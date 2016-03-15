@@ -12,7 +12,7 @@ public class LocusInvoke {
     public static Object invokeMethod(ObjectAndMethod oam, Object...params) throws LocusReflectiveException{
         Object result = null;
         if(MethodUtils.isValidInvocation(oam.getMethod(), params)){
-            if(oam.isVarArgs()){
+            if(oam.isMethodVarArgs()){
                 params = MethodUtils.convertParamsForVarArgsMethod(oam.getMethod(), params);
             }
 

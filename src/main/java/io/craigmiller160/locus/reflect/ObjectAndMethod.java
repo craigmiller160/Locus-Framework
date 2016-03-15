@@ -13,19 +13,19 @@ import java.lang.reflect.Method;
  *
  * Created by Craig on 2/14/2016.
  */
-public class ObjectAndMethod {
+public class ObjectAndMethod<T> {
 
-    private final Object obj;
+    private final T obj;
     private final Method m;
     private final Class<?>[] paramTypes;
 
-    public ObjectAndMethod(Object obj, Method m){
+    public ObjectAndMethod(T obj, Method m){
         this.obj = obj;
         this.m = m;
         this.paramTypes = m.getParameterTypes();
     }
 
-    public Object getObject(){
+    public T getObject(){
         return obj;
     }
 
@@ -33,15 +33,15 @@ public class ObjectAndMethod {
         return m;
     }
 
-    public Class<?>[] getParamTypes(){
+    public Class<?>[] getMethodParamTypes(){
         return paramTypes;
     }
 
-    public int getParamCount(){
+    public int getMethodParamCount(){
         return paramTypes.length;
     }
 
-    public boolean isVarArgs(){
+    public boolean isMethodVarArgs(){
         return m.isVarArgs();
     }
 
@@ -87,7 +87,7 @@ public class ObjectAndMethod {
         return builder.toString();
     }
 
-    private String[] getParamTypeNames(){
+    protected String[] getParamTypeNames(){
         String[] paramTypeNames = new String[paramTypes.length];
         for(int i = 0; i < paramTypeNames.length; i++){
             paramTypeNames[i] = paramTypes[i].getName();
