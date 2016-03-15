@@ -1,27 +1,29 @@
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.locus.reflect.ClassAndMethod;
 import io.craigmiller160.locus.reflect.ObjectAndMethod;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A singleton storage class configured at application
- * startup. It's used to store references to all the
- * items that Locus reflectively manages.
- *
- * Created by craig on 3/12/16.
+ * Created by craig on 3/15/16.
  */
 public class LocusStorage {
 
     private static LocusStorage instance;
 
-    private Map<String,ObjectAndMethod> modelPropSetters; //TODO there cannot be two setters with the same name
-    private Map<String,ObjectAndMethod> modelPropGetters; //TODO there cannot be two getters with the same name
-    private MultiValueMap<String,ObjectAndMethod> viewPropSetters;
-    private Map<String,ObjectAndMethod> viewPropGetters; //TODO there cannot be two getters with the same name
-    private Map<String,Object> controllers; //TODO there cannot be two controllers with the same name
+    private MultiValueMap<String,ObjectAndMethod<?>> modelPropSetters;
+    private MultiValueMap<String,ObjectAndMethod<?>> modelPropGetters;
+
+    private MultiValueMap<String,ClassAndMethod> viewPropSetters;
+    private MultiValueMap<String,ClassAndMethod> viewPropGetters;
+    private MultiValueMap<Class<?>, WeakReference<?>> viewInstances;
+
+    private Map<String,Boolean> controllerSingletons;
+    private Map<String,Class<?>> controllerTypes;
 
     public static LocusStorage getInstance(){
         if(instance == null){
@@ -35,75 +37,146 @@ public class LocusStorage {
     }
 
     private LocusStorage(){
-        modelPropSetters = new HashMap<>();
-        modelPropGetters = new HashMap<>();
+        modelPropSetters = new MultiValueMap<>();
+        modelPropGetters = new MultiValueMap<>();
+
         viewPropSetters = new MultiValueMap<>();
-        viewPropGetters = new HashMap<>();
-        controllers = new HashMap<>();
+        viewPropGetters = new MultiValueMap<>();
+        viewInstances = new ViewObjectTracker<>();
+
+        controllerSingletons = new HashMap<>();
+        controllerTypes = new HashMap<>();
     }
 
-    public void addModelPropSetter(String propName, ObjectAndMethod oam){
-        modelPropSetters.put(propName, oam);
+    /*
+     * Model Setter Section
+     */
+
+    public void addModelPropSetter(String propName, ObjectAndMethod<?> oam){
+        modelPropSetters.putValue(propName, oam);
     }
 
-    public void removeModelPropSetter(String propName){
+    public void removeModelPropSetter(ObjectAndMethod<?> oam){
+        modelPropSetters.removeValue(oam);
+    }
+
+    public void removeAllSettersForModelProp(String propName){
         modelPropSetters.remove(propName);
     }
 
-    public ObjectAndMethod getModelPropSetter(String propName){
+    public Collection<ObjectAndMethod<?>> getSettersForModelProp(String propName){
         return modelPropSetters.get(propName);
     }
 
-    public void addModelPropGetter(String propName, ObjectAndMethod oam){
-        modelPropGetters.put(propName, oam);
+    /*
+     * Model Getter Section
+     */
+
+    public void addModelPropGetter(String propName, ObjectAndMethod<?> oam){
+        modelPropGetters.putValue(propName, oam);
     }
 
-    public void removeModelPropGetter(String propName){
+    public void removeModelPropGetter(ObjectAndMethod<?> oam){
+        modelPropGetters.removeValue(oam);
+    }
+
+    public void removeAllGettersForModelProp(String propName){
         modelPropGetters.remove(propName);
     }
 
-    public ObjectAndMethod getModelPropGetter(String propName){
+    public Collection<ObjectAndMethod<?>> getGettersForModelProp(String propName){
         return modelPropGetters.get(propName);
     }
 
-    public void addViewPropSetter(String propName, ObjectAndMethod oam){
-        viewPropSetters.putValue(propName, oam);
+    /*
+     * View Setter Section
+     */
+
+    public void addViewPropSetter(String propName, ClassAndMethod cam){
+        viewPropSetters.putValue(propName, cam);
     }
 
-    public void removeViewPropSetter(ObjectAndMethod oam){
-        viewPropSetters.removeValue(oam);
+    public void removeViewPropSetter(ClassAndMethod cam){
+        viewPropSetters.removeValue(cam);
     }
 
     public void removeAllSettersForViewProp(String propName){
         viewPropSetters.remove(propName);
     }
 
-    public Collection<ObjectAndMethod> getViewPropSetters(String propName){
+    public Collection<ClassAndMethod> getSettersForViewProp(String propName){
         return viewPropSetters.get(propName);
     }
 
-    public void addViewPropGetter(String propName, ObjectAndMethod oam){
-        viewPropGetters.put(propName, oam);
+    /*
+     * View Getter Section
+     */
+
+    public void addViewPropGetter(String propName, ClassAndMethod cam){
+        viewPropGetters.putValue(propName, cam);
     }
 
-    public void removeViewPropGetter(String propName){
+    public void removeViewPropGetter(ClassAndMethod cam){
+        viewPropGetters.removeValue(cam);
+    }
+
+    public void removeAllGettersForViewProp(String propName){
         viewPropGetters.remove(propName);
     }
 
-    public ObjectAndMethod getViewPropGetter(String propName){
+    public Collection<ClassAndMethod> getGettersForViewProp(String propName){
         return viewPropGetters.get(propName);
     }
 
-    public void addController(String key, Object controller){
-        controllers.put(key, controller);
+    /*
+     * View Instance Section
+     */
+
+    public void addViewInstance(Class<?> clazz, Object instance){
+        WeakReference<?> weakRef = new WeakReference<>(instance);
+        viewInstances.putValue(clazz, weakRef);
     }
 
-    public void removeController(String key){
-        controllers.remove(key);
+    public void removeViewInstance(Object instance){
+        Collection<WeakReference<?>> weakRefs = viewInstances.get(instance.getClass());
+        if(weakRefs != null){
+            for(WeakReference<?> weakRef : weakRefs){
+                if(weakRef.get() != null && weakRef.get().equals(instance)){
+                    viewInstances.removeValue(weakRef);
+                    break;
+                }
+            }
+        }
     }
 
-    public Object getController(String key){
-        return controllers.get(key);
+    public void removeAllViewInstancesForClass(Class<?> clazz){
+        viewInstances.remove(clazz);
+    }
+
+    public Collection<WeakReference<?>> getViewInstancesForClass(Class<?> clazz){
+        return viewInstances.get(clazz);
+    }
+
+    /*
+     * Controller Section
+     */
+
+    public void addControllerType(String name, Class<?> clazz, boolean singleton){
+        controllerTypes.put(name, clazz);
+        controllerSingletons.put(name, singleton);
+    }
+
+    public void removeControllerType(String name){
+        controllerTypes.remove(name);
+        controllerSingletons.remove(name);
+    }
+
+    public Class<?> getControllerType(String name){
+        return controllerTypes.get(name);
+    }
+
+    public boolean isControllerSingleton(String name){
+        return controllerSingletons.get(name);
     }
 
 }
