@@ -1,4 +1,14 @@
+# .gitignore file
+
+# Java files
 *.class
+
+# Maven files
+target/
+
+# IntelliJ files
+.idea/
+*.iml
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
