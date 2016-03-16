@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Locus>
-    <package name="io.craigmiller160.locus.sample"/>
+    <packages>
+        <package name="io.craigmiller160.locus.sample"/>
+    </packages>
 </Locus>
