@@ -20,7 +20,7 @@ public class LocusStorage {
 
     private MultiValueMap<String,ClassAndMethod> viewPropSetters;
     private MultiValueMap<String,ClassAndMethod> viewPropGetters;
-    private MultiValueMap<Class<?>, WeakReference<?>> viewInstances;
+    private ViewObjectTracker viewInstances;
 
     private Map<String,Boolean> controllerSingletons;
     private Map<String,Class<?>> controllerTypes;
@@ -42,7 +42,7 @@ public class LocusStorage {
 
         viewPropSetters = new MultiValueMap<>();
         viewPropGetters = new MultiValueMap<>();
-        viewInstances = new ViewObjectTracker<>();
+        viewInstances = new ViewObjectTracker();
 
         controllerSingletons = new HashMap<>();
         controllerTypes = new HashMap<>();

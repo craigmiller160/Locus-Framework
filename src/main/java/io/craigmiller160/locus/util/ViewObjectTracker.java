@@ -17,19 +17,19 @@ import java.util.Collection;
  *
  * Created by craig on 3/14/16.
  */
-public class ViewObjectTracker<T> extends MultiValueMap<Class<T>,WeakReference<T>> {
+public class ViewObjectTracker extends MultiValueMap<Class<?>,WeakReference<?>> {
 
     @Override
-    public Collection<WeakReference<T>> get(Object key){
-        Collection<WeakReference<T>> values = super.get(key);
-        Collection<WeakReference<T>> toRemove = getNewCollection();
-        for(WeakReference<T> weakRef : values){
+    public Collection<WeakReference<?>> get(Object key){
+        Collection<WeakReference<?>> values = super.get(key);
+        Collection<WeakReference<?>> toRemove = getNewCollection();
+        for(WeakReference<?> weakRef : values){
             if(weakRef.get() == null){
                 values.add(weakRef);
             }
         }
 
-        for(WeakReference<T> weakRef : toRemove){
+        for(WeakReference<?> weakRef : toRemove){
             values.remove(weakRef);
         }
 
