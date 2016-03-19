@@ -1,5 +1,7 @@
 package io.craigmiller160.locus.reflect;
 
+import io.craigmiller160.locus.othermodel.ModelTwo;
+import io.craigmiller160.locus.sample.ModelOne;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -288,6 +290,24 @@ public class MethodUtilsTest {
         assertEquals("Number Array Second Element Wrong Value", numArr[1], 33.781);
         assertEquals("Number Array Third Element Wrong Type", numArr[2].getClass(), Integer.class);
         assertEquals("Number Array Third Element Wrong Value", numArr[2], 46);
+    }
+
+    /**
+     * This test pulls three methods and tests them for being
+     * duplicates. The first and third should be duplicates, the
+     * second is unique.
+     *
+     * @throws Exception if an error occurs outside the scope
+     * of the test.
+     */
+    @Test
+    public void testIsDuplicateMethod() throws Exception{
+        Method m1 = ModelOne.class.getMethod("setFirstField", String.class);
+        Method m2 = ModelTwo.class.getMethod("setFieldThree", String.class);
+        Method m3 = ModelTwo.class.getMethod("setFirstField", String.class);
+
+        assertTrue("Duplicate methods weren't recognized", MethodUtils.isDuplicateMethod(m1, m3));
+        assertFalse("Non-Duplicate methods recognized as duplicate", MethodUtils.isDuplicateMethod(m1, m2));
     }
 
     /**
