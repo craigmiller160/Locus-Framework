@@ -48,8 +48,6 @@ import java.util.Set;
  */
 public class LocusScannerImpl implements LocusScanner{
 
-    //TODO the fact that this gets methods from parent classes is a recipe for disaster...
-
     private static final Logger logger = LoggerFactory.getLogger(LocusScannerImpl.class);
 
     private static final String MODEL_CATEGORY = "Model";
@@ -59,7 +57,7 @@ public class LocusScannerImpl implements LocusScanner{
     LocusScannerImpl(){}
 
     @Override
-    public void scanPackage(String packageName, LocusStorage storage) throws LocusReflectiveException{
+    public void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
         logger.debug("Scanning package \"" + packageName + "\" for annotated classes");
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage(packageName))
@@ -67,62 +65,76 @@ public class LocusScannerImpl implements LocusScanner{
                 .filterInputsBy(new FilterBuilder().includePackage(packageName))
         );
 
-        parseModelClasses(reflections, storage);
-        parseControllerClasses(reflections, storage);
-        parseViewClasses(reflections, storage);
+        parseModelClasses(reflections, storage, scannerExclusions);
+        parseControllerClasses(reflections, storage, scannerExclusions);
+        parseViewClasses(reflections, storage, scannerExclusions);
     }
 
-    private void parseViewClasses(Reflections reflections, LocusStorage storage) throws LocusReflectiveException{
+    @Override
+    public void scanPackage(String packageName, LocusStorage storage) throws LocusReflectiveException{
+        scanPackage(packageName, storage, null);
+    }
+
+    private void parseViewClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
         Set<Class<?>> views = reflections.getTypesAnnotatedWith(View.class);
         for(Class<?> viewType : views){
             Method[] publicMethods = viewType.getMethods();
             for(Method m : publicMethods){
-                if(m.getName().startsWith("set")){
+                if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
+                    logger.debug("Adding view property setter to storage. Property: " + propName + " | Setter: " + cam.toString());
                     storage.addViewPropSetter(propName, cam);
                 }
-                else if(m.getName().startsWith("get")){
+                else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
                     validateUniqueMethod(propName, VIEW_CATEGORY, cam, storage.getGettersForViewProp(propName));
+                    logger.debug("Adding view property getter to storage. Property: " + propName + " | Getter: " + cam.toString());
                     storage.addViewPropGetter(propName, cam);
                 }
             }
         }
     }
 
-    private void parseControllerClasses(Reflections reflections, LocusStorage storage) throws LocusReflectiveException{
+    private void parseControllerClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
         Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(Controller.class);
         for(Class<?> controllerType : controllers){
             Controller con = controllerType.getAnnotation(Controller.class);
             String name = con.name();
             boolean singleton = con.singleton();
             validateUniqueController(name, controllerType, storage.getAllControllerTypes());
+            logger.debug("Adding controller type to storage. Name: " + name + " | Class: " + controllerType);
             storage.addControllerType(name, controllerType, singleton);
         }
     }
 
-    private void parseModelClasses(Reflections reflections, LocusStorage storage) throws LocusReflectiveException{
+    private void parseModelClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
         Set<Class<?>> models = reflections.getTypesAnnotatedWith(Model.class);
         for(Class<?> modelType : models){
             Object model = ObjectCreator.instantiateClass(modelType);
             Method[] publicMethods = modelType.getMethods();
             for(Method m : publicMethods){
-                if(m.getName().startsWith("set")){
+                if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
                     validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getSettersForModelProp(propName));
+                    logger.debug("Adding model property setter to storage. Property: " + propName + " | Setter: " + oam.toString());
                     storage.addModelPropSetter(propName, oam);
                 }
-                else if(m.getName().startsWith("get")){
+                else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
                     validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getGettersForModelProp(propName));
+                    logger.debug("Adding model property getter to storage. Property: " + propName + " | Getter: " + oam.toString());
                     storage.addModelPropGetter(propName, oam);
                 }
             }
         }
+    }
+
+    private boolean isClassAllowed(Class<?> clazz, ScannerExclusions scannerExclusions){
+        return scannerExclusions == null || scannerExclusions.isClassAllowed(clazz);
     }
 
     private void validateUniqueController(String controllerName, Class<?> controllerType,

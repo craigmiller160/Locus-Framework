@@ -49,8 +49,9 @@ public class LocusScannerImplTest {
         LocusScanner scanner = new LocusScannerImpl();
         String packageName = "io.craigmiller160.locus.sample";
         LocusStorage storage = new LocusStorage();
+        ScannerExclusions scannerExclusions = new ScannerExclusions();
 
-        scanner.scanPackage(packageName, storage);
+        scanner.scanPackage(packageName, storage, scannerExclusions);
 
         MultiValueMap<String,ObjectAndMethod> modelPropSetters = storage.getAllModelPropSetters();
         MultiValueMap<String,ObjectAndMethod> modelPropGetters = storage.getAllModelPropGetters();
@@ -63,7 +64,7 @@ public class LocusScannerImplTest {
         Set<String> modelGetterKeys = modelPropGetters.keySet();
 
         assertEquals("Wrong number of model setter props", modelSetterKeys.size(), 2);
-        assertEquals("Wrong number of model getter props", modelGetterKeys.size(), 3);
+        assertEquals("Wrong number of model getter props", modelGetterKeys.size(), 2);
 
         for(String key : modelSetterKeys){
             Collection<ObjectAndMethod> modelSetters = modelPropSetters.get(key);
@@ -85,7 +86,7 @@ public class LocusScannerImplTest {
         Set<String> viewGetterKeys = viewPropGetters.keySet();
 
         assertEquals("Wrong number of view setter props", viewSetterKeys.size(), 2);
-        assertEquals("Wrong number of view getter props", viewGetterKeys.size(), 3);
+        assertEquals("Wrong number of view getter props", viewGetterKeys.size(), 2);
 
         for(String key : viewSetterKeys){
             Collection<ClassAndMethod> viewSetters = viewPropSetters.get(key);

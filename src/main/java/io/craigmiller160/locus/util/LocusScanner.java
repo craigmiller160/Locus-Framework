@@ -27,4 +27,6 @@ public interface LocusScanner {
 
     void scanPackage(String packageName, LocusStorage storage) throws LocusReflectiveException;
 
+    void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException;
+
 }
