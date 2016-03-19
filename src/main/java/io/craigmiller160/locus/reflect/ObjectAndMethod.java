@@ -13,61 +13,16 @@ import java.lang.reflect.Method;
  *
  * Created by Craig on 2/14/2016.
  */
-public class ObjectAndMethod<T> {
+public class ObjectAndMethod extends ReflectiveMethodHolder<Object>{
 
-    private final T obj;
-    private final Method m;
-    private final Class<?>[] paramTypes;
-
-    public ObjectAndMethod(T obj, Method m){
-        this.obj = obj;
-        this.m = m;
-        this.paramTypes = m.getParameterTypes();
-    }
-
-    public T getObject(){
-        return obj;
-    }
-
-    public Method getMethod(){
-        return m;
-    }
-
-    public Class<?>[] getMethodParamTypes(){
-        return paramTypes;
-    }
-
-    public int getMethodParamCount(){
-        return paramTypes.length;
-    }
-
-    public boolean isMethodVarArgs(){
-        return m.isVarArgs();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ObjectAndMethod that = (ObjectAndMethod) o;
-
-        if (obj != null ? !obj.equals(that.obj) : that.obj != null) return false;
-        return !(m != null ? !m.equals(that.m) : that.m != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = obj != null ? obj.hashCode() : 0;
-        result = 31 * result + (m != null ? m.hashCode() : 0);
-        return result;
+    public ObjectAndMethod(Object obj, Method m){
+        super(obj, m);
     }
 
     @Override
     public String toString(){
-        String className = obj.getClass().getName();
-        String methodName = m.getName();
+        String className = getSource().getClass().getName();
+        String methodName = getMethod().getName();
         String[] paramTypeNames = getParamTypeNames();
 
         StringBuilder builder = new StringBuilder()
@@ -87,10 +42,10 @@ public class ObjectAndMethod<T> {
         return builder.toString();
     }
 
-    protected String[] getParamTypeNames(){
-        String[] paramTypeNames = new String[paramTypes.length];
+    private String[] getParamTypeNames(){
+        String[] paramTypeNames = new String[getMethodParamTypes().length];
         for(int i = 0; i < paramTypeNames.length; i++){
-            paramTypeNames[i] = paramTypes[i].getName();
+            paramTypeNames[i] = getMethodParamTypes()[i].getName();
         }
         return paramTypeNames;
     }

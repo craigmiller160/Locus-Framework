@@ -17,7 +17,7 @@ public class LocusInvoke {
             }
 
             try{
-                result = oam.getMethod().invoke(oam.getObject(), params);
+                result = oam.getMethod().invoke(oam.getSource(), params);
             }
             catch(InvocationTargetException ex){
                 //TODO logging?
@@ -26,7 +26,7 @@ public class LocusInvoke {
             catch(ReflectiveOperationException ex){
                 //TODO logging?
                 throw new LocusReflectiveException("Unable to reflectively invoke method " + oam.getMethod().getName() +
-                        " on " + oam.getObject().getClass().getName(), ex);
+                        " on " + oam.getSource().getClass().getName(), ex);
             }
         }
         else{
