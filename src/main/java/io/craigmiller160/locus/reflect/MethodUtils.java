@@ -95,6 +95,21 @@ public class MethodUtils {
         return result;
     }
 
+    public static boolean isDuplicateMethod(Method m1, Method m2){
+        boolean duplicate = false;
+        if(m1.getName().equals(m2.getName())){
+            Class<?>[] m1ParamTypes = m1.getParameterTypes();
+            Class<?>[] m2ParamTypes = m2.getParameterTypes();
+            if(m1ParamTypes.length == m2ParamTypes.length){
+                if(Arrays.equals(m1ParamTypes, m2ParamTypes)){
+                    duplicate = true;
+                }
+            }
+        }
+
+        return duplicate;
+    }
+
     private static boolean validateParamsNoVarArgs(Method method, Object...newParams){
         int methodParamCount = method.getParameterTypes().length;
 
@@ -174,5 +189,4 @@ public class MethodUtils {
         }
         return result;
     }
-
 }
