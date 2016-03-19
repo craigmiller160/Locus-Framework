@@ -49,7 +49,12 @@ public class DOMConfigurationReader implements ConfigurationReader{
     private static final String PACKAGES_NODE = "packages";
     private static final String ROOT_NODE = "Locus";
     private static final String PACKAGE_NODE = "package";
+    private static final String EXCLUSIONS_NODE = "exclusions";
+    private static final String EXCLUSION_NODE = "exclusion";
+    private static final String INCLUSIONS_NODE = "inclusions";
+    private static final String INCLUSION_NODE = "inclusion";
     private static final String PACKAGE_NAME_ATTR = "name";
+    private static final String PREFIX_ATTR = "prefix";
 
     DOMConfigurationReader(){}
 
@@ -68,26 +73,11 @@ public class DOMConfigurationReader implements ConfigurationReader{
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(iStream);
             Element rootElement = doc.getDocumentElement();
 
-            //Get all "packages" elements. There should only be one, but just in case
-            NodeList packagesElements = rootElement.getElementsByTagName(PACKAGES_NODE);
-            for(int i = 0; i < packagesElements.getLength(); i++){
-                //Get each "packages" element and get all of its "package" sub-elements
-                Element packagesNode = (Element) packagesElements.item(i);
-                NodeList packageNodes = packagesNode.getElementsByTagName(PACKAGE_NODE);
-
-                for(int i2 = 0; i2 < packageNodes.getLength(); i2++){
-                    //For each "package" element, get its name attribute and add it to configuration
-                    Node node = packageNodes.item(i);
-                    if(node.getNodeType() == Node.ELEMENT_NODE && node.hasAttributes()){
-                        NamedNodeMap attributes = node.getAttributes();
-                        Node packageNameAttr = attributes.getNamedItem(PACKAGE_NAME_ATTR);
-                        if(packageNameAttr != null){
-                            String name = packageNameAttr.getTextContent();
-                            logger.debug("Adding package to scan: " + name);
-                            locusConfig.addPackageName(name);
-                        }
-                    }
-                }
+            //Get the "packages" element
+            NodeList packagesElementList = rootElement.getElementsByTagName(PACKAGES_NODE);
+            if(packagesElementList.getLength() > 0){
+                Element packagesElement = (Element) packagesElementList.item(0);
+                parsePackagesElement(packagesElement, locusConfig);
             }
         }
         catch(ParserConfigurationException | SAXException | IOException ex){
@@ -105,6 +95,76 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
 
         return locusConfig;
+    }
+
+    private void parsePackagesElement(Element packagesElement, LocusConfiguration locusConfig){
+        //Get the "package" nodes, and parse them
+        NodeList packageNodes = packagesElement.getElementsByTagName(PACKAGE_NODE);
+        parsePackageNodes(packageNodes, locusConfig);
+
+        //Get the "exclusions" element, if it exists, and parse all individual exclusions
+        NodeList exclusionsElementList = packagesElement.getElementsByTagName(EXCLUSIONS_NODE);
+        if(exclusionsElementList.getLength() > 0){
+            Element exclusionsElement = (Element) exclusionsElementList.item(0);
+            NodeList exclusionNodes = exclusionsElement.getElementsByTagName(EXCLUSION_NODE);
+            parseExclusionNodes(exclusionNodes, locusConfig);
+        }
+
+        //Get the "inclusions" element, and parse all individual inclusions
+        NodeList inclusionsElementList = packagesElement.getElementsByTagName(INCLUSIONS_NODE);
+        if(inclusionsElementList.getLength() > 0){
+            Element inclusionsElement = (Element) inclusionsElementList.item(0);
+            NodeList inclusionNodes = inclusionsElement.getElementsByTagName(INCLUSION_NODE);
+            parseInclusionNodes(inclusionNodes, locusConfig);
+        }
+    }
+
+    private void parseInclusionNodes(NodeList inclusionNodes, LocusConfiguration locusConfig){
+        for(int i = 0; i < inclusionNodes.getLength(); i++){
+            //For each "inclusion" element, get its prefix attribute and add it to configuration
+            Node node = inclusionNodes.item(i);
+            if(node.getNodeType() == Node.ELEMENT_NODE && node.hasAttributes()){
+                NamedNodeMap attributes = node.getAttributes();
+                Node prefixAttr = attributes.getNamedItem(PREFIX_ATTR);
+                if(prefixAttr != null){
+                    String prefix = prefixAttr.getTextContent();
+                    logger.debug("Adding scanner inclusion prefix: " + prefix);
+                    locusConfig.addScannerInclusion(prefix);
+                }
+            }
+        }
+    }
+
+    private void parseExclusionNodes(NodeList exclusionNodes, LocusConfiguration locusConfig){
+        for(int i = 0; i < exclusionNodes.getLength(); i++){
+            //For each "exclusion" element, get its prefix attribute and add it to configuration
+            Node node = exclusionNodes.item(i);
+            if(node.getNodeType() == Node.ELEMENT_NODE && node.hasAttributes()){
+                NamedNodeMap attributes = node.getAttributes();
+                Node prefixAttr = attributes.getNamedItem(PREFIX_ATTR);
+                if(prefixAttr != null){
+                    String prefix = prefixAttr.getTextContent();
+                    logger.debug("Adding scanner exclusion" + prefix);
+                    locusConfig.addScannerExclusion(prefix);
+                }
+            }
+        }
+    }
+
+    private void parsePackageNodes(NodeList packageNodes, LocusConfiguration locusConfig){
+        for(int i = 0; i < packageNodes.getLength(); i++){
+            //For each "package" element, get its name attribute and add it to configuration
+            Node node = packageNodes.item(i);
+            if(node.getNodeType() == Node.ELEMENT_NODE && node.hasAttributes()){
+                NamedNodeMap attributes = node.getAttributes();
+                Node packageNameAttr = attributes.getNamedItem(PACKAGE_NAME_ATTR);
+                if(packageNameAttr != null){
+                    String name = packageNameAttr.getTextContent();
+                    logger.debug("Adding package to scan: " + name);
+                    locusConfig.addPackageName(name);
+                }
+            }
+        }
     }
 
 

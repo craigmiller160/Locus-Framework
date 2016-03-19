@@ -40,6 +40,12 @@ public class LocusConfiguration {
     private List<String> packageNames = new ArrayList<>();
 
     /**
+     * The container for the ScannerExclusions used for validation
+     * during package scanning.
+     */
+    private ScannerExclusions scannerExclusions = new ScannerExclusions();
+
+    /**
      * Add the name of a package to the list of packages to be scanned for
      * annotated classes.
      *
@@ -77,6 +83,33 @@ public class LocusConfiguration {
      */
     public List<String> getPackageNames(){
         return packageNames;
+    }
+
+    /**
+     * Add an exclusion prefix to the ScannerExclusions.
+     *
+     * @param exclusion the exclusion prefix.
+     */
+    public void addScannerExclusion(String exclusion){
+        scannerExclusions.addExclusion(exclusion);
+    }
+
+    /**
+     * Add an inclusion prefix to the ScannerExclusions.
+     *
+     * @param inclusion the inclusion prefix.
+     */
+    public void addScannerInclusion(String inclusion){
+        scannerExclusions.addInclusion(inclusion);
+    }
+
+    /**
+     * Get the ScannerExclusions for this configuration.
+     *
+     * @return the ScannerExclusions.
+     */
+    public ScannerExclusions getScannerExclusions(){
+        return scannerExclusions;
     }
 
 }

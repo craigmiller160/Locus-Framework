@@ -16,9 +16,13 @@
 
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.locus.Locus;
 import org.junit.Test;
 
+import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A class with JUnit test cases to test
@@ -35,6 +39,13 @@ public class DOMConfigurationReaderTest {
 
         assertEquals("Wrong number of packages returned", locusConfig.getPackageCount(), 1);
         assertEquals("Wrong package name returned", locusConfig.getPackageNames().get(0), "io.craigmiller160.locus.sample");
+
+        ScannerExclusions scannerExclusions = locusConfig.getScannerExclusions();
+        Set<String> exclusions = scannerExclusions.getAllExclusions();
+        Set<String> inclusions = scannerExclusions.getAllInclusions();
+
+        assertTrue(exclusions.contains("org.foo"));
+        assertTrue(inclusions.contains("org.foo.foo2"));
     }
 
 }
