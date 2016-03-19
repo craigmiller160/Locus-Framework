@@ -15,8 +15,8 @@ public class LocusStorage {
 
     private static LocusStorage instance;
 
-    private MultiValueMap<String,ObjectAndMethod<?>> modelPropSetters;
-    private MultiValueMap<String,ObjectAndMethod<?>> modelPropGetters;
+    private MultiValueMap<String,ObjectAndMethod> modelPropSetters;
+    private MultiValueMap<String,ObjectAndMethod> modelPropGetters;
 
     private MultiValueMap<String,ClassAndMethod> viewPropSetters;
     private MultiValueMap<String,ClassAndMethod> viewPropGetters;
@@ -52,11 +52,11 @@ public class LocusStorage {
      * Model Setter Section
      */
 
-    public void addModelPropSetter(String propName, ObjectAndMethod<?> oam){
+    public void addModelPropSetter(String propName, ObjectAndMethod oam){
         modelPropSetters.putValue(propName, oam);
     }
 
-    public void removeModelPropSetter(ObjectAndMethod<?> oam){
+    public void removeModelPropSetter(ObjectAndMethod oam){
         modelPropSetters.removeValue(oam);
     }
 
@@ -64,19 +64,23 @@ public class LocusStorage {
         modelPropSetters.remove(propName);
     }
 
-    public Collection<ObjectAndMethod<?>> getSettersForModelProp(String propName){
+    public Collection<ObjectAndMethod> getSettersForModelProp(String propName){
         return modelPropSetters.get(propName);
+    }
+
+    public MultiValueMap<String,ObjectAndMethod> getAllModelPropSetters(){
+        return modelPropSetters;
     }
 
     /*
      * Model Getter Section
      */
 
-    public void addModelPropGetter(String propName, ObjectAndMethod<?> oam){
+    public void addModelPropGetter(String propName, ObjectAndMethod oam){
         modelPropGetters.putValue(propName, oam);
     }
 
-    public void removeModelPropGetter(ObjectAndMethod<?> oam){
+    public void removeModelPropGetter(ObjectAndMethod oam){
         modelPropGetters.removeValue(oam);
     }
 
@@ -84,8 +88,12 @@ public class LocusStorage {
         modelPropGetters.remove(propName);
     }
 
-    public Collection<ObjectAndMethod<?>> getGettersForModelProp(String propName){
+    public Collection<ObjectAndMethod> getGettersForModelProp(String propName){
         return modelPropGetters.get(propName);
+    }
+
+    public MultiValueMap<String,ObjectAndMethod> getAllModelPropGetters(){
+        return modelPropGetters;
     }
 
     /*
@@ -108,6 +116,10 @@ public class LocusStorage {
         return viewPropSetters.get(propName);
     }
 
+    public MultiValueMap<String,ClassAndMethod> getAllViewPropSetters(){
+        return viewPropSetters;
+    }
+
     /*
      * View Getter Section
      */
@@ -126,6 +138,10 @@ public class LocusStorage {
 
     public Collection<ClassAndMethod> getGettersForViewProp(String propName){
         return viewPropGetters.get(propName);
+    }
+
+    public MultiValueMap<String,ClassAndMethod> getAllViewPropGetters(){
+        return viewPropGetters;
     }
 
     /*
@@ -177,6 +193,14 @@ public class LocusStorage {
 
     public boolean isControllerSingleton(String name){
         return controllerSingletons.get(name);
+    }
+
+    public Map<String,Class<?>> getAllControllerTypes(){
+        return controllerTypes;
+    }
+
+    public Map<String,Boolean> getAllControllerSingletons(){
+        return controllerSingletons;
     }
 
 }
