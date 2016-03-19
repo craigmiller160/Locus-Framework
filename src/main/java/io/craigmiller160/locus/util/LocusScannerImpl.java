@@ -48,6 +48,8 @@ import java.util.Set;
  */
 public class LocusScannerImpl implements LocusScanner{
 
+    //TODO the fact that this gets methods from parent classes is a recipe for disaster...
+
     private static final Logger logger = LoggerFactory.getLogger(LocusScannerImpl.class);
 
     private static final String MODEL_CATEGORY = "Model";
@@ -78,7 +80,6 @@ public class LocusScannerImpl implements LocusScanner{
                 if(m.getName().startsWith("set")){
                     String propName = m.getName().substring(3, m.getName().length());
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
-                    validateUniqueMethod(propName, VIEW_CATEGORY, cam, storage.getSettersForViewProp(propName));
                     storage.addViewPropSetter(propName, cam);
                 }
                 else if(m.getName().startsWith("get")){
