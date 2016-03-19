@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="ERROR">
+
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{MM-dd-yyyy HH:mm:ss:SSS} %level [Locus]:  %msg %n%rEx{full}"/>
+        <Console name="LocusConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{MM-dd-yyyy HH:mm:ss:SSS} [ Locus ]: %-5level: %msg %n%rEx{full}"/>
+        </Console>
+        <Console name="ReflectionsConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{MM-dd-yyyy HH:mm:ss:SSS} [Reflect]: %-5level: %msg %n%rEx{full}"/>
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="trace">
-            <AppenderRef ref="Console" />
-        </Root>
+        <Root level="trace" />
+        <Logger name="io.craigmiller160.locus">
+            <AppenderRef ref="LocusConsole" />
+        </Logger>
+        <Logger name="org.reflections" level="trace">
+            <AppenderRef ref="ReflectionsConsole" />
+        </Logger>
     </Loggers>
-
 </Configuration>
