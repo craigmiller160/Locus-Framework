@@ -106,12 +106,14 @@ public class LocusScannerImplTest {
         String package2 = "io.craigmiller160.locus.othermodel";
         LocusStorage storage = new LocusStorage();
 
+        ScannerExclusions scannerExclusions = new ScannerExclusions();
+
         //After the two scans, the first boolean should still be false, the second should be true
         boolean firstScanException = false;
         boolean secondScanException = false;
 
         try{
-            scanner.scanPackage(package1, storage);
+            scanner.scanPackage(package1, storage, scannerExclusions);
         }
         catch(LocusReflectiveException ex){
             firstScanException = true;
@@ -119,7 +121,7 @@ public class LocusScannerImplTest {
         }
 
         try{
-            scanner.scanPackage(package2, storage);
+            scanner.scanPackage(package2, storage, scannerExclusions);
         }
         catch(LocusReflectiveException ex){
             secondScanException = true;
@@ -138,12 +140,14 @@ public class LocusScannerImplTest {
         String package2 = "io.craigmiller160.locus.otherview";
         LocusStorage storage = new LocusStorage();
 
+        ScannerExclusions scannerExclusions = new ScannerExclusions();
+
         //After the two scans, the first boolean should still be false, the second should be true
         boolean firstScanException = false;
         boolean secondScanException = false;
 
         try{
-            scanner.scanPackage(package1, storage);
+            scanner.scanPackage(package1, storage, scannerExclusions);
         }
         catch(LocusReflectiveException ex){
             firstScanException = true;
@@ -151,7 +155,7 @@ public class LocusScannerImplTest {
         }
 
         try{
-            scanner.scanPackage(package2, storage);
+            scanner.scanPackage(package2, storage, scannerExclusions);
         }
         catch(LocusReflectiveException ex){
             secondScanException = true;

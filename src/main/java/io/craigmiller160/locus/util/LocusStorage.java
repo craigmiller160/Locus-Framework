@@ -88,6 +88,10 @@ public class LocusStorage {
         return modelPropSetters;
     }
 
+    public int getModelPropSetterCount(){
+        return modelPropSetters.fullSize();
+    }
+
     /*
      * Model Getter Section
      */
@@ -110,6 +114,10 @@ public class LocusStorage {
 
     public MultiValueMap<String,ObjectAndMethod> getAllModelPropGetters(){
         return modelPropGetters;
+    }
+
+    public int getModelPropGetterCount(){
+        return modelPropGetters.fullSize();
     }
 
     /*
@@ -136,6 +144,10 @@ public class LocusStorage {
         return viewPropSetters;
     }
 
+    public int getViewPropSetterCount(){
+        return viewPropSetters.fullSize();
+    }
+
     /*
      * View Getter Section
      */
@@ -158,6 +170,10 @@ public class LocusStorage {
 
     public MultiValueMap<String,ClassAndMethod> getAllViewPropGetters(){
         return viewPropGetters;
+    }
+
+    public int getViewPropGetterCount(){
+        return viewPropGetters.fullSize();
     }
 
     /*
@@ -217,6 +233,10 @@ public class LocusStorage {
 
     public Map<String,Boolean> getAllControllerSingletons(){
         return controllerSingletons;
+    }
+
+    public int getControllerCount(){
+        return controllerTypes.size();
     }
 
 }
