@@ -36,7 +36,7 @@ public class LocusStorage {
         return instance;
     }
 
-    private LocusStorage(){
+    LocusStorage(){
         modelPropSetters = new MultiValueMap<>();
         modelPropGetters = new MultiValueMap<>();
 
