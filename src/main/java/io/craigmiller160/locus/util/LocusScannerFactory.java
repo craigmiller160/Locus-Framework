@@ -5,6 +5,9 @@ package io.craigmiller160.locus.util;
  */
 public class LocusScannerFactory {
 
+    public LocusScannerFactory() {
+    }
+
     /**
      * Get a new instance of this factory class.
      *
