@@ -18,13 +18,16 @@
 <Locus>
     <packages>
         <package name="io.craigmiller160.locus.sample"/>
+    </packages>
+
+    <scanning-filters>
         <exclusions>
             <exclusion prefix="org.foo"/>"
         </exclusions>
         <inclusions>
             <inclusion prefix="org.foo.foo2" />
         </inclusions>
-    </packages>
+    </scanning-filters>
 
 
 </Locus>

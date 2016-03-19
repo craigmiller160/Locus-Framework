@@ -53,6 +53,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
     private static final String EXCLUSION_NODE = "exclusion";
     private static final String INCLUSIONS_NODE = "inclusions";
     private static final String INCLUSION_NODE = "inclusion";
+    private static final String SCANNING_FILTERS_NODE = "scanning-filters";
     private static final String PACKAGE_NAME_ATTR = "name";
     private static final String PREFIX_ATTR = "prefix";
 
@@ -79,6 +80,13 @@ public class DOMConfigurationReader implements ConfigurationReader{
                 Element packagesElement = (Element) packagesElementList.item(0);
                 parsePackagesElement(packagesElement, locusConfig);
             }
+
+            //Get the "scanning-filters" element, and parse it
+            NodeList scanningFiltersNodes = rootElement.getElementsByTagName(SCANNING_FILTERS_NODE);
+            if(scanningFiltersNodes.getLength() > 0){
+                Element scanningFiltersElement = (Element) scanningFiltersNodes.item(0);
+                parseScanningFiltersElement(scanningFiltersElement, locusConfig);
+            }
         }
         catch(ParserConfigurationException | SAXException | IOException ex){
             throw new LocusParsingException("Unable tp parse Locus configuration file", ex);
@@ -101,9 +109,11 @@ public class DOMConfigurationReader implements ConfigurationReader{
         //Get the "package" nodes, and parse them
         NodeList packageNodes = packagesElement.getElementsByTagName(PACKAGE_NODE);
         parsePackageNodes(packageNodes, locusConfig);
+    }
 
+    private void parseScanningFiltersElement(Element scanningFiltersElement, LocusConfiguration locusConfig){
         //Get the "exclusions" element, if it exists, and parse all individual exclusions
-        NodeList exclusionsElementList = packagesElement.getElementsByTagName(EXCLUSIONS_NODE);
+        NodeList exclusionsElementList = scanningFiltersElement.getElementsByTagName(EXCLUSIONS_NODE);
         if(exclusionsElementList.getLength() > 0){
             Element exclusionsElement = (Element) exclusionsElementList.item(0);
             NodeList exclusionNodes = exclusionsElement.getElementsByTagName(EXCLUSION_NODE);
@@ -111,7 +121,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
 
         //Get the "inclusions" element, and parse all individual inclusions
-        NodeList inclusionsElementList = packagesElement.getElementsByTagName(INCLUSIONS_NODE);
+        NodeList inclusionsElementList = scanningFiltersElement.getElementsByTagName(INCLUSIONS_NODE);
         if(inclusionsElementList.getLength() > 0){
             Element inclusionsElement = (Element) inclusionsElementList.item(0);
             NodeList inclusionNodes = inclusionsElement.getElementsByTagName(INCLUSION_NODE);
