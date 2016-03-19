@@ -40,6 +40,7 @@ public class LocusStorage {
 
     private Map<String,Boolean> controllerSingletons;
     private Map<String,Class<?>> controllerTypes;
+    private Map<String,Object> controllerSingletonInstances;
 
     public static LocusStorage getInstance(){
         if(instance == null){
@@ -62,6 +63,7 @@ public class LocusStorage {
 
         controllerSingletons = new HashMap<>();
         controllerTypes = new HashMap<>();
+        controllerSingletonInstances = new HashMap<>();
     }
 
     /*
@@ -237,6 +239,22 @@ public class LocusStorage {
 
     public int getControllerCount(){
         return controllerTypes.size();
+    }
+
+    /*
+     * Controller Singleton Instance methods
+     */
+
+    public void addControllerSingletonInstance(String name, Object controller){
+        controllerSingletonInstances.put(name, controller);
+    }
+
+    public void remoteControllerSingletonIntance(String name){
+        controllerSingletonInstances.remove(name);
+    }
+
+    public Object getControllerSingletonInstance(String name){
+        return controllerSingletonInstances.get(name);
     }
 
 }

@@ -19,10 +19,23 @@ package io.craigmiller160.locus.sample;
 import io.craigmiller160.locus.annotations.Controller;
 
 /**
+ * A sample class with a @Controller annotation,
+ * used for testing the Locus Framework.
+ *
  * Created by craigmiller on 3/19/16.
  */
 @Controller(name="ControllerOne")
 public class ControllerOne {
+
+    private String id;
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public String getId(){
+        return id;
+    }
 
     @Override
     public String toString(){
