@@ -19,10 +19,10 @@
 
     <Appenders>
         <Console name="LocusConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{MM-dd-yyyy HH:mm:ss:SSS} [ Locus ]: %-5level: %msg %n%rEx{full}"/>
+            <PatternLayout pattern="%d{MM-dd-yyyy HH:mm:ss:SSS} %-5level: [ Locus ]: %msg %n%rEx{full}"/>
         </Console>
         <Console name="ReflectionsConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{MM-dd-yyyy HH:mm:ss:SSS} [Reflect]: %-5level: %msg %n%rEx{full}"/>
+            <PatternLayout pattern="%d{MM-dd-yyyy HH:mm:ss:SSS} %-5level: [Reflect]: %msg %n%rEx{full}"/>
         </Console>
     </Appenders>
     <Loggers>
