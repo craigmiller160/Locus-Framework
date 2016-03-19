@@ -16,6 +16,11 @@ public class ClassAndMethod extends ReflectiveMethodHolder<Class<?>> {
     }
 
     @Override
+    public Class<?> getSourceType(){
+        return getSource();
+    }
+
+    @Override
     public String toString(){
         String className = getSource().getName();
         String methodName = getMethod().getName();

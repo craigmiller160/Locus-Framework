@@ -37,6 +37,8 @@ public abstract class ReflectiveMethodHolder<T> {
         return method.isVarArgs();
     }
 
+    public abstract Class<?> getSourceType();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
