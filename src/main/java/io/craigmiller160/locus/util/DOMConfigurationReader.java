@@ -157,7 +157,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
                 Node prefixAttr = attributes.getNamedItem(PREFIX_ATTR);
                 if(prefixAttr != null){
                     String prefix = prefixAttr.getTextContent();
-                    logger.debug("Adding scanner exclusion" + prefix);
+                    logger.debug("Adding scanner exclusion prefix: " + prefix);
                     locusConfig.addScannerExclusion(prefix);
                 }
             }
