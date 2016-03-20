@@ -46,6 +46,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
      * XML schema. They should be used for all references to XML
      * nodes in the code to maintain consistency.
      */
+    private static final String NAMESPACE = "io.craigmiller160.github.com/locus-schema";
     private static final String PACKAGES_NODE = "packages";
     private static final String ROOT_NODE = "Locus";
     private static final String PACKAGE_NODE = "package";
@@ -71,18 +72,20 @@ public class DOMConfigurationReader implements ConfigurationReader{
             }
 
             //Create DOM document & root element
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(iStream);
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            docBuilderFactory.setNamespaceAware(true);
+            Document doc = docBuilderFactory.newDocumentBuilder().parse(iStream);
             Element rootElement = doc.getDocumentElement();
 
             //Get the "packages" element
-            NodeList packagesElementList = rootElement.getElementsByTagName(PACKAGES_NODE);
+            NodeList packagesElementList = rootElement.getElementsByTagNameNS(NAMESPACE, PACKAGES_NODE);
             if(packagesElementList.getLength() > 0){
                 Element packagesElement = (Element) packagesElementList.item(0);
                 parsePackagesElement(packagesElement, locusConfig);
             }
 
             //Get the "scanning-filters" element, and parse it
-            NodeList scanningFiltersNodes = rootElement.getElementsByTagName(SCANNING_FILTERS_NODE);
+            NodeList scanningFiltersNodes = rootElement.getElementsByTagNameNS(NAMESPACE, SCANNING_FILTERS_NODE);
             if(scanningFiltersNodes.getLength() > 0){
                 Element scanningFiltersElement = (Element) scanningFiltersNodes.item(0);
                 parseScanningFiltersElement(scanningFiltersElement, locusConfig);
@@ -107,24 +110,24 @@ public class DOMConfigurationReader implements ConfigurationReader{
 
     private void parsePackagesElement(Element packagesElement, LocusConfiguration locusConfig){
         //Get the "package" nodes, and parse them
-        NodeList packageNodes = packagesElement.getElementsByTagName(PACKAGE_NODE);
+        NodeList packageNodes = packagesElement.getElementsByTagNameNS(NAMESPACE, PACKAGE_NODE);
         parsePackageNodes(packageNodes, locusConfig);
     }
 
     private void parseScanningFiltersElement(Element scanningFiltersElement, LocusConfiguration locusConfig){
         //Get the "exclusions" element, if it exists, and parse all individual exclusions
-        NodeList exclusionsElementList = scanningFiltersElement.getElementsByTagName(EXCLUSIONS_NODE);
+        NodeList exclusionsElementList = scanningFiltersElement.getElementsByTagNameNS(NAMESPACE, EXCLUSIONS_NODE);
         if(exclusionsElementList.getLength() > 0){
             Element exclusionsElement = (Element) exclusionsElementList.item(0);
-            NodeList exclusionNodes = exclusionsElement.getElementsByTagName(EXCLUSION_NODE);
+            NodeList exclusionNodes = exclusionsElement.getElementsByTagNameNS(NAMESPACE, EXCLUSION_NODE);
             parseExclusionNodes(exclusionNodes, locusConfig);
         }
 
         //Get the "inclusions" element, and parse all individual inclusions
-        NodeList inclusionsElementList = scanningFiltersElement.getElementsByTagName(INCLUSIONS_NODE);
+        NodeList inclusionsElementList = scanningFiltersElement.getElementsByTagNameNS(NAMESPACE, INCLUSIONS_NODE);
         if(inclusionsElementList.getLength() > 0){
             Element inclusionsElement = (Element) inclusionsElementList.item(0);
-            NodeList inclusionNodes = inclusionsElement.getElementsByTagName(INCLUSION_NODE);
+            NodeList inclusionNodes = inclusionsElement.getElementsByTagNameNS(NAMESPACE, INCLUSION_NODE);
             parseInclusionNodes(inclusionNodes, locusConfig);
         }
     }

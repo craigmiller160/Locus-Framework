@@ -20,38 +20,36 @@
            targetNamespace="io.craigmiller160.github.com/locus-schema"
            elementFormDefault="qualified">
 
-
-    <xs:element name="Locus" type="Locus"/>
-
-
-    <xs:complexType name="Locus">
-        <xs:choice maxOccurs="1">
-            <xs:element name="packages" type="packages"/>
-            <xs:element name="scanning-filters" type="scanning-filters"/>
-        </xs:choice>
-    </xs:complexType>
+    <xs:element name="Locus">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="packages" type="packages" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="scanning-filters" type="scanning-filters" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
     <xs:complexType name="packages">
-        <xs:choice>
+        <xs:sequence maxOccurs="unbounded">
             <xs:element name="package" type="package"/>
-        </xs:choice>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="scanning-filters">
-        <xs:choice maxOccurs="1">
-            <xs:element name="exclusions" type="exclusions" maxOccurs="1"/>
-            <xs:element name="inclusions" type="inclusions" maxOccurs="1"/>
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="exclusions" type="exclusions" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inclusions" type="inclusions" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="exclusions">
-        <xs:choice>
-            <xs:element name="inclusion" type="filter" />
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="exclusion" type="filter" />
         </xs:choice>
     </xs:complexType>
 
     <xs:complexType name="inclusions">
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="inclusion" type="filter" />
         </xs:choice>
     </xs:complexType>
