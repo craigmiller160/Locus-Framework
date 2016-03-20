@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2016 Craig Miller
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="io.craigmiller160.github.com/locus-schema"
+           targetNamespace="io.craigmiller160.github.com/locus-schema"
+           elementFormDefault="qualified">
+
+
+    <xs:element name="Locus" type="Locus"/>
+
+
+    <xs:complexType name="Locus">
+        <xs:choice maxOccurs="1">
+            <xs:element name="packages" type="packages"/>
+            <xs:element name="scanning-filters" type="scanning-filters"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="packages">
+        <xs:choice>
+            <xs:element name="package" type="package"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="scanning-filters">
+        <xs:choice maxOccurs="1">
+            <xs:element name="exclusions" type="exclusions" maxOccurs="1"/>
+            <xs:element name="inclusions" type="inclusions" maxOccurs="1"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="exclusions">
+        <xs:choice>
+            <xs:element name="inclusion" type="filter" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="inclusions">
+        <xs:choice>
+            <xs:element name="inclusion" type="filter" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="package">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="filter">
+        <xs:attribute name="prefix" type="xs:string" use="required"/>
+    </xs:complexType>
+
+</xs:schema>

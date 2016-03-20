@@ -15,19 +15,21 @@
   ~ limitations under the License.
   -->
 
-<Locus>
-    <packages>
-        <package name="io.craigmiller160.locus.sample"/>
-    </packages>
+<Locus xmlns="io.craigmiller160.github.com/locus-schema file:///Users/craigmiller/Locus/src/main/resources/locus-schema.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="io.craigmiller160.github.com/locus-schema file:///Users/craigmiller/Locus/src/main/resources/locus-schema.xsd">
+    <!--<packages>-->
+        <!--<package name="io.craigmiller160.locus.sample"/>-->
+    <!--</packages>-->
 
-    <scanning-filters>
-        <exclusions>
-            <exclusion prefix="org.foo"/>"
-        </exclusions>
-        <inclusions>
-            <inclusion prefix="org.foo.foo2" />
-        </inclusions>
-    </scanning-filters>
+    <!--<scanning-filters>-->
+        <!--<exclusions>-->
+            <!--<exclusion prefix="org.foo"/>"-->
+        <!--</exclusions>-->
+        <!--<inclusions>-->
+            <!--<inclusion prefix="org.foo.foo2"/>-->
+        <!--</inclusions>-->
+    <!--</scanning-filters>-->
 
 
 </Locus>
