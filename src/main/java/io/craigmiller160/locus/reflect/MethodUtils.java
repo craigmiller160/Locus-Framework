@@ -102,7 +102,6 @@ public class MethodUtils {
 
     MethodUtils(){}
 
-    //TODO needs to factor in primitives
     /**
      * Convert the parameters passed to this method for a varargs invocation
      * on the Method object provided. This is done by determining which of
@@ -168,7 +167,6 @@ public class MethodUtils {
         return newParams;
     }
 
-    //TODO need to factor in primitives
     /**
      * Convert the parameters provided for a varargs invocation. It takes
      * the parameters from the varargs index to the end of the newParams array
@@ -206,7 +204,6 @@ public class MethodUtils {
         return resultArr;
     }
 
-    //TODO needs to factor in primitives here
     /**
      * Test if the method provided can be invoked with the provided
      * parameters.
@@ -251,8 +248,7 @@ public class MethodUtils {
         return result;
     }
 
-    //TODO need to factor in primitive types here too
-    /**
+     /**
      * Compare the two provided methods and test if they are duplicates.
      * This is different from Method.equals(...), because this method
      * only takes into account method name and argument types, not
@@ -278,7 +274,6 @@ public class MethodUtils {
         return duplicate;
     }
 
-    //TODO needs to factor in primitives
     /**
      * Validate that the provided params will all work to
      * reflectively invoke the provided method.
@@ -307,7 +302,6 @@ public class MethodUtils {
         return result;
     }
 
-    //TODO need to factor in primitives
     /**
      * Validate that the provided params will all work to reflectively
      * invoke the provided method.
@@ -346,7 +340,6 @@ public class MethodUtils {
         return result;
     }
 
-    //TODO needs to factor in primitives
     /**
      * Validate that the provided params will all work to reflectively
      * invoke the provided method.
@@ -376,7 +369,6 @@ public class MethodUtils {
         return result;
     }
 
-    //TODO needs to factor in primitives
     /**
      * Validate that the provides parameters are all valid for use with
      * the varArg type provided.
