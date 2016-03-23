@@ -327,6 +327,36 @@ public class MethodUtilsTest {
     }
 
     /**
+     * Because of how important the new isPrimitive method is
+     * for MethodUtils, it is reflectively retrieved and accessed
+     * here to test it directly.
+     *
+     * @throws Exception if an error occurs outside the scope
+     * of the test.
+     */
+    @Test
+    public void testIsAcceptablePrimitive() throws Exception{
+        Method m = MethodUtils.class.getDeclaredMethod("isAcceptablePrimitive", Class.class, Class.class);
+        m.setAccessible(true);
+
+        MethodUtils mu = new MethodUtils();
+        boolean result = (Boolean) m.invoke(mu, int.class, int.class);
+        assertTrue("The primitive int was able to accept the other primitive int", result);
+
+        result = (Boolean) m.invoke(mu, int.class, Integer.class);
+        assertTrue("The primitive int was able to accept the wrapper Integer", result);
+
+        result = (Boolean) m.invoke(mu, Integer.class, int.class);
+        assertTrue("The wrapper Integer was able to accept the primitive int", result);
+
+        result = (Boolean) m.invoke(mu, int.class, Boolean.class);
+        assertFalse("The primitive int was able to accept the wrapper Boolean", result);
+
+        result = (Boolean) m.invoke(mu, long.class, int.class);
+        assertTrue("The primitive long wouldn't accept the primitive int", result);
+    }
+
+    /**
      * Simple utility method for the regularly used operation
      * to get the method to test in the test methods.
      *
@@ -384,6 +414,10 @@ public class MethodUtilsTest {
 
         public String method5(Object o1, Number...nums){
             return o1.toString() + " " + Arrays.toString(nums);
+        }
+
+        public String method6(int i){
+            return "Param: " + i;
         }
 
     }

@@ -25,6 +25,16 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class LocusInvoke {
 
+    /**
+     * Reflectively invoke any method contained in the holder
+     * argument, passing to it the provided parameters.
+     *
+     * @param oam the holder of the method to invoke and its source.
+     * @param params the parameters to use to invoke the method.
+     * @return the result of the method invocation, or null if there
+     *          was none.
+     * @throws LocusReflectiveException if unable to reflectively invoke the method.
+     */
     public static Object invokeMethod(ObjectAndMethod oam, Object...params) throws LocusReflectiveException{
         Object result = null;
         if(MethodUtils.isValidInvocation(oam.getMethod(), params)){
@@ -36,11 +46,9 @@ public class LocusInvoke {
                 result = oam.getMethod().invoke(oam.getSource(), params);
             }
             catch(InvocationTargetException ex){
-                //TODO logging?
                 throw new LocusInvocationException("Method invoked threw exception", ex.getCause());
             }
             catch(ReflectiveOperationException ex){
-                //TODO logging?
                 throw new LocusReflectiveException("Unable to reflectively invoke method " + oam.getMethod().getName() +
                         " on " + oam.getSource().getClass().getName(), ex);
             }

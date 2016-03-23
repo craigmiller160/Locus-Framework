@@ -45,4 +45,28 @@ public class ModelOne {
     public void setSecondField(String secondField) {
         this.secondField = secondField;
     }
+
+    public void setFields(String...fields){
+        if(fields.length > 0){
+            firstField = fields[0];
+        }
+
+        if(fields.length > 1){
+            secondField = fields[1];
+        }
+    }
+
+    public String getField(int fieldNumber){
+        String result = null;
+        switch(fieldNumber){
+            case 1:
+                result = firstField;
+                break;
+            case 2:
+                result = secondField;
+                break;
+        }
+
+        return result;
+    }
 }
