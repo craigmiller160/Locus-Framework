@@ -31,11 +31,11 @@ public class LocusStorage {
 
     private static LocusStorage instance;
 
-    private MultiValueMap<String,ObjectAndMethod> modelPropSetters;
-    private MultiValueMap<String,ObjectAndMethod> modelPropGetters;
+    private Map<String,ObjectAndMethod> modelPropSetters;
+    private Map<String,ObjectAndMethod> modelPropGetters;
 
     private MultiValueMap<String,ClassAndMethod> viewPropSetters;
-    private MultiValueMap<String,ClassAndMethod> viewPropGetters;
+    private Map<String,ClassAndMethod> viewPropGetters;
     private ViewObjectTracker viewInstances;
 
     private Map<String,Boolean> controllerSingletons;
@@ -54,11 +54,11 @@ public class LocusStorage {
     }
 
     LocusStorage(){
-        modelPropSetters = new MultiValueMap<>();
-        modelPropGetters = new MultiValueMap<>();
+        modelPropSetters = new HashMap<>();
+        modelPropGetters = new HashMap<>();
 
         viewPropSetters = new MultiValueMap<>();
-        viewPropGetters = new MultiValueMap<>();
+        viewPropGetters = new HashMap<>();
         viewInstances = new ViewObjectTracker();
 
         controllerSingletons = new HashMap<>();
@@ -71,27 +71,23 @@ public class LocusStorage {
      */
 
     public void addModelPropSetter(String propName, ObjectAndMethod oam){
-        modelPropSetters.putValue(propName, oam);
+        modelPropSetters.put(propName, oam);
     }
 
-    public void removeModelPropSetter(ObjectAndMethod oam){
-        modelPropSetters.removeValue(oam);
-    }
-
-    public void removeAllSettersForModelProp(String propName){
+    public void removeModelPropSetter(String propName){
         modelPropSetters.remove(propName);
     }
 
-    public Collection<ObjectAndMethod> getSettersForModelProp(String propName){
+    public ObjectAndMethod getSetterForModelProp(String propName){
         return modelPropSetters.get(propName);
     }
 
-    public MultiValueMap<String,ObjectAndMethod> getAllModelPropSetters(){
+    public Map<String,ObjectAndMethod> getAllModelPropSetters(){
         return modelPropSetters;
     }
 
     public int getModelPropSetterCount(){
-        return modelPropSetters.fullSize();
+        return modelPropSetters.size();
     }
 
     /*
@@ -99,27 +95,23 @@ public class LocusStorage {
      */
 
     public void addModelPropGetter(String propName, ObjectAndMethod oam){
-        modelPropGetters.putValue(propName, oam);
+        modelPropGetters.put(propName, oam);
     }
 
-    public void removeModelPropGetter(ObjectAndMethod oam){
-        modelPropGetters.removeValue(oam);
-    }
-
-    public void removeAllGettersForModelProp(String propName){
+    public void removeModelPropGetter(String propName){
         modelPropGetters.remove(propName);
     }
 
-    public Collection<ObjectAndMethod> getGettersForModelProp(String propName){
+    public ObjectAndMethod getModelPropGetter(String propName){
         return modelPropGetters.get(propName);
     }
 
-    public MultiValueMap<String,ObjectAndMethod> getAllModelPropGetters(){
+    public Map<String,ObjectAndMethod> getAllModelPropGetters(){
         return modelPropGetters;
     }
 
     public int getModelPropGetterCount(){
-        return modelPropGetters.fullSize();
+        return modelPropGetters.size();
     }
 
     /*
@@ -155,27 +147,23 @@ public class LocusStorage {
      */
 
     public void addViewPropGetter(String propName, ClassAndMethod cam){
-        viewPropGetters.putValue(propName, cam);
+        viewPropGetters.put(propName, cam);
     }
 
-    public void removeViewPropGetter(ClassAndMethod cam){
-        viewPropGetters.removeValue(cam);
-    }
-
-    public void removeAllGettersForViewProp(String propName){
+    public void removeViewPropGetter(String propName){
         viewPropGetters.remove(propName);
     }
 
-    public Collection<ClassAndMethod> getGettersForViewProp(String propName){
+    public ClassAndMethod getGetterForViewProp(String propName){
         return viewPropGetters.get(propName);
     }
 
-    public MultiValueMap<String,ClassAndMethod> getAllViewPropGetters(){
+    public Map<String,ClassAndMethod> getAllViewPropGetters(){
         return viewPropGetters;
     }
 
     public int getViewPropGetterCount(){
-        return viewPropGetters.fullSize();
+        return viewPropGetters.size();
     }
 
     /*

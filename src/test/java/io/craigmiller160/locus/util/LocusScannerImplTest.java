@@ -53,28 +53,18 @@ public class LocusScannerImplTest {
 
         scanner.scanPackage(packageName, storage, scannerExclusions);
 
-        MultiValueMap<String,ObjectAndMethod> modelPropSetters = storage.getAllModelPropSetters();
-        MultiValueMap<String,ObjectAndMethod> modelPropGetters = storage.getAllModelPropGetters();
+        Map<String,ObjectAndMethod> modelPropSetters = storage.getAllModelPropSetters();
+        Map<String,ObjectAndMethod> modelPropGetters = storage.getAllModelPropGetters();
         Map<String,Class<?>> controllerTypes = storage.getAllControllerTypes();
         Map<String,Boolean> controllerSingletons = storage.getAllControllerSingletons();
         MultiValueMap<String,ClassAndMethod> viewPropSetters = storage.getAllViewPropSetters();
-        MultiValueMap<String,ClassAndMethod> viewPropGetters = storage.getAllViewPropGetters();
+        Map<String,ClassAndMethod> viewPropGetters = storage.getAllViewPropGetters();
 
         Set<String> modelSetterKeys = modelPropSetters.keySet();
         Set<String> modelGetterKeys = modelPropGetters.keySet();
 
         assertEquals("Wrong number of model setter props", modelSetterKeys.size(), 3);
         assertEquals("Wrong number of model getter props", modelGetterKeys.size(), 3);
-
-        for(String key : modelSetterKeys){
-            Collection<ObjectAndMethod> modelSetters = modelPropSetters.get(key);
-            assertEquals("Wrong number of methods for model setter prop " + key, modelSetters.size(), 1);
-        }
-
-        for(String key : modelGetterKeys){
-            Collection<ObjectAndMethod> modelGetters = modelPropGetters.get(key);
-            assertEquals("Wrong number of methods for model getter prop " + key, modelGetters.size(), 1);
-        }
 
         Set<String> controllerNames = controllerTypes.keySet();
         assertEquals("Wrong number of controller types", controllerNames.size(), 1);
@@ -91,11 +81,6 @@ public class LocusScannerImplTest {
         for(String key : viewSetterKeys){
             Collection<ClassAndMethod> viewSetters = viewPropSetters.get(key);
             assertEquals("Wrong number of methods for view setter prop " + key, viewSetters.size(), 1);
-        }
-
-        for(String key : viewGetterKeys){
-            Collection<ClassAndMethod> viewGetters = viewPropGetters.get(key);
-            assertEquals("Wrong number of methods for view getter prop " + key, viewGetters.size(), 1);
         }
     }
 

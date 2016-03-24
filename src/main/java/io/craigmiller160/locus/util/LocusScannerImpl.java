@@ -96,7 +96,7 @@ public class LocusScannerImpl implements LocusScanner{
                 else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
-                    validateUniqueMethod(propName, VIEW_CATEGORY, cam, storage.getGettersForViewProp(propName));
+                    validateUniqueMethod(propName, VIEW_CATEGORY, cam, storage.getAllViewPropGetters().values());
                     logger.trace("Adding view property getter to storage. Property: " + propName + " | Getter: " + cam.toString());
                     storage.addViewPropGetter(propName, cam);
                 }
@@ -125,14 +125,14 @@ public class LocusScannerImpl implements LocusScanner{
                 if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
-                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getSettersForModelProp(propName));
+                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropSetters().values());
                     logger.trace("Adding model property setter to storage. Property: " + propName + " | Setter: " + oam.toString());
                     storage.addModelPropSetter(propName, oam);
                 }
                 else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
-                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getGettersForModelProp(propName));
+                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropGetters().values());
                     logger.trace("Adding model property getter to storage. Property: " + propName + " | Getter: " + oam.toString());
                     storage.addModelPropGetter(propName, oam);
                 }
@@ -172,11 +172,11 @@ public class LocusScannerImpl implements LocusScanner{
         Method m1 = rmh.getMethod();
         for(ReflectiveMethodHolder<?> rmh2 : otherOams){
             Method m2= rmh2.getMethod();
-            if(MethodUtils.isDuplicateMethod(m1, m2)){
-                throw new LocusReflectiveException("Identical methods for single property in single category not allowed. Please be aware that identical methods from a superclass can cause this exception." + System.lineSeparator() +
+            if(m1.getName().equals(m2.getName())){
+                throw new LocusReflectiveException("Identical methods for single property in single category not allowed." + System.lineSeparator() +
                         "   Category: " + category + " | Property: " + propName + System.lineSeparator() +
-                        "   Class: " + rmh.getSourceType().getName() + " | Method: " + m1.getName() + " | Params: " + Arrays.toString(m1.getParameterTypes()) + System.lineSeparator() +
-                        "   Class: " + rmh2.getSourceType().getName() + " | Method: " + m2.getName() + " | Params: " + Arrays.toString(m2.getParameterTypes())
+                        "   Class: " + rmh.getSourceType().getName() + " | Method: " + m1.getName() +
+                        "   Class: " + rmh2.getSourceType().getName() + " | Method: " + m2.getName()
                 );
             }
         }
