@@ -164,6 +164,18 @@ public class MethodUtilsTest {
     }
 
     /**
+     * Test validating a method with primitive parameters.
+     * The primitive params of the method and the ones passed
+     * to it are identical.
+     */
+    @Test
+    public void testPrimitivesIdenticalParams(){
+        Method method = getMethod("method6");
+        assertNotNull("Method for test wasn't retrieved", method);
+        assertTrue(MethodUtils.isValidInvocation(method, 22));
+    }
+
+    /**
      * Test validating a method with polymorphic values.
      * That is, th values provided are subclasses of what is
      * expected. This test also tests this with a VarArgs
