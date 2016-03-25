@@ -38,7 +38,8 @@ public class LocusControllerTest {
     private static final Logger logger = LoggerFactory.getLogger(LocusControllerTest.class);
 
     /**
-     * Get a LocusStorage instance for use in tests.
+     * Get a LocusStorage instance for use in tests. It's created reflectively
+     * because there's no access to its constructor normally.
      *
      * @return the LocusStorage instance.
      * @throws RuntimeException if unable to create the LocusStorage.
