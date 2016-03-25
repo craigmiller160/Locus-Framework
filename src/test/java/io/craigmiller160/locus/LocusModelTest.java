@@ -40,6 +40,11 @@ public class LocusModelTest {
     private static LocusModel locusModel;
     private static ModelOne modelOne;
 
+    /**
+     * Static initializer to set up the LocusStorage properly for
+     * use in these tests. It's created reflectively because
+     * there's no access to its constructor normally.
+     */
     static{
         try{
             Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
