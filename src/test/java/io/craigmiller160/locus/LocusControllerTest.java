@@ -62,8 +62,8 @@ public class LocusControllerTest {
      */
     @Test
     public void testGetControllerNonSingleton(){
-        LocusController locusController = new LocusController();
         LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         Object controller = locusController.getController("ControllerOne");
@@ -77,8 +77,8 @@ public class LocusControllerTest {
      */
     @Test
     public void testGetControllerWrongName(){
-        LocusController locusController = new LocusController();
         LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         boolean exceptionThrown = false;
@@ -98,8 +98,8 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerSingleton(){
-        LocusController locusController = new LocusController();
         LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, true);
 
         Object one = locusController.getController("ControllerOne");
@@ -123,8 +123,8 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerSpecificType(){
-        LocusController locusController = new LocusController();
         LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         ControllerOne cOne = locusController.getController("ControllerOne", ControllerOne.class);
@@ -139,8 +139,8 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerInvalidType(){
-        LocusController locusController = new LocusController();
         LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         boolean exceptionThrown = false;
