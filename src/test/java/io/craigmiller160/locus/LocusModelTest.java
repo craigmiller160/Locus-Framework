@@ -42,9 +42,9 @@ public class LocusModelTest {
 
     static{
         try{
-            Constructor constructor = LocusStorage.class.getDeclaredConstructor();
+            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
             constructor.setAccessible(true);
-            storage = (LocusStorage) constructor.newInstance();
+            storage = constructor.newInstance();
 
             modelOne = new ModelOne();
             Method[] methods = ModelOne.class.getDeclaredMethods();
@@ -232,4 +232,74 @@ public class LocusModelTest {
         assertTrue("Invalid LongField value", locusModel.getLong("LongField") == 9876543210L);
     }
 
-}   //TODO going to need a special test for getting a primitive
+    /**
+     * Test getting a boolean value.
+     */
+    @Test
+    public void testGetBoolean(){
+        //If testSetBoolean runs before this, then the field will already be true
+        //If nothing has run, it'll be false by default
+        if(!modelOne.getBooleanField()){
+            modelOne.setBooleanField(true);
+        }
+
+        assertTrue("Invalid BooleanField value", locusModel.getBoolean("BooleanField"));
+    }
+
+    /**
+     * Test getting a String value.
+     */
+    @Test
+    public void testGetString(){
+        modelOne.setStringField("AnotherValue");
+        assertEquals("Invalid StringField value", locusModel.getString("StringField"), "AnotherValue");
+    }
+
+    /**
+     * Test getting a Character value.
+     */
+    @Test
+    public void testGetCharacter(){
+        modelOne.setCharField('z');
+        assertTrue("Invalid CharField value", locusModel.getCharacter("CharField") == 'z');
+    }
+
+    /**
+     * Test getting an Object value.
+     */
+    @Test
+    public void setGetObject(){
+        //If testSetObject has run before this, then the field won't be null.
+        //If nothing has run, it'll be null by default
+        if(modelOne.getObjectField() == null){
+            modelOne.setObjectField(new Object());
+        }
+
+        assertNotNull("Invalid ObjectField value", locusModel.getObject("ObjectField"));
+    }
+
+    /**
+     * Test getting an Object, where the value returned
+     * is a subclass of object.
+     */
+    @Test
+    public void testGetWithInheritance(){
+        BigDecimal bigDecimal = new BigDecimal(567890.1234);
+        modelOne.setObjectField(bigDecimal);
+        assertEquals("Invalid ObjectField value", locusModel.getObject("ObjectField"), bigDecimal);
+    }
+
+    /**
+     * Test getting a value with the generic method.
+     */
+    @Test
+    public void testGenericGet(){
+        BigDecimal bigDecimal = new BigDecimal(543210.6789);
+        modelOne.setObjectField(bigDecimal);
+        assertEquals("Invalid class type returned",
+                locusModel.getValue("ObjectField", BigDecimal.class).getClass(),
+                BigDecimal.class);
+        assertEquals("Invalid ObjectField value", locusModel.getValue("ObjectField", BigDecimal.class), bigDecimal);
+    }
+
+}
