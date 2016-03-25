@@ -330,9 +330,9 @@ public class MethodUtilsTest {
      */
     @Test
     public void testIsDuplicateMethod() throws Exception{
-        Method m1 = ModelOne.class.getMethod("setFirstField", String.class);
+        Method m1 = ModelOne.class.getMethod("setStringField", String.class);
         Method m2 = ModelTwo.class.getMethod("setFieldThree", String.class);
-        Method m3 = ModelTwo.class.getMethod("setFirstField", String.class);
+        Method m3 = ModelTwo.class.getMethod("setStringField", String.class);
 
         assertTrue("Duplicate methods weren't recognized", MethodUtils.isDuplicateMethod(m1, m3));
         assertFalse("Non-Duplicate methods recognized as duplicate", MethodUtils.isDuplicateMethod(m1, m2));

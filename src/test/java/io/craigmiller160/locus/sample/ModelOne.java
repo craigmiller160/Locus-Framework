@@ -18,6 +18,7 @@ package io.craigmiller160.locus.sample;
 
 import io.craigmiller160.locus.annotations.Model;
 
+
 /**
  * A sample Model class to use for testing
  * this framework.
@@ -27,46 +28,118 @@ import io.craigmiller160.locus.annotations.Model;
 @Model
 public class ModelOne {
 
-    private String firstField;
-    private String secondField;
+    private String stringField;
+    private int intField;
+    private float floatField;
+    private double doubleField;
+    private short shortField;
+    private byte byteField;
+    private long longField;
+    private boolean booleanField;
+    private char charField;
+    private Object objectField;
 
-    public String getFirstField() {
-        return firstField;
+    public String getStringField() {
+        return stringField;
     }
 
-    public void setFirstField(String firstField) {
-        this.firstField = firstField;
+    public void setStringField(String stringField) {
+        this.stringField = stringField;
     }
 
-    public String getSecondField() {
-        return secondField;
+    public int getIntField() {
+        return intField;
     }
 
-    public void setSecondField(String secondField) {
-        this.secondField = secondField;
+    public void setIntField(int intField) {
+        this.intField = intField;
     }
 
-    public void setFields(String...fields){
+    public void setFields(Object...fields){
         if(fields.length > 0){
-            firstField = fields[0];
+            stringField = (String) fields[0];
         }
 
         if(fields.length > 1){
-            secondField = fields[1];
+            intField = (Integer) fields[1];
         }
     }
 
-    public String getField(int fieldNumber){
-        String result = null;
+    public float getFloatField() {
+        return floatField;
+    }
+
+    public void setFloatField(float floatField) {
+        this.floatField = floatField;
+    }
+
+    public double getDoubleField() {
+        return doubleField;
+    }
+
+    public void setDoubleField(double doubleField) {
+        this.doubleField = doubleField;
+    }
+
+    public short getShortField() {
+        return shortField;
+    }
+
+    public void setShortField(short shortField) {
+        this.shortField = shortField;
+    }
+
+    public byte getByteField() {
+        return byteField;
+    }
+
+    public void setByteField(byte byteField) {
+        this.byteField = byteField;
+    }
+
+    public long getLongField() {
+        return longField;
+    }
+
+    public void setLongField(long longField) {
+        this.longField = longField;
+    }
+
+    public boolean getBooleanField() {
+        return booleanField;
+    }
+
+    public void setBooleanField(boolean booleanField) {
+        this.booleanField = booleanField;
+    }
+
+    public char getCharField() {
+        return charField;
+    }
+
+    public void setCharField(char charField) {
+        this.charField = charField;
+    }
+
+    public Object getField(int fieldNumber){
+        Object result = null;
         switch(fieldNumber){
             case 1:
-                result = firstField;
+                result = stringField;
                 break;
             case 2:
-                result = secondField;
+                result = intField;
                 break;
         }
 
         return result;
+    }
+
+    public Object getObjectField() {
+        return objectField;
+    }
+
+    public void setObjectField(Object objectField) {
+        this.objectField = objectField;
     }
 }

@@ -78,7 +78,7 @@ public class LocusStorage {
         modelPropSetters.remove(propName);
     }
 
-    public ObjectAndMethod getSetterForModelProp(String propName){
+    public ObjectAndMethod getModelPropSetter(String propName){
         return modelPropSetters.get(propName);
     }
 
@@ -154,7 +154,7 @@ public class LocusStorage {
         viewPropGetters.remove(propName);
     }
 
-    public ClassAndMethod getGetterForViewProp(String propName){
+    public ClassAndMethod getViewPropGetter(String propName){
         return viewPropGetters.get(propName);
     }
 

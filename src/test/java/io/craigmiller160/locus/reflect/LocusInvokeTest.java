@@ -35,7 +35,7 @@ public class LocusInvokeTest {
     @Test
     public void testValidSingleParamNoReturn() throws Exception{
         ModelOne modelOne = new ModelOne();
-        Method m = modelOne.getClass().getMethod("setFirstField", String.class);
+        Method m = modelOne.getClass().getMethod("setStringField", String.class);
         ObjectAndMethod oam = new ObjectAndMethod(modelOne, m);
 
         //Storing the value in a variable for easier testing
@@ -43,34 +43,34 @@ public class LocusInvokeTest {
 
         LocusInvoke.invokeMethod(oam, newValue);
 
-        assertEquals("Incorrect value for property FirstField in ModelOne", modelOne.getFirstField(), newValue);
+        assertEquals("Incorrect value for property StringField in ModelOne", modelOne.getStringField(), newValue);
     }
 
     @Test
     public void testValidMultipleParamNoReturn() throws Exception{
         ModelOne modelOne = new ModelOne();
-        Method m = modelOne.getClass().getMethod("setFields", String[].class);
+        Method m = modelOne.getClass().getMethod("setFields", Object[].class);
         ObjectAndMethod oam = new ObjectAndMethod(modelOne, m);
 
         //Storing the values in a variable for easier testing
         String newValue1 = "NewValue1";
-        String newValue2 = "NewValue2";
+        int newValue2 = 101;
 
         LocusInvoke.invokeMethod(oam, newValue1, newValue2);
 
-        assertEquals("Incorrect value for property FirstField in ModelOne", modelOne.getFirstField(), newValue1);
-        assertEquals("Incorrect value for property SecondField in ModelOne", modelOne.getSecondField(), newValue2);
+        assertEquals("Incorrect value for property StringField in ModelOne", modelOne.getStringField(), newValue1);
+        assertEquals("Incorrect value for property IntField in ModelOne", modelOne.getIntField(), newValue2);
     }
 
     @Test
     public void testValidNoParamWithReturn() throws Exception{
         ModelOne modelOne = new ModelOne();
-        Method m = modelOne.getClass().getMethod("getFirstField");
+        Method m = modelOne.getClass().getMethod("getStringField");
         ObjectAndMethod oam = new ObjectAndMethod(modelOne, m);
 
         //Storing the value in a variable for easier testing
         String newValue = "NewValue";
-        modelOne.setFirstField(newValue);
+        modelOne.setStringField(newValue);
 
         Object result = LocusInvoke.invokeMethod(oam);
 
@@ -88,9 +88,9 @@ public class LocusInvokeTest {
 
         //Storing the value in a variable for easier testing
         String newValue1 = "NewValue1";
-        String newValue2 = "NewValue2";
-        modelOne.setFirstField(newValue1);
-        modelOne.setSecondField(newValue2);
+        int newValue2 = 101;
+        modelOne.setStringField(newValue1);
+        modelOne.setIntField(newValue2);
 
         Object result1 = LocusInvoke.invokeMethod(oam, 1);
 

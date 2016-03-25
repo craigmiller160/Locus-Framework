@@ -63,8 +63,8 @@ public class LocusScannerImplTest {
         Set<String> modelSetterKeys = modelPropSetters.keySet();
         Set<String> modelGetterKeys = modelPropGetters.keySet();
 
-        assertEquals("Wrong number of model setter props", modelSetterKeys.size(), 3);
-        assertEquals("Wrong number of model getter props", modelGetterKeys.size(), 3);
+        assertEquals("Wrong number of model setter props", modelSetterKeys.size(), 11);
+        assertEquals("Wrong number of model getter props", modelGetterKeys.size(), 11);
 
         Set<String> controllerNames = controllerTypes.keySet();
         assertEquals("Wrong number of controller types", controllerNames.size(), 1);

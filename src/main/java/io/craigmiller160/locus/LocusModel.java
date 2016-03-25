@@ -26,11 +26,17 @@ import io.craigmiller160.locus.util.LocusStorage;
  */
 public class LocusModel {
 
-    private static final LocusStorage storage = LocusStorage.getInstance();
+    private final LocusStorage storage;
 
-    LocusModel(){}
+    LocusModel(){
+        this.storage = LocusStorage.getInstance();
+    }
 
-    public void setInt(String propName, int... value) throws LocusException{
+    LocusModel(LocusStorage storage){
+        this.storage = storage;
+    }
+
+    public void setInt(String propName, int value) throws LocusException{
         setValue(propName, value);
     }
 
@@ -62,6 +68,10 @@ public class LocusModel {
         setValue(propName, value);
     }
 
+    public void setCharacter(String propName, char value) throws LocusException{
+        setValue(propName, value);
+    }
+
     //TODO consider having convenience methods for interacting with collections & arrays
 
     public void setObject(String propName, Object value) throws LocusException{
@@ -69,8 +79,7 @@ public class LocusModel {
     }
 
     public <T> void setValue(String propName, T value) throws LocusException{
-        ObjectAndMethod oam = getMethod(propName, Locus.SETTER);
-        LocusInvoke.invokeMethod(oam, value);
+        LocusInvoke.invokeMethod(getMethod(propName, Locus.SETTER), value);
     }
 
     public int getInt(String propName) throws LocusException{
@@ -105,10 +114,15 @@ public class LocusModel {
         return getValue(propName, String.class);
     }
 
+    public char getCharacter(String propName) throws LocusException{
+        return getValue(propName, Character.class);
+    }
+
     public Object getObject(String propName) throws LocusException{
         return LocusInvoke.invokeMethod(getMethod(propName, Locus.GETTER));
     }
 
+    //TODO this is going to need work, for the primitives
     public <T> T getValue(String propName, Class<T> valueType) throws LocusException{
         Object result = getObject(propName);
         if(!(valueType.isAssignableFrom(result.getClass()))){
@@ -123,11 +137,11 @@ public class LocusModel {
         ObjectAndMethod oam = null;
         String typeName = "";
         if(methodType == Locus.GETTER){
-            //TODO oam = storage.getModelPropGetter(propName);
+            oam = storage.getModelPropGetter(propName);
             typeName = "getter";
         }
         else{
-            //TODO oam = storage.getModelPropSetter(propName);
+            oam = storage.getModelPropSetter(propName);
             typeName = "setter";
         }
 

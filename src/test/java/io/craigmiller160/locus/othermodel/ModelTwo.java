@@ -33,16 +33,16 @@ import io.craigmiller160.locus.annotations.Model;
 @Model
 public class ModelTwo {
 
-    private String firstField;
+    private String stringField;
     private String fieldThree;
     private String fieldFour;
 
-    public void setFirstField(String firstField){
-        this.firstField = firstField;
+    public void setStringField(String stringField){
+        this.stringField = stringField;
     }
 
-    public String getFirstField(){
-        return firstField;
+    public String getStringField(){
+        return stringField;
     }
 
     public String getFieldThree() {

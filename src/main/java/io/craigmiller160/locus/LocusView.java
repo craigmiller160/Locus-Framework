@@ -23,6 +23,8 @@ import io.craigmiller160.locus.util.LocusStorage;
  */
 public class LocusView {
 
+    //TODO need to add char to this
+
     //TODO There won't be any manual view property setting, but getting is necessary
 
     //TODO will primitive types work with the reflection, or will wrapper types be needed?
