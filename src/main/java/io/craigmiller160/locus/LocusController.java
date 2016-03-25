@@ -22,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Locus component for managing controllers.
+ * One of the core components of the Locus Framework.
+ * This class is the component that abstractly links
+ * the controllers to the views.
  *
  * Created by craig on 3/12/16.
  */
@@ -30,9 +32,32 @@ public class LocusController {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusController.class);
 
-    private static final LocusStorage storage = LocusStorage.getInstance();
+    /**
+     * The LocusStorage instance containing the classes managed
+     * by this framework.
+     */
+    private final LocusStorage storage;
 
-    LocusController(){}
+    /**
+     * The default constructor for this class.
+     */
+    LocusController(){
+        this.storage = LocusStorage.getInstance();
+    }
+
+    /**
+     * A special constructor provided exclusively for
+     * testing. It allows the LocusStorage to be set
+     * externally a more controlled testing environment.
+     *
+     * @param storage the LocusStorage, passed this way
+     *                primarily for more controlled testing.
+     */
+    LocusController(LocusStorage storage){
+        this.storage = storage;
+    }
+
+
 
     public Object getController(String controllerName) throws LocusException{
         Object controller = null;
@@ -44,7 +69,7 @@ public class LocusController {
 
         boolean singleton = storage.isControllerSingleton(controllerName);
 
-        logger.debug("Retrieving controller. Name: " + controllerName + " | Singleton: " + singleton);
+        logger.trace("Retrieving controller. Name: " + controllerName + " | Singleton: " + singleton);
 
         if(singleton){
             controller = storage.getControllerSingletonInstance(controllerName);

@@ -22,6 +22,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -35,10 +37,33 @@ public class LocusControllerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusControllerTest.class);
 
+    /**
+     * Get a LocusStorage instance for use in tests.
+     *
+     * @return the LocusStorage instance.
+     * @throws RuntimeException if unable to create the LocusStorage.
+     */
+    private LocusStorage getStorage(){
+        LocusStorage storage = null;
+        try{
+            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            storage = constructor.newInstance();
+        }
+        catch(Exception ex){
+            throw new RuntimeException("Unable to reflectively create LocusStorage for test", ex);
+        }
+
+        return storage;
+    }
+
+    /**
+     * Test getting a non-singleton controller.
+     */
     @Test
     public void testGetControllerNonSingleton(){
         LocusController locusController = new LocusController();
-        LocusStorage storage = LocusStorage.getInstance();
+        LocusStorage storage = getStorage();
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         Object controller = locusController.getController("ControllerOne");
@@ -46,10 +71,14 @@ public class LocusControllerTest {
         assertEquals("Controller wrong type", controller.getClass(), ControllerOne.class);
     }
 
+    /**
+     * Test getting a controller with the wrong name, which should
+     * fail.
+     */
     @Test
     public void testGetControllerWrongName(){
         LocusController locusController = new LocusController();
-        LocusStorage storage = LocusStorage.getInstance();
+        LocusStorage storage = getStorage();
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         boolean exceptionThrown = false;
@@ -64,10 +93,13 @@ public class LocusControllerTest {
         assertTrue("Exception was not thrown for wrong name", exceptionThrown);
     }
 
+    /**
+     * Test getting a singleton controller.
+     */
     @Test
     public void testControllerSingleton(){
         LocusController locusController = new LocusController();
-        LocusStorage storage = LocusStorage.getInstance();
+        LocusStorage storage = getStorage();
         storage.addControllerType("ControllerOne", ControllerOne.class, true);
 
         Object one = locusController.getController("ControllerOne");
@@ -86,21 +118,29 @@ public class LocusControllerTest {
         assertEquals("Controller refs don't have identical ID fields", cOne.getId(), cTwo.getId());
     }
 
+    /**
+     * Test getting a controller with a specific type.
+     */
     @Test
     public void testControllerSpecificType(){
         LocusController locusController = new LocusController();
-        LocusStorage storage = LocusStorage.getInstance();
+        LocusStorage storage = getStorage();
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         ControllerOne cOne = locusController.getController("ControllerOne", ControllerOne.class);
 
         assertNotNull("Controller instance is null", cOne);
+        assertEquals("Controller instance is wrong type", cOne.getClass(), ControllerOne.class);
     }
 
+    /**
+     * Test getting a controller with a specific type, but
+     * with the wrong type being specified so it should fail.
+     */
     @Test
     public void testControllerInvalidType(){
         LocusController locusController = new LocusController();
-        LocusStorage storage = LocusStorage.getInstance();
+        LocusStorage storage = getStorage();
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         boolean exceptionThrown = false;
