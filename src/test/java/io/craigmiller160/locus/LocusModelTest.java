@@ -64,7 +64,7 @@ public class LocusModelTest {
                 }
             }
 
-            locusModel = new LocusModel(storage);
+            locusModel = new LocusModel(storage, null);
         }
         catch(Exception ex){
             throw new RuntimeException("Fatal exception at initialization", ex);

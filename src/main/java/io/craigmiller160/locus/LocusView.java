@@ -16,23 +16,29 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.reflect.ClassAndMethod;
+import io.craigmiller160.locus.reflect.LocusInvoke;
+import io.craigmiller160.locus.reflect.LocusReflectiveException;
+import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.util.LocusStorage;
+
+import java.lang.ref.WeakReference;
+import java.util.Collection;
 
 /**
  * Created by craig on 3/12/16.
  */
 public class LocusView {
 
-    //TODO need to add char to this
+    private final LocusStorage storage;
 
-    //TODO There won't be any manual view property setting, but getting is necessary
+    LocusView(){
+        this.storage = LocusStorage.getInstance();
+    }
 
-    //TODO will primitive types work with the reflection, or will wrapper types be needed?
-    //TODO consider if declaring the exceptions in the throws clause is really necessary, since it is a runtime exception
-
-    private static final LocusStorage storage = LocusStorage.getInstance();
-
-    LocusView(){}
+    LocusView(LocusStorage storage){
+        this.storage = storage;
+    }
 
     public void registerView(Object view){
         //TODO this is how the view instances are locked in
@@ -66,11 +72,13 @@ public class LocusView {
         //TODO
     }
 
-    public void setString(String propName, String value) throws LocusException{
+    public void setCharacter(String propName, char value) throws LocusException{
         //TODO
     }
 
-    //TODO consider having convenience methods for interacting with collections & arrays
+    public void setString(String propName, String value) throws LocusException{
+        //TODO
+    }
 
     public void setObject(String propName, Object value) throws LocusException{
         //TODO
@@ -79,8 +87,6 @@ public class LocusView {
     public <T> void setValue(String propName, T value) throws LocusException{
         //TODO
     }
-
-    //TODO what about multiple areas in a view displaying a value with the same name?
 
     public int getInt(String propName) throws LocusException{
         //TODO
@@ -122,14 +128,71 @@ public class LocusView {
         return "";
     }
 
-    public Object getObject(String propName) throws LocusException{
+    public char getCharacter(String propName) throws LocusException{
         //TODO
-        return null;
+        return 'a';
+    }
+
+    public Object getObject(String propName) throws LocusException{
+        ClassAndMethod cam = getMethod(propName, Locus.GETTER);
+        Collection<WeakReference<?>> instances = storage.getViewInstancesForClass(cam.getSource());
+
+        ObjectAndMethod oam = null;
+        if(instances != null){
+            if(instances.size() != 1){
+                throw new LocusReflectiveException("Cannot have more than 1 instance of a view class to invoke a getter on, found " + instances.size() +
+                        "Class: " + cam.getSourceType() + " | Method: " + cam.getMethod().getName()
+
+                );
+            }
+            else{
+                oam = new ObjectAndMethod(instances.iterator().next(), cam.getMethod());
+            }
+        }
+
+        return LocusInvoke.invokeMethod(oam);
     }
 
     public <T> T getValue(String propName, Class<T> valueType) throws LocusException{
-        //TODO
+//        Object result = getObject(propName);
+//        if(!(valueType.isAssignableFrom(result.getClass()))){
+//            throw new LocusInvalidTypeException("Return value for getting \"" + propName +
+//                    "\" doesn't match expected type. Expected: " + valueType.getName() +
+//                    " Actual: " + result.getClass().getName());
+//        }
+//
+//        return (T) result;
         return null;
+    }
+
+    /**
+     * Get the appropriate method and its corresponding
+     * object instance from the storage, to be reflectively
+     * invoked by the caller.
+     *
+     * @param propName the name of the property to get the method for.
+     * @param methodType the type of method (setter, getter, etc) to
+     *                   retrieve.
+     * @return the ObjectAndMethod of the specified type for the property.
+     * @throws LocusReflectiveException if unable to find a method matching
+     *                   the specifications.
+     */
+    private ClassAndMethod getMethod(String propName, int methodType) throws LocusReflectiveException{
+        ClassAndMethod cam = null;
+        String typeName = "";
+        if(methodType == Locus.GETTER){
+            //TODO cam = storage.getViewPropGetter(propName);
+            typeName = "getter";
+        }
+        else{
+            //TODO oam = storage.getModelPropSetter(propName);
+            typeName = "setter";
+        }
+
+        if(cam == null){
+            throw new LocusReflectiveException("No view " + typeName + " found matching the property name \"" + propName + "\"");
+        }
+        return cam;
     }
 
 }

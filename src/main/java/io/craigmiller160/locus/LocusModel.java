@@ -41,22 +41,32 @@ public class LocusModel {
     private final LocusStorage storage;
 
     /**
+     * The LocusView instance, used for updating views
+     * after changes to the models.
+     */
+    private final LocusView locusView;
+
+    /**
      * The default constructor for this class.
      */
     LocusModel(){
         this.storage = LocusStorage.getInstance();
+        this.locusView = new LocusView();
     }
 
     /**
      * A special constructor provided exclusively for
-     * testing. It allows the LocusStorage to be set
+     * testing. It allows the LocusStorage and LocusView to be set
      * externally a more controlled testing environment.
      *
      * @param storage the LocusStorage, passed this way
      *                primarily for more controlled testing.
+     * @param locusView the LocusView, passed this way
+     *                  primarily for more controlled testing.
      */
-    LocusModel(LocusStorage storage){
+    LocusModel(LocusStorage storage, LocusView locusView){
         this.storage = storage;
+        this.locusView = locusView;
     }
 
     /**

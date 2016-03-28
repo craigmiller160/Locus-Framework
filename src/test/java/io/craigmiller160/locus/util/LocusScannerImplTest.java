@@ -44,6 +44,10 @@ public class LocusScannerImplTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusScannerImplTest.class);
 
+    /**
+     * Test basic package scanning, and what classes it retrieves,
+     * using the sample package.
+     */
     @Test
     public void testScanPackage(){
         LocusScanner scanner = new LocusScannerImpl();
@@ -84,6 +88,10 @@ public class LocusScannerImplTest {
         }
     }
 
+    /**
+     * Test package scanning with invalid model methods,
+     * which should result in an exception.
+     */
     @Test
     public void testScanInvalidModel(){
         LocusScanner scanner = new LocusScannerImpl();
@@ -97,6 +105,7 @@ public class LocusScannerImplTest {
         boolean firstScanException = false;
         boolean secondScanException = false;
 
+        //Scanning the first package should work with no exception, because everything is valid
         try{
             scanner.scanPackage(package1, storage, scannerExclusions);
         }
@@ -105,6 +114,7 @@ public class LocusScannerImplTest {
             logger.error("First Scan Stack Trace", ex);
         }
 
+        //Scanning the second package should find an invalid, duplicate method, and throw an exception
         try{
             scanner.scanPackage(package2, storage, scannerExclusions);
         }
@@ -118,6 +128,10 @@ public class LocusScannerImplTest {
 
     }
 
+    /**
+     * Test package scanning with invalid view methods,
+     * which should result in an exception.
+     */
     @Test
     public void testScanInvalidView(){
         LocusScanner scanner = new LocusScannerImpl();
@@ -131,6 +145,7 @@ public class LocusScannerImplTest {
         boolean firstScanException = false;
         boolean secondScanException = false;
 
+        //Scanning the first package should work with no exception, because everything is valid
         try{
             scanner.scanPackage(package1, storage, scannerExclusions);
         }
@@ -139,6 +154,7 @@ public class LocusScannerImplTest {
             logger.error("First Scan Stack Trace", ex);
         }
 
+        //Scanning the second package should throw an exception due to an invalid getter
         try{
             scanner.scanPackage(package2, storage, scannerExclusions);
         }
@@ -151,6 +167,10 @@ public class LocusScannerImplTest {
         assertTrue("The second scan did not throw an exception, it should have", secondScanException);
     }
 
+    /**
+     * Test scanning with invalid controller names, which
+     * should result in an exception.
+     */
     @Test
     public void testScanInvalidController(){
         LocusScanner scanner = new LocusScannerImpl();
@@ -162,6 +182,7 @@ public class LocusScannerImplTest {
         boolean firstScanException = false;
         boolean secondScanException = false;
 
+        //Scanning the first package should work with no exception because there's no name conflict
         try{
             scanner.scanPackage(package1, storage);
         }
@@ -170,6 +191,7 @@ public class LocusScannerImplTest {
             logger.error("First Scan Stack Trace", ex);
         }
 
+        //Scanning the second package should throw an exception because of a duplicate name
         try{
             scanner.scanPackage(package2, storage);
         }
