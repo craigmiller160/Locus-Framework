@@ -16,6 +16,19 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.reflect.ClassAndMethod;
+import io.craigmiller160.locus.sample.ViewOne;
+import io.craigmiller160.locus.sample.ViewThree;
+import io.craigmiller160.locus.util.LocusStorage;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * A JUnit test class to test the LocusView class.
  * This is one of the core components of the Locus
@@ -25,6 +38,72 @@ package io.craigmiller160.locus;
  */
 public class LocusViewTest {
 
-    
+    private LocusStorage storage;
+    private ViewThree viewThree;
+    private ViewOne viewOne;
+    private LocusView locusView;
+
+    //TODO somehow going to ultimately need to test register view logic
+
+    private void setupStorage(){
+        try{
+            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            storage = constructor.newInstance();
+        }
+        catch(Exception ex){
+            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
+        }
+    }
+
+    private void setupViews(){
+        try{
+            viewOne = new ViewOne();
+            viewThree = new ViewThree();
+
+            Method m1 = viewOne.getClass().getMethod("setFirstField", String.class);
+            Method m2 = viewThree.getClass().getMethod("setFirstField", String.class);
+
+            ClassAndMethod cam1 = new ClassAndMethod(viewOne.getClass(), m1);
+            ClassAndMethod cam2 = new ClassAndMethod(viewThree.getClass(), m2);
+
+            storage.addViewPropSetter("FirstField", cam1);
+            storage.addViewPropSetter("FirstField", cam2);
+
+            storage.addViewInstance(viewOne.getClass(), viewOne);
+            storage.addViewInstance(viewThree.getClass(), viewThree);
+        }
+        catch(Exception ex){
+            throw new RuntimeException("Fatal exception while trying to setup views for test", ex);
+        }
+    }
+
+    private void setupLocusView(){
+        this.locusView = new LocusView(storage);
+    }
+
+    @Before
+    public void initialize(){
+        setupStorage();
+        setupViews();
+        setupLocusView();
+    }
+
+    @Test
+    public void testSetObject(){
+        String value = "Value";
+        locusView.setObject("FirstField", value);
+
+        String val1 = viewOne.getFirstField();
+        String val2 = viewThree.getViewThreeFirstField();
+
+        //Test that neither value is null. They start out as null
+        assertNotNull("ViewOne FirstField value is null", val1);
+        assertNotNull("ViewThree FirstField value is null", val2);
+
+        //Test that both values are set properly, and are the same
+        assertEquals("ViewOne FirstField value invalid", val1, value);
+        assertEquals("ViewThree FirstField value invalid", val2, value);
+    }
 
 }

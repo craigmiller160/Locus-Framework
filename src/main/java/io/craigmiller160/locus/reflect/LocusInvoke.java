@@ -16,7 +16,11 @@
 
 package io.craigmiller160.locus.reflect;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 /**
  * Special class for reflectively invoking methods.
@@ -24,6 +28,11 @@ import java.lang.reflect.InvocationTargetException;
  * Created by craig on 3/12/16.
  */
 public class LocusInvoke {
+
+    /**
+     * The logger for this class.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(LocusInvoke.class);
 
     /**
      * Reflectively invoke any method contained in the holder
@@ -44,6 +53,8 @@ public class LocusInvoke {
 
             try{
                 result = oam.getMethod().invoke(oam.getSource(), params);
+                logger.trace("Successfully invoked view setter method. Method: " + oam.getMethod() +
+                        " | Params: " + Arrays.toString(params));
             }
             catch(InvocationTargetException ex){
                 throw new LocusInvocationException("Method invoked threw exception", ex.getCause());

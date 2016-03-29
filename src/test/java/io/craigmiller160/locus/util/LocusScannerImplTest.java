@@ -80,11 +80,16 @@ public class LocusScannerImplTest {
         Set<String> viewGetterKeys = viewPropGetters.keySet();
 
         assertEquals("Wrong number of view setter props", viewSetterKeys.size(), 2);
-        assertEquals("Wrong number of view getter props", viewGetterKeys.size(), 2);
+        assertEquals("Wrong number of view getter props", viewGetterKeys.size(), 3);
 
         for(String key : viewSetterKeys){
             Collection<ClassAndMethod> viewSetters = viewPropSetters.get(key);
-            assertEquals("Wrong number of methods for view setter prop " + key, viewSetters.size(), 1);
+            if(key.equals("FirstField")){
+                assertEquals("Wrong number of methods for view setter prop " + key, viewSetters.size(), 2);
+            }
+            else if(key.equals("SecondField")){
+                assertEquals("Wrong number of methods for view setter prop " + key, viewSetters.size(), 1);
+            }
         }
     }
 
@@ -178,13 +183,15 @@ public class LocusScannerImplTest {
         String package2 = "io.craigmiller160.locus.othercontroller";
         LocusStorage storage = new LocusStorage();
 
+        ScannerExclusions scannerExclusions = new ScannerExclusions();
+
         //After the two scans, the first boolean should still be false, the second should be true
         boolean firstScanException = false;
         boolean secondScanException = false;
 
         //Scanning the first package should work with no exception because there's no name conflict
         try{
-            scanner.scanPackage(package1, storage);
+            scanner.scanPackage(package1, storage, scannerExclusions);
         }
         catch(LocusReflectiveException ex){
             firstScanException = true;
@@ -193,7 +200,7 @@ public class LocusScannerImplTest {
 
         //Scanning the second package should throw an exception because of a duplicate name
         try{
-            scanner.scanPackage(package2, storage);
+            scanner.scanPackage(package2, storage, scannerExclusions);
         }
         catch(LocusReflectiveException ex){
             secondScanException = true;

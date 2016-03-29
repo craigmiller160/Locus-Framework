@@ -21,6 +21,8 @@ import io.craigmiller160.locus.reflect.LocusInvoke;
 import io.craigmiller160.locus.reflect.LocusReflectiveException;
 import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.util.LocusStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -29,6 +31,8 @@ import java.util.Collection;
  * Created by craig on 3/12/16.
  */
 public class LocusView {
+
+    private static final Logger logger = LoggerFactory.getLogger(LocusView.class);
 
     private final LocusStorage storage;
 
@@ -81,7 +85,35 @@ public class LocusView {
     }
 
     public void setObject(String propName, Object value) throws LocusException{
-        //TODO
+        Collection<ClassAndMethod> setters = storage.getSettersForViewProp(propName);
+        if(setters == null || setters.size() <= 0){
+            throw new LocusReflectiveException("No setters available in registered views to invoke for property. Property Name: " + propName);
+        }
+
+        boolean success = false;
+        for(ClassAndMethod cam : setters){
+            Collection<WeakReference<?>> viewInstances = storage.getViewInstancesForClass(cam.getSourceType());
+            if(viewInstances != null && viewInstances.size() > 0){
+                for(WeakReference<?> weakRef : viewInstances){
+                    Object ref = weakRef.get();
+                    if(ref != null){
+                        ObjectAndMethod oam = new ObjectAndMethod(ref, cam.getMethod());
+                        try{
+                            LocusInvoke.invokeMethod(oam, value);
+                            success = true;
+                        }
+                        catch(LocusReflectiveException ex){
+                            logger.trace("Failed to invoke view setter method. Method: " + oam.getMethod() +
+                                    " | Param: " + value.toString(), ex);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!success){
+            throw new LocusReflectiveException("Unable to successfully invoke any view setter for property. Check TRACE level logs for details");
+        }
     }
 
     public <T> void setValue(String propName, T value) throws LocusException{
