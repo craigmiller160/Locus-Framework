@@ -53,8 +53,7 @@ public class LocusInvoke {
 
             try{
                 result = oam.getMethod().invoke(oam.getSource(), params);
-                logger.trace("Successfully invoked view setter method. Method: " + oam.getMethod() +
-                        " | Params: " + Arrays.toString(params));
+                logger.trace("Successfully invoked method. Method: {} | Params: {}", oam.getMethod(), Arrays.toString(params));
             }
             catch(InvocationTargetException ex){
                 throw new LocusInvocationException("Method invoked threw exception", ex.getCause());

@@ -69,7 +69,7 @@ public class LocusController {
 
         boolean singleton = storage.isControllerSingleton(controllerName);
 
-        logger.trace("Retrieving controller. Name: " + controllerName + " | Singleton: " + singleton);
+        logger.trace("Retrieving controller. Name: {} | Singleton: {}", controllerName, singleton);
 
         if(singleton){
             controller = storage.getControllerSingletonInstance(controllerName);

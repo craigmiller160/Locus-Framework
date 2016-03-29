@@ -58,7 +58,7 @@ public class LocusScannerImpl implements LocusScanner{
 
     @Override
     public void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
-        logger.debug("Scanning package \"" + packageName + "\" for annotated classes");
+        logger.debug("Scanning package \"{}\" for annotated classes", packageName);
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage(packageName))
                 .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
@@ -70,11 +70,11 @@ public class LocusScannerImpl implements LocusScanner{
         parseViewClasses(reflections, storage, scannerExclusions);
 
         logger.debug("Package scanning complete. Results below.");
-        logger.debug("Total view property setters registered: " + storage.getViewPropSetterCount());
-        logger.debug("Total view property getters registered: " + storage.getViewPropGetterCount());
-        logger.debug("Total model property setters registered: " + storage.getModelPropSetterCount());
-        logger.debug("Total model property getters registered: " + storage.getModelPropGetterCount());
-        logger.debug("Total controllers registered: " + storage.getControllerCount());
+        logger.debug("Total view property setters registered: {}", storage.getViewPropSetterCount());
+        logger.debug("Total view property getters registered: {}", storage.getViewPropGetterCount());
+        logger.debug("Total model property setters registered: {}", storage.getModelPropSetterCount());
+        logger.debug("Total model property getters registered: {}", storage.getModelPropGetterCount());
+        logger.debug("Total controllers registered: {}", storage.getControllerCount());
     }
 
     @Override
@@ -90,14 +90,14 @@ public class LocusScannerImpl implements LocusScanner{
                 if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
-                    logger.trace("Adding view property setter to storage. Property: " + propName + " | Setter: " + cam.toString());
+                    logger.trace("Adding view property setter to storage. Property: {} | Setter: {}", propName, cam.toString());
                     storage.addViewPropSetter(propName, cam);
                 }
                 else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
                     validateUniqueMethod(propName, VIEW_CATEGORY, cam, storage.getAllViewPropGetters().values());
-                    logger.trace("Adding view property getter to storage. Property: " + propName + " | Getter: " + cam.toString());
+                    logger.trace("Adding view property getter to storage. Property: {} | Getter: {}", propName, cam.toString());
                     storage.addViewPropGetter(propName, cam);
                 }
             }
@@ -111,7 +111,7 @@ public class LocusScannerImpl implements LocusScanner{
             String name = con.name();
             boolean singleton = con.singleton();
             validateUniqueController(name, controllerType, storage.getAllControllerTypes());
-            logger.trace("Adding controller type to storage. Name: " + name + " | Class: " + controllerType);
+            logger.trace("Adding controller type to storage. Name: {} | Class: {}", name, controllerType);
             storage.addControllerType(name, controllerType, singleton);
         }
     }
@@ -126,14 +126,14 @@ public class LocusScannerImpl implements LocusScanner{
                     String propName = m.getName().substring(3, m.getName().length());
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
                     validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropSetters().values());
-                    logger.trace("Adding model property setter to storage. Property: " + propName + " | Setter: " + oam.toString());
+                    logger.trace("Adding model property setter to storage. Property: {} | Setter: {}", propName, oam.toString());
                     storage.addModelPropSetter(propName, oam);
                 }
                 else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
                     validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropGetters().values());
-                    logger.trace("Adding model property getter to storage. Property: " + propName + " | Getter: " + oam.toString());
+                    logger.trace("Adding model property getter to storage. Property: {} | Getter: {}", propName, oam.toString());
                     storage.addModelPropGetter(propName, oam);
                 }
             }

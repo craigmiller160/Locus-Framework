@@ -62,7 +62,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
 
     @Override
     public LocusConfiguration readConfiguration(String fileName) throws LocusParsingException{
-        logger.debug("Reading configuration file: " + fileName);
+        logger.debug("Reading configuration file: {}", fileName);
         LocusConfiguration locusConfig = new LocusConfiguration();
         InputStream iStream = null;
         try{
@@ -141,7 +141,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
                 Node prefixAttr = attributes.getNamedItem(PREFIX_ATTR);
                 if(prefixAttr != null){
                     String prefix = prefixAttr.getTextContent();
-                    logger.debug("Adding scanner inclusion prefix: " + prefix);
+                    logger.debug("Adding scanner inclusion prefix: {}", prefix);
                     locusConfig.addScannerInclusion(prefix);
                 }
             }
@@ -157,7 +157,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
                 Node prefixAttr = attributes.getNamedItem(PREFIX_ATTR);
                 if(prefixAttr != null){
                     String prefix = prefixAttr.getTextContent();
-                    logger.debug("Adding scanner exclusion prefix: " + prefix);
+                    logger.debug("Adding scanner exclusion prefix: {}", prefix);
                     locusConfig.addScannerExclusion(prefix);
                 }
             }
@@ -173,7 +173,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
                 Node packageNameAttr = attributes.getNamedItem(PACKAGE_NAME_ATTR);
                 if(packageNameAttr != null){
                     String name = packageNameAttr.getTextContent();
-                    logger.debug("Adding package to scan: " + name);
+                    logger.debug("Adding package to scan: {}", name);
                     locusConfig.addPackageName(name);
                 }
             }

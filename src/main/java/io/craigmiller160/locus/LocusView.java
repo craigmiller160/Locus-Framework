@@ -103,8 +103,8 @@ public class LocusView {
                             success = true;
                         }
                         catch(LocusReflectiveException ex){
-                            logger.trace("Failed to invoke view setter method. Method: " + oam.getMethod() +
-                                    " | Param: " + value.toString(), ex);
+                            logger.trace("Failed to invoke view setter method. Method: {} | Param: {}", oam.getMethod(), value.toString());
+                            logger.trace("Exception thrown during failed invocation.", ex);
                         }
                     }
                 }
