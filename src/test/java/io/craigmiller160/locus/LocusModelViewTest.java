@@ -17,14 +17,20 @@
 package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.reflect.ClassAndMethod;
+import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.ViewOne;
 import io.craigmiller160.locus.sample.ViewThree;
 import io.craigmiller160.locus.util.LocusStorage;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * A special test class to test the combined
@@ -68,17 +74,14 @@ public class LocusModelViewTest {
 
             Method m1 = viewOne.getClass().getMethod("setStringField", String.class);
             Method m2 = viewThree.getClass().getMethod("setStringField", String.class);
-            Method m3 = viewOne.getClass().getMethod("setTwoFields", String.class, String.class);
             Method m4 = viewOne.getClass().getMethod("setObjectField", Object.class);
 
             ClassAndMethod cam1 = new ClassAndMethod(viewOne.getClass(), m1);
             ClassAndMethod cam2 = new ClassAndMethod(viewThree.getClass(), m2);
-            ClassAndMethod cam3 = new ClassAndMethod(viewOne.getClass(), m3);
             ClassAndMethod cam4 = new ClassAndMethod(viewOne.getClass(), m4);
 
-            storage.addViewPropSetter("FirstField", cam1);
-            storage.addViewPropSetter("FirstField", cam2);
-            storage.addViewPropSetter("TwoFields", cam3);
+            storage.addViewPropSetter("StringField", cam1);
+            storage.addViewPropSetter("StringField", cam2);
             storage.addViewPropSetter("ObjectField", cam4);
 
             storage.addViewInstance(viewOne.getClass(), viewOne);
@@ -90,11 +93,26 @@ public class LocusModelViewTest {
     }
 
     private void setupModels(){
-        modelOne = new ModelOne();
+        try{
+            modelOne = new ModelOne();
+
+            Method m1 = modelOne.getClass().getMethod("setStringField", String.class);
+            Method m2 = modelOne.getClass().getMethod("setObjectField", Object.class);
+
+            ObjectAndMethod oam1 = new ObjectAndMethod(modelOne, m1);
+            ObjectAndMethod oam2 = new ObjectAndMethod(modelOne, m2);
+
+            storage.addModelPropSetter("StringField", oam1);
+            storage.addModelPropSetter("ObjectField", oam2);
+        }
+        catch(Exception ex){
+            throw new RuntimeException("Fatal exception while trying to setup models for test", ex);
+        }
     }
 
     private void setupLocus(){
         this.locusView = new LocusView(storage);
+        this.locusModel = new LocusModel(storage, locusView);
     }
 
     @Before
@@ -103,6 +121,39 @@ public class LocusModelViewTest {
         setupViews();
         setupModels();
         setupLocus();
+    }
+
+    /**
+     * Test setting a property in a model and the
+     * corresponding view.
+     */
+    @Test
+    public void testSetModelAndView(){
+        BigDecimal value = new BigDecimal("3.33333");
+        locusModel.setObject("ObjectField", value);
+
+        assertNotNull("ModelOne ObjectField is null", modelOne.getObjectField());
+        assertNotNull("ViewOne ObjectField is null", viewOne.getObjectField());
+
+        assertEquals("ModelOne ObjectField wrong value", modelOne.getObjectField(), value);
+        assertEquals("ViewOne ObjectField wrong value", viewOne.getObjectField(), value);
+    }
+
+    /**
+     * Test setting a model property in multiple views.
+     */
+    @Test
+    public void testSetModelAndMultipleViews(){
+        String value = "Value";
+        locusModel.setString("StringField", value);
+
+        assertNotNull("ModelOne StringField is null", modelOne.getStringField());
+        assertNotNull("ViewOne StringField is null", viewOne.getStringField());
+        assertNotNull("ViewThree StringField is null", viewThree.getStringField());
+
+        assertEquals("ModelOne StringField wrong value", modelOne.getStringField(), value);
+        assertEquals("ViewOne StringField wrong value", viewOne.getStringField(), value);
+        assertEquals("ViewThree StringField wrong value", viewThree.getStringField(), value);
     }
 
 }
