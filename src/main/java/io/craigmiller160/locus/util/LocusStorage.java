@@ -25,6 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A special storage class where all the class types,
+ * instance references, and methods to remotely invoke
+ * are stored.
+ *
  * Created by craig on 3/15/16.
  */
 public class LocusStorage {

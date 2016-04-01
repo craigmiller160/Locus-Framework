@@ -18,6 +18,7 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.reflect.ClassAndMethod;
 import io.craigmiller160.locus.reflect.LocusReflectiveException;
+import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.ViewOne;
 import io.craigmiller160.locus.sample.ViewThree;
 import io.craigmiller160.locus.util.LocusStorage;
@@ -26,8 +27,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -99,6 +102,19 @@ public class LocusViewTest {
         setupStorage();
         setupViews();
         setupLocusView();
+    }
+
+    /**
+     * Test registering a new view, that its
+     * instance is saved in the storage.
+     */
+    @Test
+    public void testRegisterView(){
+        ViewOne anotherViewOne = new ViewOne();
+        locusView.registerView(anotherViewOne);
+
+        Collection<WeakReference<?>> instances = storage.getViewInstancesForClass(ViewOne.class);
+        assertEquals("Wrong number of view instances", instances.size(), 2);
     }
 
     /**

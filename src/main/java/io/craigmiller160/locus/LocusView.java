@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Created by craig on 3/12/16.
@@ -37,16 +38,28 @@ public class LocusView {
 
     private final LocusStorage storage;
 
+    /**
+     * This is the main constructor for this class.
+     * It should be used in all cases, except for when
+     * testing this class.
+     */
     LocusView(){
         this.storage = LocusStorage.getInstance();
     }
 
+    /**
+     * This is a special constructor for use
+     * in testing this class. It allows a mocked
+     * LocusStorage to be passed to it externally.
+     *
+     * @param storage the LocusStorage.
+     */
     LocusView(LocusStorage storage){
         this.storage = storage;
     }
 
     public void registerView(Object view){
-        //TODO this is how the view instances are locked in
+        storage.addViewInstance(view.getClass(), view);
     }
 
     public void setInt(String propName, int value) throws LocusException{
