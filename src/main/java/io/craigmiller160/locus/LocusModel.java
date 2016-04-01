@@ -80,7 +80,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setInt(String propName, int value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -94,7 +94,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setFloat(String propName, float value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -108,7 +108,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setDouble(String propName, double value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -122,7 +122,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setShort(String propName, short value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -136,7 +136,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setByte(String propName, byte value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -150,7 +150,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setLong(String propName, long value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -164,7 +164,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setBoolean(String propName, boolean value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -178,7 +178,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setString(String propName, String value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -192,7 +192,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setCharacter(String propName, char value) throws LocusException{
-        setValue(propName, value);
+        setObject(propName, value);
     }
 
     /**
@@ -206,23 +206,6 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setObject(String propName, Object value) throws LocusException{
-        setValue(propName, value);
-    }
-
-    /**
-     * Set a value in one of the model classes.
-     * This method uses generics to handle the type
-     * of value provided.
-     *
-     * After being called, this method will update any
-     * corresponding views that have been configured
-     * to accept this behavior.
-     *
-     * @param propName the name of the property to set.
-     * @param value the value to set to the property.
-     * @throws LocusException if an error occurs.
-     */
-    public <T> void setValue(String propName, T value) throws LocusException{
         LocusInvoke.invokeMethod(getMethod(propName, Locus.SETTER), value);
     }
 
