@@ -122,8 +122,4 @@ public class LocusView {
         }
     }
 
-    public <T> void setValue(String propName, T value) throws LocusException{
-
-    }
-
 }
