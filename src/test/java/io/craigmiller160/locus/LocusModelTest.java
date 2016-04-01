@@ -40,6 +40,14 @@ public class LocusModelTest {
     private static LocusModel locusModel;
     private static ModelOne modelOne;
 
+    private static LocusView locusView = new LocusView(){
+        @Override
+        public void setObject(String propName, Object value) throws LocusException{
+            //Do nothing, this is just killing the behavior of this object so
+            //this test class can run in a more controlled way
+        }
+    };
+
     /**
      * Static initializer to set up the LocusStorage properly for
      * use in these tests. It's created reflectively because
@@ -64,7 +72,7 @@ public class LocusModelTest {
                 }
             }
 
-            locusModel = new LocusModel(storage, null);
+            locusModel = new LocusModel(storage, locusView);
         }
         catch(Exception ex){
             throw new RuntimeException("Fatal exception at initialization", ex);

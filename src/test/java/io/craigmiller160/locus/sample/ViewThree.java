@@ -28,6 +28,7 @@ import io.craigmiller160.locus.annotations.View;
 public class ViewThree {
 
     private String firstField;
+    private String stringField;
 
     public void setFirstField(String firstField){
         this.firstField = firstField;
@@ -35,6 +36,14 @@ public class ViewThree {
 
     public String getViewThreeFirstField(){
         return firstField;
+    }
+
+    public void setStringField(String stringField){
+        this.stringField = stringField;
+    }
+
+    public String getStringField(){
+        return stringField;
     }
 
 }

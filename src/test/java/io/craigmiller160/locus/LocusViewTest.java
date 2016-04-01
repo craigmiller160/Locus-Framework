@@ -52,8 +52,6 @@ public class LocusViewTest {
     private ViewOne viewOne;
     private LocusView locusView;
 
-    //TODO somehow going to ultimately need to test register view logic
-
     private void setupStorage(){
         try{
             Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();

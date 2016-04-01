@@ -81,6 +81,7 @@ public class LocusModel {
      */
     public void setInt(String propName, int value) throws LocusException{
         setObject(propName, value);
+        locusView.setInt(propName, value);
     }
 
     /**
@@ -95,6 +96,7 @@ public class LocusModel {
      */
     public void setFloat(String propName, float value) throws LocusException{
         setObject(propName, value);
+        locusView.setFloat(propName, value);
     }
 
     /**
@@ -109,6 +111,7 @@ public class LocusModel {
      */
     public void setDouble(String propName, double value) throws LocusException{
         setObject(propName, value);
+        locusView.setDouble(propName, value);
     }
 
     /**
@@ -123,6 +126,7 @@ public class LocusModel {
      */
     public void setShort(String propName, short value) throws LocusException{
         setObject(propName, value);
+        locusView.setShort(propName, value);
     }
 
     /**
@@ -137,6 +141,7 @@ public class LocusModel {
      */
     public void setByte(String propName, byte value) throws LocusException{
         setObject(propName, value);
+        locusView.setByte(propName, value);
     }
 
     /**
@@ -151,6 +156,7 @@ public class LocusModel {
      */
     public void setLong(String propName, long value) throws LocusException{
         setObject(propName, value);
+        locusView.setLong(propName, value);
     }
 
     /**
@@ -165,6 +171,7 @@ public class LocusModel {
      */
     public void setBoolean(String propName, boolean value) throws LocusException{
         setObject(propName, value);
+        locusView.setBoolean(propName, value);
     }
 
     /**
@@ -179,6 +186,7 @@ public class LocusModel {
      */
     public void setString(String propName, String value) throws LocusException{
         setObject(propName, value);
+        locusView.setString(propName, value);
     }
 
     /**
@@ -193,6 +201,7 @@ public class LocusModel {
      */
     public void setCharacter(String propName, char value) throws LocusException{
         setObject(propName, value);
+        locusView.setCharacter(propName, value);
     }
 
     /**
@@ -207,6 +216,7 @@ public class LocusModel {
      */
     public void setObject(String propName, Object value) throws LocusException{
         LocusInvoke.invokeMethod(getMethod(propName, Locus.SETTER), value);
+        locusView.setObject(propName, value);
     }
 
     /**
