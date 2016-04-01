@@ -18,10 +18,10 @@ package io.craigmiller160.locus.sample;
 
 import io.craigmiller160.locus.annotations.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
+ * A sample View class used for testing
+ * Locus components.
+ *
  * Created by craigmiller on 3/19/16.
  */
 @View
@@ -29,6 +29,97 @@ public class ViewOne {
 
     private String firstField;
     private String secondField;
+
+    private String stringField;
+    private int intField;
+    private float floatField;
+    private double doubleField;
+    private short shortField;
+    private byte byteField;
+    private long longField;
+    private boolean booleanField;
+    private char charField;
+    private Object objectField;
+
+    public String getStringField() {
+        return stringField;
+    }
+
+    public void setStringField(String stringField) {
+        this.stringField = stringField;
+    }
+
+    public int getIntField() {
+        return intField;
+    }
+
+    public void setIntField(int intField) {
+        this.intField = intField;
+    }
+
+    public float getFloatField() {
+        return floatField;
+    }
+
+    public void setFloatField(float floatField) {
+        this.floatField = floatField;
+    }
+
+    public double getDoubleField() {
+        return doubleField;
+    }
+
+    public void setDoubleField(double doubleField) {
+        this.doubleField = doubleField;
+    }
+
+    public short getShortField() {
+        return shortField;
+    }
+
+    public void setShortField(short shortField) {
+        this.shortField = shortField;
+    }
+
+    public byte getByteField() {
+        return byteField;
+    }
+
+    public void setByteField(byte byteField) {
+        this.byteField = byteField;
+    }
+
+    public long getLongField() {
+        return longField;
+    }
+
+    public void setLongField(long longField) {
+        this.longField = longField;
+    }
+
+    public boolean isBooleanField() {
+        return booleanField;
+    }
+
+    public void setBooleanField(boolean booleanField) {
+        this.booleanField = booleanField;
+    }
+
+    public char getCharField() {
+        return charField;
+    }
+
+    public void setCharField(char charField) {
+        this.charField = charField;
+    }
+
+    public void setObjectField(Object objectField){
+        this.objectField = objectField;
+    }
+
+    public Object getObjectField(){
+        return objectField;
+    }
 
     public String getFirstField() {
         return firstField;
@@ -43,6 +134,11 @@ public class ViewOne {
     }
 
     public void setSecondField(String secondField) {
+        this.secondField = secondField;
+    }
+
+    public void setTwoFields(String firstField, String secondField){
+        this.firstField = firstField;
         this.secondField = secondField;
     }
 

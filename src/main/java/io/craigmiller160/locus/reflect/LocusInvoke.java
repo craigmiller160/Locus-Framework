@@ -64,7 +64,17 @@ public class LocusInvoke {
             }
         }
         else{
-            throw new LocusReflectiveException("Parameters provided for method " + oam.getMethod().getName() + " do not match what is expected.");
+            StringBuilder builder = new StringBuilder("[");
+            for(Object o : params){
+                builder.append(o.getClass() + ", ");
+            }
+            if(builder.length() > 2 && builder.substring(builder.length() - 2).equals(", ")){
+                builder.delete(builder.length() - 2, builder.length());
+                builder.append("]");
+            }
+
+            throw new LocusReflectiveException("Parameters provided for method " + oam.getMethod().getName() + " do not match what is expected.\n" +
+                    "   Expected: " + Arrays.toString(oam.getMethod().getParameterTypes()) + " | Actual: " + builder.toString());
         }
 
         return result;

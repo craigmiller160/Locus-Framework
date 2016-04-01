@@ -174,16 +174,6 @@ public class LocusModelTest {
     }
 
     /**
-     * Test setValue(...) with the generic type.
-     */
-    @Test
-    public void testGenericSet(){
-        BigDecimal bigDecimal = new BigDecimal(5.12345);
-        locusModel.setValue("ObjectField", bigDecimal);
-        assertEquals("Invalid ObjectField value", modelOne.getObjectField(), bigDecimal);
-    }
-
-    /**
      * Test getting an int value.
      */
     @Test

@@ -79,9 +79,10 @@ public class LocusScannerImplTest {
         Set<String> viewSetterKeys = viewPropSetters.keySet();
         Set<String> viewGetterKeys = viewPropGetters.keySet();
 
-        assertEquals("Wrong number of view setter props", viewSetterKeys.size(), 2);
-        assertEquals("Wrong number of view getter props", viewGetterKeys.size(), 3);
+        assertEquals("Wrong number of view setter props", viewSetterKeys.size(), 13);
+        assertEquals("Wrong number of view getter props", viewGetterKeys.size(), 12);
 
+        //TODO this will need to be revamped once all the new methods are added
         for(String key : viewSetterKeys){
             Collection<ClassAndMethod> viewSetters = viewPropSetters.get(key);
             if(key.equals("FirstField")){

@@ -17,6 +17,7 @@
 package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.reflect.ClassAndMethod;
+import io.craigmiller160.locus.reflect.LocusInvocationException;
 import io.craigmiller160.locus.reflect.LocusInvoke;
 import io.craigmiller160.locus.reflect.LocusReflectiveException;
 import io.craigmiller160.locus.reflect.ObjectAndMethod;
@@ -49,39 +50,39 @@ public class LocusView {
     }
 
     public void setInt(String propName, int value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setFloat(String propName, float value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setDouble(String propName, double value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setShort(String propName, short value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setByte(String propName, byte value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setLong(String propName, long value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setBoolean(String propName, boolean value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setCharacter(String propName, char value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setString(String propName, String value) throws LocusException{
-        //TODO
+        setObject(propName, value);
     }
 
     public void setObject(String propName, Object value) throws LocusException{
@@ -102,9 +103,14 @@ public class LocusView {
                             LocusInvoke.invokeMethod(oam, value);
                             success = true;
                         }
+                        catch(LocusInvocationException ex){
+                            //InvocationExceptions are when the method was successfully invoked, but during its operation an exception occurred
+                            //This should NOT be swallowed, and should be propagated
+                            throw ex;
+                        }
                         catch(LocusReflectiveException ex){
-                            logger.trace("Failed to invoke view setter method. Method: {} | Param: {}", oam.getMethod(), value.toString());
-                            logger.trace("Exception thrown during failed invocation.", ex);
+                            logger.trace("Failed to invoke view setter method. Note that certain invocations are expected to fail.\n" +
+                                    "   Method: {} | Param: {}", oam.getMethod(), value.toString(), ex);
                         }
                     }
                 }
@@ -117,114 +123,7 @@ public class LocusView {
     }
 
     public <T> void setValue(String propName, T value) throws LocusException{
-        //TODO
-    }
 
-    public int getInt(String propName) throws LocusException{
-        //TODO
-        return 0;
-    }
-
-    public float getFloat(String propName) throws LocusException{
-        //TODO
-        return 0f;
-    }
-
-    public double getDouble(String propName) throws LocusException{
-        //TODO
-        return 0.0;
-    }
-
-    public short getShort(String propName) throws LocusException{
-        //TODO
-        return 0;
-    }
-
-    public byte getByte(String propName) throws LocusException{
-        //TODO
-        return 0;
-    }
-
-    public long getLong(String propName) throws LocusException{
-        //TODO
-        return 0;
-    }
-
-    public boolean getBoolean(String propName) throws LocusException{
-        //TODO
-        return false;
-    }
-
-    public String getString(String propName) throws LocusException{
-        //TODO
-        return "";
-    }
-
-    public char getCharacter(String propName) throws LocusException{
-        //TODO
-        return 'a';
-    }
-
-    public Object getObject(String propName) throws LocusException{
-        ClassAndMethod cam = getMethod(propName, Locus.GETTER);
-        Collection<WeakReference<?>> instances = storage.getViewInstancesForClass(cam.getSource());
-
-        ObjectAndMethod oam = null;
-        if(instances != null){
-            if(instances.size() != 1){
-                throw new LocusReflectiveException("Cannot have more than 1 instance of a view class to invoke a getter on, found " + instances.size() +
-                        "Class: " + cam.getSourceType() + " | Method: " + cam.getMethod().getName()
-
-                );
-            }
-            else{
-                oam = new ObjectAndMethod(instances.iterator().next(), cam.getMethod());
-            }
-        }
-
-        return LocusInvoke.invokeMethod(oam);
-    }
-
-    public <T> T getValue(String propName, Class<T> valueType) throws LocusException{
-//        Object result = getObject(propName);
-//        if(!(valueType.isAssignableFrom(result.getClass()))){
-//            throw new LocusInvalidTypeException("Return value for getting \"" + propName +
-//                    "\" doesn't match expected type. Expected: " + valueType.getName() +
-//                    " Actual: " + result.getClass().getName());
-//        }
-//
-//        return (T) result;
-        return null;
-    }
-
-    /**
-     * Get the appropriate method and its corresponding
-     * object instance from the storage, to be reflectively
-     * invoked by the caller.
-     *
-     * @param propName the name of the property to get the method for.
-     * @param methodType the type of method (setter, getter, etc) to
-     *                   retrieve.
-     * @return the ObjectAndMethod of the specified type for the property.
-     * @throws LocusReflectiveException if unable to find a method matching
-     *                   the specifications.
-     */
-    private ClassAndMethod getMethod(String propName, int methodType) throws LocusReflectiveException{
-        ClassAndMethod cam = null;
-        String typeName = "";
-        if(methodType == Locus.GETTER){
-            //TODO cam = storage.getViewPropGetter(propName);
-            typeName = "getter";
-        }
-        else{
-            //TODO oam = storage.getModelPropSetter(propName);
-            typeName = "setter";
-        }
-
-        if(cam == null){
-            throw new LocusReflectiveException("No view " + typeName + " found matching the property name \"" + propName + "\"");
-        }
-        return cam;
     }
 
 }
