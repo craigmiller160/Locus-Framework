@@ -71,7 +71,6 @@ public class LocusScannerImpl implements LocusScanner{
 
         logger.debug("Package scanning complete. Results below.");
         logger.debug("Total view property setters registered: {}", storage.getViewPropSetterCount());
-        logger.debug("Total view property getters registered: {}", storage.getViewPropGetterCount());
         logger.debug("Total model property setters registered: {}", storage.getModelPropSetterCount());
         logger.debug("Total model property getters registered: {}", storage.getModelPropGetterCount());
         logger.debug("Total controllers registered: {}", storage.getControllerCount());
@@ -92,13 +91,6 @@ public class LocusScannerImpl implements LocusScanner{
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
                     logger.trace("Adding view property setter to storage. Property: {} | Setter: {}", propName, cam.toString());
                     storage.addViewPropSetter(propName, cam);
-                }
-                else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
-                    String propName = m.getName().substring(3, m.getName().length());
-                    ClassAndMethod cam = new ClassAndMethod(viewType, m);
-                    validateUniqueMethod(propName, VIEW_CATEGORY, cam, storage.getAllViewPropGetters().values());
-                    logger.trace("Adding view property getter to storage. Property: {} | Getter: {}", propName, cam.toString());
-                    storage.addViewPropGetter(propName, cam);
                 }
             }
         }

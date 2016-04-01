@@ -62,7 +62,6 @@ public class LocusScannerImplTest {
         Map<String,Class<?>> controllerTypes = storage.getAllControllerTypes();
         Map<String,Boolean> controllerSingletons = storage.getAllControllerSingletons();
         MultiValueMap<String,ClassAndMethod> viewPropSetters = storage.getAllViewPropSetters();
-        Map<String,ClassAndMethod> viewPropGetters = storage.getAllViewPropGetters();
 
         Set<String> modelSetterKeys = modelPropSetters.keySet();
         Set<String> modelGetterKeys = modelPropGetters.keySet();
@@ -77,10 +76,8 @@ public class LocusScannerImplTest {
         assertFalse("Controller singleton value should be false", controllerSingletons.get(name));
 
         Set<String> viewSetterKeys = viewPropSetters.keySet();
-        Set<String> viewGetterKeys = viewPropGetters.keySet();
 
         assertEquals("Wrong number of view setter props", viewSetterKeys.size(), 13);
-        assertEquals("Wrong number of view getter props", viewGetterKeys.size(), 12);
 
         //TODO this will need to be revamped once all the new methods are added
         for(String key : viewSetterKeys){
@@ -132,45 +129,6 @@ public class LocusScannerImplTest {
         assertFalse("The first scan threw an exception, it shouldn't have", firstScanException);
         assertTrue("The second scan did not throw an exception, it should have", secondScanException);
 
-    }
-
-    /**
-     * Test package scanning with invalid view methods,
-     * which should result in an exception.
-     */
-    @Test
-    public void testScanInvalidView(){
-        LocusScanner scanner = new LocusScannerImpl();
-        String package1 = "io.craigmiller160.locus.sample";
-        String package2 = "io.craigmiller160.locus.otherview";
-        LocusStorage storage = new LocusStorage();
-
-        ScannerExclusions scannerExclusions = new ScannerExclusions();
-
-        //After the two scans, the first boolean should still be false, the second should be true
-        boolean firstScanException = false;
-        boolean secondScanException = false;
-
-        //Scanning the first package should work with no exception, because everything is valid
-        try{
-            scanner.scanPackage(package1, storage, scannerExclusions);
-        }
-        catch(LocusReflectiveException ex){
-            firstScanException = true;
-            logger.error("First Scan Stack Trace", ex);
-        }
-
-        //Scanning the second package should throw an exception due to an invalid getter
-        try{
-            scanner.scanPackage(package2, storage, scannerExclusions);
-        }
-        catch(LocusReflectiveException ex){
-            secondScanException = true;
-            logger.error("Second Scan Stack Trace", ex);
-        }
-
-        assertFalse("The first scan threw an exception, it shouldn't have", firstScanException);
-        assertTrue("The second scan did not throw an exception, it should have", secondScanException);
     }
 
     /**

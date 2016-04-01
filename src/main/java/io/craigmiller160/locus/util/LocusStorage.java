@@ -39,7 +39,6 @@ public class LocusStorage {
     private Map<String,ObjectAndMethod> modelPropGetters;
 
     private MultiValueMap<String,ClassAndMethod> viewPropSetters;
-    private Map<String,ClassAndMethod> viewPropGetters;
     private ViewObjectTracker viewInstances;
 
     private Map<String,Boolean> controllerSingletons;
@@ -62,7 +61,6 @@ public class LocusStorage {
         modelPropGetters = new HashMap<>();
 
         viewPropSetters = new MultiValueMap<>();
-        viewPropGetters = new HashMap<>();
         viewInstances = new ViewObjectTracker();
 
         controllerSingletons = new HashMap<>();
@@ -144,30 +142,6 @@ public class LocusStorage {
 
     public int getViewPropSetterCount(){
         return viewPropSetters.fullSize();
-    }
-
-    /*
-     * View Getter Section
-     */
-
-    public void addViewPropGetter(String propName, ClassAndMethod cam){
-        viewPropGetters.put(propName, cam);
-    }
-
-    public void removeViewPropGetter(String propName){
-        viewPropGetters.remove(propName);
-    }
-
-    public ClassAndMethod getViewPropGetter(String propName){
-        return viewPropGetters.get(propName);
-    }
-
-    public Map<String,ClassAndMethod> getAllViewPropGetters(){
-        return viewPropGetters;
-    }
-
-    public int getViewPropGetterCount(){
-        return viewPropGetters.size();
     }
 
     /*
