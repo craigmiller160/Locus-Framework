@@ -109,7 +109,8 @@ public class ModelOne {
         this.longField = longField;
     }
 
-    public boolean getBooleanField() {
+    //Testing that is... methods get picked up
+    public boolean isBooleanField() {
         return booleanField;
     }
 

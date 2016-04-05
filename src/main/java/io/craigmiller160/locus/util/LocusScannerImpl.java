@@ -121,7 +121,8 @@ public class LocusScannerImpl implements LocusScanner{
                     logger.trace("Adding model property setter to storage. Property: {} | Setter: {}", propName, oam.toString());
                     storage.addModelPropSetter(propName, oam);
                 }
-                else if(m.getName().startsWith("get") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
+                else if((m.getName().startsWith("get") || m.getName().startsWith("is")) &&
+                        isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3, m.getName().length());
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
                     validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropGetters().values());
