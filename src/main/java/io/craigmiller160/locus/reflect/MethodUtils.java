@@ -181,7 +181,7 @@ public class MethodUtils {
      * @param varArgsSize the number of arguments that are being passed
      *                    to the varargs part of the method.
      * @param newParams the parameters to convert for varargs.
-     * @return
+     * @return the converted parameters.
      */
     private static Object[] convertParams(Method method, int varArgsSize, Object...newParams){
         Class<?>[] paramTypes = method.getParameterTypes();
@@ -191,13 +191,14 @@ public class MethodUtils {
         for(int i = 0; i < paramTypes.length - 1; i++){
             resultArr[i] = newParams[i];
         }
+        //Create a varargs array of the specified size. If 0, an empty array will be created
+        Object varArgs = Array.newInstance(paramTypes[varArgsIndex].getComponentType(), varArgsSize);
 
-        //Create a varArgs array of the specified size. If 0, an empty array will be created
-        Object[] varArgs = (Object[]) Array.newInstance(paramTypes[varArgsIndex].getComponentType(), varArgsSize);
-        //Assign the varArgs values to the varArgs array. If the array size is 0, nothing will be added
+        //The components are assigned reflectively to accomodate for primitive arrays
         for(int i = 0; i < varArgsSize; i++){
-            varArgs[i] = newParams[varArgsIndex + i];
+            Array.set(varArgs, i, newParams[varArgsIndex + i]);
         }
+
         //Assign the varArgs array to the varArgsIndex in the resultArr, aka the last position in the array
         resultArr[varArgsIndex] = varArgs;
 
