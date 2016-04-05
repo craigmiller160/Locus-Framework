@@ -66,27 +66,27 @@ public class LocusScannerImplTest {
         Set<String> modelSetterKeys = modelPropSetters.keySet();
         Set<String> modelGetterKeys = modelPropGetters.keySet();
 
-        assertEquals("Wrong number of model setter props", modelSetterKeys.size(), 11);
-        assertEquals("Wrong number of model getter props", modelGetterKeys.size(), 11);
+        assertEquals("Wrong number of model setter props", 12, modelSetterKeys.size());
+        assertEquals("Wrong number of model getter props", 12, modelGetterKeys.size());
 
         Set<String> controllerNames = controllerTypes.keySet();
-        assertEquals("Wrong number of controller types", controllerNames.size(), 1);
+        assertEquals("Wrong number of controller types", 1, controllerNames.size());
 
         String name = controllerNames.iterator().next();
         assertFalse("Controller singleton value should be false", controllerSingletons.get(name));
 
         Set<String> viewSetterKeys = viewPropSetters.keySet();
 
-        assertEquals("Wrong number of view setter props", viewSetterKeys.size(), 13);
+        assertEquals("Wrong number of view setter props", 13, viewSetterKeys.size());
 
         //TODO this will need to be revamped once all the new methods are added
         for(String key : viewSetterKeys){
             Collection<ClassAndMethod> viewSetters = viewPropSetters.get(key);
             if(key.equals("FirstField")){
-                assertEquals("Wrong number of methods for view setter prop " + key, viewSetters.size(), 2);
+                assertEquals("Wrong number of methods for view setter prop " + key, 2, viewSetters.size());
             }
             else if(key.equals("SecondField")){
-                assertEquals("Wrong number of methods for view setter prop " + key, viewSetters.size(), 1);
+                assertEquals("Wrong number of methods for view setter prop " + key, 1, viewSetters.size());
             }
         }
     }

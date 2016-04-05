@@ -42,7 +42,7 @@ public class LocusModelTest {
 
     private static LocusView locusView = new LocusView(){
         @Override
-        public void setObject(String propName, Object value) throws LocusException{
+        public void setValue(String propName, Object... value) throws LocusException{
             //Do nothing, this is just killing the behavior of this object so
             //this test class can run in a more controlled way
         }
@@ -80,84 +80,60 @@ public class LocusModelTest {
     }
 
     /**
-     * Test setting a String.
+     * Test invoking a getter with arguments.
      */
     @Test
-    public void testSetString(){
-        locusModel.setString("StringField", "Value");
-        assertEquals("Invalid StringField value", modelOne.getStringField(), "Value");
+    public void testGetWithArgs(){
+        String value1 = "String";
+        int value2 = 1;
+        modelOne.setStringField(value1);
+        modelOne.setIntField(value2);
+
+        Object o1 = locusModel.getValue("Field", 1);
+        Object o2 = locusModel.getValue("Field", 2);
+
+        assertNotNull("Result for Field with arg 1 is null", o1);
+        assertNotNull("Result for Field with arg 2 is null", o2);
+
+        assertEquals("Result for Field with arg 1 is invalid", value1, o1);
+        assertEquals("Result for Field with arg 2 is invalid", value2, o2);
     }
 
     /**
-     * Test setting an int.
+     * Test invoking a getter with multiple arguments.
      */
     @Test
-    public void testSetInt(){
-        locusModel.setInt("IntField", 101);
-        assertEquals("Invalid IntField value", modelOne.getIntField(), 101);
+    public void testGetWithMultipleArgs(){
+        String value1 = "String";
+        int value2 = 1;
+        double value3 = 2.2;
+        modelOne.setStringField(value1);
+        modelOne.setIntField(value2);
+        modelOne.setDoubleField(value3);
+
+        Object[] results = locusModel.getValue("MultipleFields", Object[].class, ModelOne.STRING_FIELD, ModelOne.INT_FIELD, ModelOne.DOUBLE_FIELD);
+
+        assertNotNull("Results array is null", results);
+        assertEquals("Results array is the wrong size", 3, results.length);
+
+        assertEquals("Results[0] has wrong value", value1, results[0]);
+        assertEquals("Results[1] has the wrong value", value2, results[1]);
+        assertEquals("Results[2] has the wrong value", value3, results[2]);
     }
 
     /**
-     * Test setting a float.
+     * Test invoking a setter with multiple arguments.
      */
     @Test
-    public void testSetFloat(){
-        locusModel.setFloat("FloatField", 1.1f);
-        assertTrue("Invalid FloatField value", modelOne.getFloatField() == 1.1f);
-    }
+    public void testSetterWithMultipleArgs(){
+        String value1 = "String22";
+        int value2 = 5;
+        double value3 = 3.2;
+        locusModel.setValue("ThreeFields", value1, value2, value3);
 
-    /**
-     * Test setting a double.
-     */
-    @Test
-    public void testSetDouble(){
-        locusModel.setDouble("DoubleField", 1.1d);
-        assertTrue("Invalid DoubleField value", modelOne.getDoubleField() == 1.1d);
-    }
-
-    /**
-     * Test setting a short.
-     */
-    @Test
-    public void testSetShort(){
-        locusModel.setShort("ShortField", (short)1);
-        assertTrue("Invalid ShortField value", modelOne.getShortField() == (short) 1);
-    }
-
-    /**
-     * Test setting a byte.
-     */
-    @Test
-    public void testSetByte(){
-        locusModel.setByte("ByteField", (byte) 11);
-        assertTrue("Invalid ByteField value", modelOne.getByteField() == (byte) 11);
-    }
-
-    /**
-     * Test setting a long.
-     */
-    @Test
-    public void testSetLong(){
-        locusModel.setLong("LongField", 1234567890L);
-        assertTrue("Invalid LongField value", modelOne.getLongField() == 1234567890L);
-    }
-
-    /**
-     * Test setting a boolean.
-     */
-    @Test
-    public void testSetBoolean(){
-        locusModel.setBoolean("BooleanField", true);
-        assertTrue("Invalid BooleanField value", modelOne.getBooleanField());
-    }
-
-    /**
-     * Test setting a character.
-     */
-    @Test
-    public void testSetCharacter(){
-        locusModel.setCharacter("CharField", 'a');
-        assertEquals("Invalid CharField value", modelOne.getCharField(), 'a');
+        assertEquals("ModelOne StringField invalid value", value1, modelOne.getStringField());
+        assertEquals("ModelOne IntField invalid value", value2, modelOne.getIntField());
+        assertTrue("ModelOne DoubleField invalid value", value3 == modelOne.getDoubleField());
     }
 
     /**
@@ -165,120 +141,34 @@ public class LocusModelTest {
      */
     @Test
     public void testSetObject(){
-        locusModel.setObject("ObjectField", new Object());
+        locusModel.setValue("ObjectField", new Object());
         assertNotNull("Invalid ObjectField value", modelOne.getObjectField());
     }
 
     /**
-     * Test setting a value using setObject(...),
+     * Test setting a value using setValue(...),
      * but with a different object type to test
      * inheritance.
      */
     @Test
     public void testSetWithInheritance(){
         BigDecimal bigDecimal = new BigDecimal(5.12345);
-        locusModel.setObject("ObjectField", bigDecimal);
+        locusModel.setValue("ObjectField", bigDecimal);
         assertEquals("Invalid ObjectField value", modelOne.getObjectField(), bigDecimal);
-    }
-
-    /**
-     * Test getting an int value.
-     */
-    @Test
-    public void testGetInt(){
-        modelOne.setIntField(123);
-        assertTrue("Invalid IntField value", locusModel.getInt("IntField") == 123);
-    }
-
-    /**
-     * Test getting a float value.
-     */
-    @Test
-    public void testGetFloat(){
-        modelOne.setFloatField(22.2f);
-        assertTrue("Invalid FloatField value", locusModel.getFloat("FloatField") == 22.2f);
-    }
-
-    /**
-     * Test getting a double value.
-     */
-    @Test
-    public void testGetDouble(){
-        modelOne.setDoubleField(33.3d);
-        assertTrue("Invalid DoubleField value", locusModel.getDouble("DoubleField") == 33.3d);
-    }
-
-    /**
-     * Test getting a short value.
-     */
-    @Test
-    public void testGetShort(){
-        modelOne.setShortField((short) 5);
-        assertTrue("Invalid ShortField value", locusModel.getShort("ShortField") == (short) 5);
-    }
-
-    /**
-     * Test getting a byte value.
-     */
-    @Test
-    public void testGetByte(){
-        modelOne.setByteField((byte)456);
-        assertTrue("Invalid ByteField value", locusModel.getByte("ByteField") == (byte) 456);
-    }
-
-    /**
-     * Test getting a long value.
-     */
-    @Test
-    public void testGetLong(){
-        modelOne.setLongField(9876543210L);
-        assertTrue("Invalid LongField value", locusModel.getLong("LongField") == 9876543210L);
-    }
-
-    /**
-     * Test getting a boolean value.
-     */
-    @Test
-    public void testGetBoolean(){
-        //If testSetBoolean runs before this, then the field will already be true
-        //If nothing has run, it'll be false by default
-        if(!modelOne.getBooleanField()){
-            modelOne.setBooleanField(true);
-        }
-
-        assertTrue("Invalid BooleanField value", locusModel.getBoolean("BooleanField"));
-    }
-
-    /**
-     * Test getting a String value.
-     */
-    @Test
-    public void testGetString(){
-        modelOne.setStringField("AnotherValue");
-        assertEquals("Invalid StringField value", locusModel.getString("StringField"), "AnotherValue");
-    }
-
-    /**
-     * Test getting a Character value.
-     */
-    @Test
-    public void testGetCharacter(){
-        modelOne.setCharField('z');
-        assertTrue("Invalid CharField value", locusModel.getCharacter("CharField") == 'z');
     }
 
     /**
      * Test getting an Object value.
      */
     @Test
-    public void setGetObject(){
+    public void testGetObject(){
         //If testSetObject has run before this, then the field won't be null.
         //If nothing has run, it'll be null by default
         if(modelOne.getObjectField() == null){
             modelOne.setObjectField(new Object());
         }
 
-        assertNotNull("Invalid ObjectField value", locusModel.getObject("ObjectField"));
+        assertNotNull("Invalid ObjectField value", locusModel.getValue("ObjectField"));
     }
 
     /**
@@ -289,7 +179,7 @@ public class LocusModelTest {
     public void testGetWithInheritance(){
         BigDecimal bigDecimal = new BigDecimal(567890.1234);
         modelOne.setObjectField(bigDecimal);
-        assertEquals("Invalid ObjectField value", locusModel.getObject("ObjectField"), bigDecimal);
+        assertEquals("Invalid ObjectField value", locusModel.getValue("ObjectField"), bigDecimal);
     }
 
     /**

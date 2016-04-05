@@ -28,6 +28,10 @@ import io.craigmiller160.locus.annotations.Model;
 @Model
 public class ModelOne {
 
+    public static final int STRING_FIELD = 1;
+    public static final int INT_FIELD = 2;
+    public static final int DOUBLE_FIELD = 3;
+
     private String stringField;
     private int intField;
     private float floatField;
@@ -130,6 +134,31 @@ public class ModelOne {
             case 2:
                 result = intField;
                 break;
+        }
+
+        return result;
+    }
+
+    public void setThreeFields(String stringField, int intField, double doubleField){
+        this.stringField = stringField;
+        this.intField = intField;
+        this.doubleField = doubleField;
+    }
+
+    public Object[] getMultipleFields(int...fields){
+        Object[] result = new Object[fields.length];
+        for(int i = 0; i < fields.length; i++){
+            switch(fields[i]){
+                case STRING_FIELD:
+                    result[i] = stringField;
+                    break;
+                case INT_FIELD:
+                    result[i] = intField;
+                    break;
+                case DOUBLE_FIELD:
+                    result[i] = doubleField;
+                    break;
+            }
         }
 
         return result;

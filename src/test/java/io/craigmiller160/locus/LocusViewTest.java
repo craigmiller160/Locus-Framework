@@ -18,7 +18,6 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.reflect.ClassAndMethod;
 import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.ViewOne;
 import io.craigmiller160.locus.sample.ViewThree;
 import io.craigmiller160.locus.util.LocusStorage;
@@ -70,7 +69,7 @@ public class LocusViewTest {
 
             Method m1 = viewOne.getClass().getMethod("setFirstField", String.class);
             Method m2 = viewThree.getClass().getMethod("setFirstField", String.class);
-            Method m3 = viewOne.getClass().getMethod("setTwoFields", String.class, String.class);
+            Method m3 = viewOne.getClass().getMethod("setThreeFields", String.class, int.class, double.class);
             Method m4 = viewOne.getClass().getMethod("setObjectField", Object.class);
 
             ClassAndMethod cam1 = new ClassAndMethod(viewOne.getClass(), m1);
@@ -80,7 +79,7 @@ public class LocusViewTest {
 
             storage.addViewPropSetter("FirstField", cam1);
             storage.addViewPropSetter("FirstField", cam2);
-            storage.addViewPropSetter("TwoFields", cam3);
+            storage.addViewPropSetter("ThreeFields", cam3);
             storage.addViewPropSetter("ObjectField", cam4);
 
             storage.addViewInstance(viewOne.getClass(), viewOne);
@@ -122,7 +121,7 @@ public class LocusViewTest {
     @Test
     public void testInvokeMultipleSetters(){
         String value = "Value";
-        locusView.setObject("FirstField", value);
+        locusView.setValue("FirstField", value);
 
         String val1 = viewOne.getFirstField();
         String val2 = viewThree.getViewThreeFirstField();
@@ -146,7 +145,7 @@ public class LocusViewTest {
 
         boolean exceptionWasThrown = false;
         try{
-            locusView.setObject("TwoFields", value);
+            locusView.setValue("TwoFields", value);
         }
         catch(LocusReflectiveException ex){
             exceptionWasThrown = true;
@@ -166,7 +165,7 @@ public class LocusViewTest {
 
         boolean exceptionWasThrown = false;
         try{
-            locusView.setObject("NoField", value);
+            locusView.setValue("NoField", value);
         }
         catch(LocusReflectiveException ex){
             exceptionWasThrown = true;
@@ -174,6 +173,21 @@ public class LocusViewTest {
         }
 
         assertTrue("No exception was thrown for an attempt to invoke non-existent method", exceptionWasThrown);
+    }
+
+    /**
+     * Test invoking a setter with multiple arguments.
+     */
+    @Test
+    public void testSetMultipleValues(){
+        String value1 = "Value1";
+        int value2 = 2;
+        double value3 = 3.3;
+        locusView.setValue("ThreeFields", value1, value2, value3);
+
+        assertEquals("ViewOne FirstField invalid value", value1, viewOne.getFirstField());
+        assertEquals("ViewOne IntField invalid value", value2, viewOne.getIntField());
+        assertTrue("ViewOne DoubleField invalid value", value3 == viewOne.getDoubleField());
     }
 
 }

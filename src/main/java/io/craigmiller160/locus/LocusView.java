@@ -62,43 +62,15 @@ public class LocusView {
         storage.addViewInstance(view.getClass(), view);
     }
 
-    public void setInt(String propName, int value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setFloat(String propName, float value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setDouble(String propName, double value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setShort(String propName, short value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setByte(String propName, byte value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setLong(String propName, long value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setBoolean(String propName, boolean value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setCharacter(String propName, char value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setString(String propName, String value) throws LocusException{
-        setObject(propName, value);
-    }
-
-    public void setObject(String propName, Object value) throws LocusException{
+    /**
+     * Set a value in any view instances that display the
+     * specified property.
+     *
+     * @param propName the name of the property.
+     * @param value the value(s) of the property.
+     * @throws LocusException if an error occurs.
+     */
+    public void setValue(String propName, Object... value) throws LocusException{
         Collection<ClassAndMethod> setters = storage.getSettersForViewProp(propName);
         if(setters == null || setters.size() <= 0){
             throw new LocusReflectiveException("No setters available in registered views to invoke for property. Property Name: " + propName);

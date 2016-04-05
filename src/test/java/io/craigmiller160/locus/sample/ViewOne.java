@@ -137,9 +137,10 @@ public class ViewOne {
         this.secondField = secondField;
     }
 
-    public void setTwoFields(String firstField, String secondField){
+    public void setThreeFields(String firstField, int intField, double doubleField){
         this.firstField = firstField;
-        this.secondField = secondField;
+        this.intField = intField;
+        this.doubleField = doubleField;
     }
 
 }

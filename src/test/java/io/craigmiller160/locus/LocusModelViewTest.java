@@ -130,7 +130,7 @@ public class LocusModelViewTest {
     @Test
     public void testSetModelAndView(){
         BigDecimal value = new BigDecimal("3.33333");
-        locusModel.setObject("ObjectField", value);
+        locusModel.setValue("ObjectField", value);
 
         assertNotNull("ModelOne ObjectField is null", modelOne.getObjectField());
         assertNotNull("ViewOne ObjectField is null", viewOne.getObjectField());
@@ -145,7 +145,7 @@ public class LocusModelViewTest {
     @Test
     public void testSetModelAndMultipleViews(){
         String value = "Value";
-        locusModel.setString("StringField", value);
+        locusModel.setValue("StringField", value);
 
         assertNotNull("ModelOne StringField is null", modelOne.getStringField());
         assertNotNull("ViewOne StringField is null", viewOne.getStringField());
@@ -154,6 +154,15 @@ public class LocusModelViewTest {
         assertEquals("ModelOne StringField wrong value", modelOne.getStringField(), value);
         assertEquals("ViewOne StringField wrong value", viewOne.getStringField(), value);
         assertEquals("ViewThree StringField wrong value", viewThree.getStringField(), value);
+    }
+
+    /**
+     * Test setting multiple values in a model
+     * and having them be updated in the views.
+     */
+    @Test
+    public void testSetMultipleValues(){
+
     }
 
 }
