@@ -42,6 +42,15 @@ public class LocusConfigurationLogger {
     private static final String VIEW_OUTPUT_TITLE = "VIEW PROPERTIES";
     private static final String CONTROLLER_OUTPUT_TITLE = "CONTROLLERS";
 
+    private static final String PROPERTY_HEADER = "Property";
+    private static final String CLASS_HEADER = "Class";
+    private static final String METHODS_HEADER = "Methods";
+
+    private static final String SETTER_METHOD = "Setter";
+    private static final String GETTER_METHOD = "Getter";
+
+    private static final String LS = System.lineSeparator();
+
     public static void logLocusConfiguration(){
         logger.info("Logging all Locus configuration details. Set logging to lowest level to view details for debugging.");
 
@@ -54,12 +63,34 @@ public class LocusConfigurationLogger {
     private static String getModelPropertyOutput(){
         StringBuilder builder = new StringBuilder();
 
-        builder.append(MODEL_OUTPUT_TITLE);
+        builder.append(MODEL_OUTPUT_TITLE).append(LS);
 
-        Map<String,ObjectAndMethod> modelSetters = storage.getAllModelPropSetters();
-        Map<String,ObjectAndMethod> modelGetters = storage.getAllModelPropGetters();
+        Set<String> propertyNames = storage.getAllModelPropertyNames();
+        for(String prop : propertyNames){
+            builder.append(String.format(" %-7s: ", PROPERTY_HEADER)).append(prop).append(LS);
 
+            boolean hasSetter = storage.getModelPropSetter(prop) != null;
+            boolean hasGetter = storage.getModelPropGetter(prop) != null;
+            String classType = hasSetter ? storage.getModelPropSetter(prop).getClass().getName() :
+                    storage.getModelPropGetter(prop).getClass().getName();
 
+            builder.append(String.format(" %-7s: ", CLASS_HEADER)).append(classType).append(LS);
+            builder.append(String.format(" %-7s: ", METHODS_HEADER));
+            if(hasSetter){
+                builder.append(SETTER_METHOD);
+                builder.append(" set(").append(prop).append(")");
+                if(hasGetter){
+                    builder.append(", ");
+                }
+            }
+
+            if(hasGetter){
+                builder.append(GETTER_METHOD);
+                builder.append(" get(").append(prop).append(")");
+            }
+
+            builder.append(LS);
+        }
 
         return builder.toString();
     }
@@ -70,8 +101,9 @@ public class LocusConfigurationLogger {
     }
 
     private static String getControllerOutput(){
-        //TODO finish this
-        return null;
+        StringBuilder builder = new StringBuilder();
+
+        return builder.toString();
     }
 
     public static void outputLocusConfigurationToConsole(){

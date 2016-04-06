@@ -81,6 +81,10 @@ public class LocusStorage {
         return viewPropSetters.keySet();
     }
 
+    public Set<String> getAllControllerNames(){
+        return controllerTypes.keySet();
+    }
+
     /*
      * Model Setter Section
      */
