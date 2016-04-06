@@ -29,10 +29,12 @@ import org.slf4j.LoggerFactory;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -188,6 +190,34 @@ public class LocusViewTest {
         assertEquals("ViewOne FirstField invalid value", value1, viewOne.getFirstField());
         assertEquals("ViewOne IntField invalid value", value2, viewOne.getIntField());
         assertTrue("ViewOne DoubleField invalid value", value3 == viewOne.getDoubleField());
+    }
+
+    /**
+     * Test that a weak reference becomes null
+     * at the appropriate time.
+     */
+    @Test
+    public void testWeakRefNull() throws Exception{
+        //Any object can be a view, using a BigDecimal provides a specific value to test
+        BigDecimal value = new BigDecimal(33.23);
+        locusView.registerView(value);
+
+        Collection<WeakReference<?>> instances = storage.getViewInstancesForClass(BigDecimal.class);
+        assertNotNull("Pre-Nulling Instances collection is null, it shouldn't be", instances);
+        assertEquals("Pre-Nulling Instances collection wrong size", 1, instances.size());
+
+        WeakReference<?> instance = instances.iterator().next();
+        assertNotNull("Pre-Nulling Instance object is null, it should not be yet", instance.get());
+        assertEquals("Pre-Nulling Instance object wrong value", value, instance.get());
+
+        //Null the value and run the garbage collector
+        value = null;
+        Runtime.getRuntime().gc();
+
+        instances = storage.getViewInstancesForClass(BigDecimal.class);
+        assertNotNull("Post-Nulling Instances collection is null, it shouldn't be", instances);
+        assertEquals("Post-Nulling Instances collection wrong size", 0, instances.size());
+
     }
 
 }
