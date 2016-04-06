@@ -41,6 +41,8 @@ public class Locus {
 
     public static LocusView view = new LocusView();
 
+    public static LocusDebug debug = new LocusDebug();
+
     public static void initialize(){
         //TODO critical method that needs to be finished
         //TODO this must validate that every model setter/getter is unique

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package io.craigmiller160.locus.util;
+package io.craigmiller160.locus;
 
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
+import io.craigmiller160.locus.reflect.ClassAndMethod;
+import io.craigmiller160.locus.util.LocusStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -32,10 +32,10 @@ import java.util.Set;
  *
  * Created by craigmiller on 4/6/16.
  */
-public class LocusConfigurationLogger {
+public class LocusDebug {
 
-    private static final LocusStorage storage = LocusStorage.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(LocusConfigurationLogger.class);
+    private LocusStorage storage;
+    private static final Logger logger = LoggerFactory.getLogger(LocusDebug.class);
 
     private static final String CONFIG_OUTPUT_TITLE = "LOCUS PROPERTY CONFIGURATION";
     private static final String MODEL_OUTPUT_TITLE = "MODEL PROPERTIES";
@@ -44,14 +44,25 @@ public class LocusConfigurationLogger {
 
     private static final String PROPERTY_HEADER = "Property";
     private static final String CLASS_HEADER = "Class";
+    private static final String CLASSES_HEADER = "Classes";
     private static final String METHODS_HEADER = "Methods";
+    private static final String NAME_HEADER = "Name";
 
     private static final String SETTER_METHOD = "Setter";
     private static final String GETTER_METHOD = "Getter";
 
     private static final String LS = System.lineSeparator();
 
-    public static void logLocusConfiguration(){
+    LocusDebug(){
+        this.storage = LocusStorage.getInstance();
+    }
+
+    //Testing constructor only
+    LocusDebug(LocusStorage storage){
+        this.storage = storage;
+    }
+
+    public void logLocusConfiguration(){
         logger.info("Logging all Locus configuration details. Set logging to lowest level to view details for debugging.");
 
         logger.trace(CONFIG_OUTPUT_TITLE);
@@ -60,7 +71,7 @@ public class LocusConfigurationLogger {
         logger.trace(getControllerOutput());
     }
 
-    private static String getModelPropertyOutput(){
+    private String getModelPropertyOutput(){
         StringBuilder builder = new StringBuilder();
 
         builder.append(MODEL_OUTPUT_TITLE).append(LS);
@@ -74,8 +85,8 @@ public class LocusConfigurationLogger {
             String classType = hasSetter ? storage.getModelPropSetter(prop).getClass().getName() :
                     storage.getModelPropGetter(prop).getClass().getName();
 
-            builder.append(String.format(" %-7s: ", CLASS_HEADER)).append(classType).append(LS);
-            builder.append(String.format(" %-7s: ", METHODS_HEADER));
+            builder.append(String.format("   %-7s: ", CLASS_HEADER)).append(classType).append(LS);
+            builder.append(String.format("   %-7s: ", METHODS_HEADER));
             if(hasSetter){
                 builder.append(SETTER_METHOD);
                 builder.append(" set(").append(prop).append(")");
@@ -95,18 +106,48 @@ public class LocusConfigurationLogger {
         return builder.toString();
     }
 
-    private static String getViewPropertyOutput(){
-        //TODO finish this
-        return null;
-    }
-
-    private static String getControllerOutput(){
+    private String getViewPropertyOutput(){
         StringBuilder builder = new StringBuilder();
+
+        builder.append(VIEW_OUTPUT_TITLE).append(LS);
+
+        Set<String> propertyNames = storage.getAllViewPropNames();
+        for(String prop : propertyNames){
+            builder.append(String.format(" %-7s: ", PROPERTY_HEADER)).append(prop).append(LS);
+
+            builder.append(String.format("   %-7s: ", CLASSES_HEADER));
+            Collection<ClassAndMethod> cams = storage.getSettersForViewProp(prop);
+            Iterator<ClassAndMethod> camIt = cams.iterator();
+            while(camIt.hasNext()){
+                ClassAndMethod cam = camIt.next();
+                String classType = cam.getSourceType().getName();
+                builder.append(classType);
+                if(camIt.hasNext()){
+                    builder.append(LS);
+                }
+            }
+        }
+
 
         return builder.toString();
     }
 
-    public static void outputLocusConfigurationToConsole(){
+    private String getControllerOutput(){
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(CONTROLLER_OUTPUT_TITLE).append(LS);
+
+        Set<String> controllerNames = storage.getAllControllerNames();
+        for(String name : controllerNames){
+            builder.append(String.format(" %-7s: ", NAME_HEADER)).append(name).append(LS);
+            String classType = storage.getControllerType(name).getName();
+            builder.append(String.format("   %-7s: ", CLASS_HEADER)).append(classType).append(LS);
+        }
+
+        return builder.toString();
+    }
+
+    public void outputLocusConfigurationToConsole(){
         System.out.println(CONFIG_OUTPUT_TITLE);
         System.out.println(getModelPropertyOutput());
         System.out.println(getViewPropertyOutput());
