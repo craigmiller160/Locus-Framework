@@ -22,7 +22,9 @@ import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A special storage class where all the class types,
@@ -66,6 +68,17 @@ public class LocusStorage {
         controllerSingletons = new HashMap<>();
         controllerTypes = new HashMap<>();
         controllerSingletonInstances = new HashMap<>();
+    }
+
+    public Set<String> getAllModelPropertyNames(){
+        Set<String> allPropNames = new HashSet<>();
+        allPropNames.addAll(modelPropGetters.keySet());
+        allPropNames.addAll(modelPropSetters.keySet());
+        return allPropNames;
+    }
+
+    public Set<String> getAllViewPropNames(){
+        return viewPropSetters.keySet();
     }
 
     /*

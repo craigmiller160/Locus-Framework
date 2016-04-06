@@ -87,7 +87,7 @@ public class LocusScannerImpl implements LocusScanner{
             Method[] publicMethods = viewType.getMethods();
             for(Method m : publicMethods){
                 if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
-                    String propName = m.getName().substring(3, m.getName().length());
+                    String propName = m.getName().substring(3);
                     ClassAndMethod cam = new ClassAndMethod(viewType, m);
                     logger.trace("Adding view property setter to storage. Property: {} | Setter: {}", propName, cam.toString());
                     storage.addViewPropSetter(propName, cam);
@@ -115,7 +115,7 @@ public class LocusScannerImpl implements LocusScanner{
             Method[] publicMethods = modelType.getMethods();
             for(Method m : publicMethods){
                 if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
-                    String propName = m.getName().substring(3, m.getName().length());
+                    String propName = m.getName().substring(3);
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
                     validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropSetters().values());
                     logger.trace("Adding model property setter to storage. Property: {} | Setter: {}", propName, oam.toString());
@@ -123,7 +123,8 @@ public class LocusScannerImpl implements LocusScanner{
                 }
                 else if((m.getName().startsWith("get") || m.getName().startsWith("is")) &&
                         isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
-                    String propName = m.getName().substring(3, m.getName().length());
+                    //Set the propName differently for either a "get" or "is" prefix, based on their different lengths
+                    String propName = m.getName().startsWith("get") ? m.getName().substring(3) : m.getName().substring(2);
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
                     validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropGetters().values());
                     logger.trace("Adding model property getter to storage. Property: {} | Getter: {}", propName, oam.toString());
