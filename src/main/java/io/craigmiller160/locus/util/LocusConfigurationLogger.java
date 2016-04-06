@@ -16,8 +16,14 @@
 
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A special class that simply serves to output a log
@@ -31,12 +37,48 @@ public class LocusConfigurationLogger {
     private static final LocusStorage storage = LocusStorage.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(LocusConfigurationLogger.class);
 
+    private static final String CONFIG_OUTPUT_TITLE = "LOCUS PROPERTY CONFIGURATION";
+    private static final String MODEL_OUTPUT_TITLE = "MODEL PROPERTIES";
+    private static final String VIEW_OUTPUT_TITLE = "VIEW PROPERTIES";
+    private static final String CONTROLLER_OUTPUT_TITLE = "CONTROLLERS";
+
     public static void logLocusConfiguration(){
         logger.info("Logging all Locus configuration details. Set logging to lowest level to view details for debugging.");
 
-        //TODO log each model class that has been scanned, the properties it has, and the types of methods (eg getters/setters) each property has
-        //TODO log each view class that has been scanned, the properties it has, and the types of methods (eg getters/setters) each property has.
-        //TODO log each controller class, and its corresponding name
+        logger.trace(CONFIG_OUTPUT_TITLE);
+        logger.trace(getModelPropertyOutput());
+        logger.trace(getViewPropertyOutput());
+        logger.trace(getControllerOutput());
+    }
+
+    private static String getModelPropertyOutput(){
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(MODEL_OUTPUT_TITLE);
+
+        Map<String,ObjectAndMethod> modelSetters = storage.getAllModelPropSetters();
+        Map<String,ObjectAndMethod> modelGetters = storage.getAllModelPropGetters();
+
+
+
+        return builder.toString();
+    }
+
+    private static String getViewPropertyOutput(){
+        //TODO finish this
+        return null;
+    }
+
+    private static String getControllerOutput(){
+        //TODO finish this
+        return null;
+    }
+
+    public static void outputLocusConfigurationToConsole(){
+        System.out.println(CONFIG_OUTPUT_TITLE);
+        System.out.println(getModelPropertyOutput());
+        System.out.println(getViewPropertyOutput());
+        System.out.println(getControllerOutput());
     }
 
 }
