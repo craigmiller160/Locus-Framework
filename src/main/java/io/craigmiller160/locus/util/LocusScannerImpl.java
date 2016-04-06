@@ -58,7 +58,7 @@ public class LocusScannerImpl implements LocusScanner{
 
     @Override
     public void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
-        logger.debug("Scanning package \"{}\" for annotated classes", packageName);
+        logger.debug("Beginning scan of package \"{}\" for annotated classes", packageName);
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage(packageName))
                 .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
@@ -69,7 +69,7 @@ public class LocusScannerImpl implements LocusScanner{
         parseControllerClasses(reflections, storage);
         parseViewClasses(reflections, storage, scannerExclusions);
 
-        logger.debug("Package {} scanned. Results below.", packageName);
+        logger.info("Package {} scanned.", packageName);
         logger.debug("Total view property setters registered: {}", storage.getViewPropSetterCount());
         logger.debug("Total model property setters registered: {}", storage.getModelPropSetterCount());
         logger.debug("Total model property getters registered: {}", storage.getModelPropGetterCount());
