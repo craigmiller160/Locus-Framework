@@ -16,10 +16,10 @@
 
 package io.craigmiller160.locus;
 
-import io.craigmiller160.locus.reflect.InvocationExceptionHandler;
+import io.craigmiller160.locus.reflect.LocusInvoke;
 import io.craigmiller160.locus.reflect.LocusReflectiveException;
+import io.craigmiller160.locus.reflect.ObjectAndMethod;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,15 +71,8 @@ class LocusControllerCallback {
         }
 
         //Attempt to invoke the method and get the result
-        try{
-            result = method.invoke(callback, args);
-        }
-        catch(IllegalAccessException ex){
-            throw new LocusReflectiveException(String.format("Unable to access method: %s", method.getName()), ex);
-        }
-        catch(InvocationTargetException ex){
-            InvocationExceptionHandler.rethrowInvocationTargetExceptionCause(ex);
-        }
+        ObjectAndMethod oam = new ObjectAndMethod(callback, method);
+        result = LocusInvoke.invokeMethod(oam, args);
 
         return result;
     }

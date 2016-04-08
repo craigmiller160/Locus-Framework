@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -178,6 +180,60 @@ public class LocusControllerTest {
         LocusControllerCallback lcc = locusController.callback(cOne);
         assertNotNull("ControllerCallback is null", lcc);
         assertEquals("ControllerCallback is wrapping wrong object", callback, lcc.getCallback());
+    }
+
+    /**
+     * Test using the Controller callback to
+     * retrieve a value from the underlying object.
+     */
+    @Test
+    public void testUsingControllerCallback(){
+        LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
+        storage.addControllerType("ControllerOne", ControllerOne.class, false);
+
+        Object callback = new Object();
+
+        Object cOne = locusController.getController("ControllerOne", callback);
+        assertNotNull("Controller instance is null", cOne);
+        assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
+
+        LocusControllerCallback lcc = locusController.callback(cOne);
+        assertNotNull("ControllerCallback is null", lcc);
+        assertEquals("ControllerCallback is wrapping wrong object", callback, lcc.getCallback());
+
+        Object result = lcc.getValue("Class");
+        assertNotNull("Result retrieved from ControllerCallback is null", result);
+        assertEquals("Result retrieved from ControllerCallback is not correct", Object.class, result);
+    }
+
+    /**
+     * Test using the Controller callback to
+     * retrieve a value from the underlying object.
+     * This tests the generic version of the method
+     * that it returns the correct type.
+     */
+    @Test
+    public void testUsingControllerCallbackGeneric(){
+        LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
+        storage.addControllerType("ControllerOne", ControllerOne.class, false);
+
+        //I know, odd choice for a callback, first thing I could think of with a standard getter
+        Thread callback = new Thread();
+        long value = callback.getId();
+
+        Object cOne = locusController.getController("ControllerOne", callback);
+        assertNotNull("Controller instance is null", cOne);
+        assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
+
+        LocusControllerCallback lcc = locusController.callback(cOne);
+        assertNotNull("ControllerCallback is null", lcc);
+        assertEquals("ControllerCallback is wrapping wrong object", callback, lcc.getCallback());
+
+        long result = lcc.getValue("Id", Long.class);
+        assertNotNull("Result retrieved from ControllerCallback is null", result);
+        assertEquals("Result retrieved from ControllerCallback is not correct", value, result);
     }
 
 }
