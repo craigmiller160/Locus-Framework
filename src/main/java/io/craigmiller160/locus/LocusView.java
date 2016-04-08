@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Created by craig on 3/12/16.

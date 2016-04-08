@@ -16,7 +16,7 @@
 
 package io.craigmiller160.locus;
 
-import io.craigmiller160.locus.reflect.LocusInvocationException;
+import io.craigmiller160.locus.reflect.InvocationExceptionHandler;
 import io.craigmiller160.locus.reflect.LocusReflectiveException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -78,7 +78,7 @@ class LocusControllerCallback {
             throw new LocusReflectiveException(String.format("Unable to access method: %s", method.getName()), ex);
         }
         catch(InvocationTargetException ex){
-            throw new LocusInvocationException(String.format("Exception while trying to invoke method: %s", method.getName()), ex);
+            InvocationExceptionHandler.rethrowInvocationTargetExceptionCause(ex);
         }
 
         return result;
