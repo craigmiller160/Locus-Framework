@@ -47,6 +47,8 @@ public class LocusStorage {
     private Map<String,Class<?>> controllerTypes;
     private Map<String,Object> controllerSingletonInstances;
 
+    private Map<Object,Object> controllerCallbacks;
+
     public static LocusStorage getInstance(){
         if(instance == null){
             synchronized (LocusStorage.class){
@@ -68,6 +70,8 @@ public class LocusStorage {
         controllerSingletons = new HashMap<>();
         controllerTypes = new HashMap<>();
         controllerSingletonInstances = new HashMap<>();
+
+        controllerCallbacks = new HashMap<>();
     }
 
     public Set<String> getAllModelPropertyNames(){
@@ -238,6 +242,22 @@ public class LocusStorage {
 
     public Object getControllerSingletonInstance(String name){
         return controllerSingletonInstances.get(name);
+    }
+
+    /*
+     * Controller Callback Methods
+     */
+
+    public void addControllerCallback(Object controller, Object callback){
+        controllerCallbacks.put(controller, callback);
+    }
+
+    public Object getControllerCallback(Object controller){
+        return controllerCallbacks.get(controller);
+    }
+
+    public void removeControllerCallback(Object controller){
+        controllerCallbacks.remove(controller);
     }
 
 }

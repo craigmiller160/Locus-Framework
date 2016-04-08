@@ -57,14 +57,21 @@ public class LocusController {
         this.storage = storage;
     }
 
+    public LocusControllerCallback callback(Object controller) throws LocusException{
+        Object callback = storage.getControllerCallback(controller);
+        if(callback == null){
+            throw new LocusException(String.format("No callback Object assigned to controller"));
+        }
 
+        return new LocusControllerCallback(callback);
+    }
 
     public Object getController(String controllerName) throws LocusException{
         Object controller = null;
 
         Class<?> controllerType = storage.getControllerType(controllerName);
         if(controllerType == null){
-            throw new LocusNoControllerException("No controller exists with the name \"" + controllerName + "\"");
+            throw new LocusNoControllerException(String.format("No controller exists with the name \"%s\"", controllerName));
         }
 
         boolean singleton = storage.isControllerSingleton(controllerName);
@@ -82,17 +89,34 @@ public class LocusController {
             controller = ObjectCreator.instantiateClass(controllerType);
         }
 
+        if(controller == null){
+            throw new LocusNoControllerException(String.format("Unable to get instance of controller named: %s", controllerName));
+        }
+
         return controller;
     }
 
     public <T> T getController(String controllerName, Class<T> controllerType) throws LocusException{
         Object controller = getController(controllerName);
+
         if(!controllerType.isAssignableFrom(controller.getClass())){
-            throw new LocusInvalidTypeException("The type of the controller named \"" + controllerName +
-                    "\" doesn't match the expected type. Expected: " + controllerType.getName() +
-                    " | Actual: " + controller.getClass().getName());
+            throw new LocusInvalidTypeException(
+                    String.format("The type of the controller names\"%1$s\" doesn't match the expected type. Expected: %2$s | Actual: %3$s",
+                            controllerName, controllerType.getName(), controller.getClass().getName()));
         }
         return (T) controller;
+    }
+
+    public Object getController(String controllerName, Object callback) throws LocusException{
+        Object controller = getController(controllerName);
+        storage.addControllerCallback(controller, callback);
+        return controller;
+    }
+
+    public <T> T getController(String controllerName, Class<T> controllerType, Object callback){
+        T controller = getController(controllerName, controllerType);
+        storage.addControllerCallback(controller, callback);
+        return controller;
     }
 
 }
