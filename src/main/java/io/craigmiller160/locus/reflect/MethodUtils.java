@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.reflect;
 
+import io.craigmiller160.locus.LocusInvalidTypeException;
 import io.craigmiller160.locus.util.MultiValueMap;
 
 import java.lang.reflect.Array;
@@ -194,8 +195,13 @@ public class MethodUtils {
         //Create a varargs array of the specified size. If 0, an empty array will be created
         Object varArgs = Array.newInstance(paramTypes[varArgsIndex].getComponentType(), varArgsSize);
 
-        //The components are assigned reflectively to accomodate for primitive arrays
+        //The components are assigned reflectively to accommodate for primitive arrays
         for(int i = 0; i < varArgsSize; i++){
+            if(!paramTypes[varArgsIndex].getComponentType().isAssignableFrom(newParams[varArgsIndex + i].getClass()) &&
+                    !isAcceptablePrimitive(paramTypes[varArgsIndex].getComponentType(), newParams[varArgsIndex + i].getClass())){
+                throw new LocusInvalidTypeException(String.format("An object with type %1$s cannot be assigned to an array of component type %2$s",
+                        newParams[varArgsIndex].getClass().getName(), paramTypes[varArgsIndex].getComponentType()));
+            }
             Array.set(varArgs, i, newParams[varArgsIndex + i]);
         }
 

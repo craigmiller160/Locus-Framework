@@ -29,6 +29,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * A JUnit test class for the methods in the
+ * MethodUtils class.
+ *
  * Created by Craig on 2/14/2016.
  */
 public class MethodUtilsTest {
@@ -212,15 +215,15 @@ public class MethodUtilsTest {
         Method method = getMethod("method3");
         assertNotNull("Method for test wasn't retrieved", method);
         Object[] params = MethodUtils.convertParamsForVarArgsMethod(method, "Message", "One", "Two", "Three");
-        assertEquals("Params wrong size", params.length, 2);
-        assertEquals("First param isn't a String", params[0].getClass(), String.class);
-        assertEquals("First param has wrong content", params[0], "Message");
-        assertEquals("Second param isn't a String[]", params[1].getClass(), String[].class);
+        assertEquals("Params wrong size", 2, params.length);
+        assertEquals("First param isn't a String", String.class, params[0].getClass());
+        assertEquals("First param has wrong content", "Message", params[0]);
+        assertEquals("Second param isn't a String[]", String[].class, params[1].getClass());
         String[] arr = (String[]) params[1];
-        assertEquals("String Array Wrong Size", arr.length, 3);
-        assertEquals("String Array First Element Wrong Value", arr[0], "One");
-        assertEquals("String Array Second Element Wrong Value", arr[1], "Two");
-        assertEquals("String Array Third Element Wrong Value", arr[2], "Three");
+        assertEquals("String Array Wrong Size", 3, arr.length);
+        assertEquals("String Array First Element Wrong Value", "One", arr[0]);
+        assertEquals("String Array Second Element Wrong Value", "Two", arr[1]);
+        assertEquals("String Array Third Element Wrong Value", "Three", arr[2]);
     }
 
     /**
@@ -232,13 +235,13 @@ public class MethodUtilsTest {
         Method method = getMethod("method3");
         assertNotNull("Method for test wasn't retrieved", method);
         Object[] params = MethodUtils.convertParamsForVarArgsMethod(method, "Message", "One");
-        assertEquals("Params wrong size", params.length, 2);
-        assertEquals("First param isn't a String", params[0].getClass(), String.class);
-        assertEquals("First param has wrong content", params[0], "Message");
-        assertEquals("Second param isn't a String[]", params[1].getClass(), String[].class);
+        assertEquals("Params wrong size", 2, params.length);
+        assertEquals("First param isn't a String", String.class, params[0].getClass());
+        assertEquals("First param has wrong content", "Message", params[0]);
+        assertEquals("Second param isn't a String[]", String[].class, params[1].getClass());
         String[] arr = (String[]) params[1];
-        assertEquals("String Array Wrong Size", arr.length, 1);
-        assertEquals("String Array First Element Wrong Value", arr[0], "One");
+        assertEquals("String Array Wrong Size", 1, arr.length);
+        assertEquals("String Array First Element Wrong Value", "One", arr[0]);
     }
 
     /**
@@ -251,12 +254,12 @@ public class MethodUtilsTest {
         Method method = getMethod("method3");
         assertNotNull("Method for test wasn't retrieved", method);
         Object[] params = MethodUtils.convertParamsForVarArgsMethod(method, "Message");
-        assertEquals("Params wrong size", params.length, 2);
-        assertEquals("First param isn't a String", params[0].getClass(), String.class);
-        assertEquals("First param has wrong content", params[0], "Message");
-        assertEquals("Second param isn't a String[]", params[1].getClass(), String[].class);
+        assertEquals("Params wrong size", 2, params.length);
+        assertEquals("First param isn't a String", String.class, params[0].getClass());
+        assertEquals("First param has wrong content", "Message", params[0]);
+        assertEquals("Second param isn't a String[]", String[].class, params[1].getClass());
         String[] arr = (String[]) params[1];
-        assertEquals("String Array Wrong Size", arr.length, 0);
+        assertEquals("String Array Wrong Size", 0, arr.length);
     }
 
     /**
@@ -271,15 +274,15 @@ public class MethodUtilsTest {
         String[] args = new String[]{"One", "Two", "Three"};
 
         Object[] params = MethodUtils.convertParamsForVarArgsMethod(method, "Message", args);
-        assertEquals("Params wrong size", params.length, 2);
-        assertEquals("First param isn't a String", params[0].getClass(), String.class);
-        assertEquals("First param has wrong content", params[0], "Message");
-        assertEquals("Second param isn't a String[]", params[1].getClass(), String[].class);
+        assertEquals("Params wrong size", 2, params.length);
+        assertEquals("First param isn't a String", String.class, params[0].getClass());
+        assertEquals("First param has wrong content", "Message", params[0]);
+        assertEquals("Second param isn't a String[]", String[].class, params[1].getClass());
         String[] arr = (String[]) params[1];
-        assertEquals("String Array Wrong Size", arr.length, 3);
-        assertEquals("String Array First Element Wrong Value", arr[0], "One");
-        assertEquals("String Array Second Element Wrong Value", arr[1], "Two");
-        assertEquals("String Array Third Element Wrong Value", arr[2], "Three");
+        assertEquals("String Array Wrong Size", 3, arr.length);
+        assertEquals("String Array First Element Wrong Value", "One", arr[0]);
+        assertEquals("String Array Second Element Wrong Value", "Two", arr[1]);
+        assertEquals("String Array Third Element Wrong Value", "Three", arr[2]);
     }
 
     @Test
@@ -290,15 +293,15 @@ public class MethodUtilsTest {
         Integer[] args = new Integer[]{1, 2, 3};
 
         Object[] params = MethodUtils.convertParamsForVarArgsMethod(method, "Message", args);
-        assertEquals("Params wrong size", params.length, 2);
-        assertEquals("First param isn't a String", params[0].getClass(), String.class);
-        assertEquals("First param has wrong content", params[0], "Message");
-        assertEquals("Second param isn't a Integer[]", params[1].getClass(), Integer[].class);
+        assertEquals("Params wrong size", 2, params.length);
+        assertEquals("First param isn't a String", String.class, params[0].getClass());
+        assertEquals("First param has wrong content", "Message", params[0]);
+        assertEquals("Second param isn't a Integer[]", Integer[].class, params[1].getClass());
         Integer[] arr = (Integer[]) params[1];
-        assertEquals("Integer Array Wrong Size", arr.length, 3);
-        assertEquals("Integer Array First Element Wrong Value", arr[0], new Integer(1));
-        assertEquals("Integer Array Second Element Wrong Value", arr[1], new Integer(2));
-        assertEquals("Integer Array Third Element Wrong Value", arr[2], new Integer(3));
+        assertEquals("Integer Array Wrong Size", 3, arr.length);
+        assertEquals("Integer Array First Element Wrong Value", new Integer(1), arr[0]);
+        assertEquals("Integer Array Second Element Wrong Value", new Integer(2), arr[1]);
+        assertEquals("Integer Array Third Element Wrong Value", new Integer(3), arr[2]);
     }
 
     @Test
@@ -306,18 +309,18 @@ public class MethodUtilsTest {
         Method method = getMethod("method5");
         assertNotNull("Method for test wasn't retrieved", method);
         Object[] params = MethodUtils.convertParamsForVarArgsMethod(method, "Message", 22, 33.781, 46);
-        assertEquals("Params wrong size", params.length, 2);
-        assertEquals("First param isn't a String", params[0].getClass(), String.class);
-        assertEquals("First param has wrong content", params[0], "Message");
-        assertEquals("Second param isn't a Number[]", params[1].getClass(), Number[].class);
+        assertEquals("Params wrong size", 2, params.length);
+        assertEquals("First param isn't a String", String.class, params[0].getClass());
+        assertEquals("First param has wrong content", "Message", params[0]);
+        assertEquals("Second param isn't a Number[]", Number[].class, params[1].getClass());
         Number[] numArr = (Number[]) params[1];
-        assertEquals("Number Array Wrong Size", numArr.length, 3);
-        assertEquals("Number Array First Element Wrong Type", numArr[0].getClass(), Integer.class);
-        assertEquals("Number Array First Element Wrong Value", numArr[0], 22);
-        assertEquals("Number Array Second Element Wrong Type", numArr[1].getClass(), Double.class);
-        assertEquals("Number Array Second Element Wrong Value", numArr[1], 33.781);
-        assertEquals("Number Array Third Element Wrong Type", numArr[2].getClass(), Integer.class);
-        assertEquals("Number Array Third Element Wrong Value", numArr[2], 46);
+        assertEquals("Number Array Wrong Size", 3, numArr.length);
+        assertEquals("Number Array First Element Wrong Type", Integer.class, numArr[0].getClass());
+        assertEquals("Number Array First Element Wrong Value", 22, numArr[0]);
+        assertEquals("Number Array Second Element Wrong Type", Double.class, numArr[1].getClass());
+        assertEquals("Number Array Second Element Wrong Value", 33.781, numArr[1]);
+        assertEquals("Number Array Third Element Wrong Type", Integer.class, numArr[2].getClass());
+        assertEquals("Number Array Third Element Wrong Value", 46, numArr[2]);
     }
 
     /**
