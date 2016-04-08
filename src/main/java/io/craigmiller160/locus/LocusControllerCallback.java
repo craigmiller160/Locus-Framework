@@ -18,7 +18,6 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.reflect.LocusInvocationException;
 import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.util.LocusStorage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -32,7 +31,7 @@ import java.util.List;
  *
  * Created by craig on 4/6/16.
  */
-public class LocusControllerCallback {
+class LocusControllerCallback {
 
     private Object callback;
 

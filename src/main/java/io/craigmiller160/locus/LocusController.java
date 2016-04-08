@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  * Created by craig on 3/12/16.
  */
-public class LocusController {
+class LocusController {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusController.class);
 

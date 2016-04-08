@@ -32,7 +32,7 @@ import java.util.Set;
  *
  * Created by craigmiller on 4/6/16.
  */
-public class LocusDebug {
+class LocusDebug {
 
     private LocusStorage storage;
     private static final Logger logger = LoggerFactory.getLogger(LocusDebug.class);

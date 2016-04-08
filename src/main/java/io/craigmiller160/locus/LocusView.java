@@ -32,7 +32,7 @@ import java.util.Set;
 /**
  * Created by craig on 3/12/16.
  */
-public class LocusView {
+class LocusView {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusView.class);
 

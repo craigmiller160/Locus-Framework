@@ -32,7 +32,7 @@ import io.craigmiller160.locus.util.LocusStorage;
  *
  * Created by craig on 3/12/16.
  */
-public class LocusModel {
+class LocusModel {
 
     /**
      * The LocusStorage instance containing the classes managed
