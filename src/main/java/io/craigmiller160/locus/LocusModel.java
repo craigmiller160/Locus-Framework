@@ -107,9 +107,10 @@ public class LocusModel {
     public <T> T getValue(String propName, Class<T> valueType, Object...args) throws LocusException{
         Object result = getValue(propName, args);
         if(!(valueType.isAssignableFrom(result.getClass()))){
-            throw new LocusInvalidTypeException("Return value for getting \"" + propName +
-                    "\" doesn't match expected type. Expected: " + valueType.getName() +
-                    " Actual: " + result.getClass().getName());
+            throw new LocusInvalidTypeException(
+                    String.format("Return value for getting \"%1$s\" doesn't match expected type. Expected: %2$s | Actual: %3$s",
+                            propName, valueType.getName(), result.getClass().getName()));
+
         }
         return (T) result;
     }

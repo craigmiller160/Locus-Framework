@@ -16,7 +16,14 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.reflect.LocusInvocationException;
+import io.craigmiller160.locus.reflect.LocusReflectiveException;
 import io.craigmiller160.locus.util.LocusStorage;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A special callback class for the LocusController.
@@ -33,14 +40,74 @@ public class LocusControllerCallback {
         this.callback = callback;
     }
 
-    public Object getValue(String propName, Object...args){
-        //TODO finish this
-        return null;
+    public Object getValue(String propName, Object...args) throws LocusException{
+        Object result = null;
+
+        //Get all the parameter types for the method
+        List<Class<?>> paramTypes = new ArrayList<>();
+        for(Object o : args){
+            paramTypes.add(o.getClass());
+        }
+
+        Class<?>[] types = new Class<?>[paramTypes.size()];
+        paramTypes.toArray(types);
+
+        //Try getting the method with a "get" prefix. Swallow exception because a separate one gets thrown if the method is ultimately null
+        Method method = null;
+        try{
+            method = callback.getClass().getMethod("get" + propName, types);
+        }
+        catch(NoSuchMethodException ex){}
+
+        //Try getting the method with an "is" prefix. Swallow exception because a separate one gets thrown if the method is ultimately null
+        if(method == null){
+            try{
+                method = callback.getClass().getMethod("is" + propName, types);
+            }
+            catch(NoSuchMethodException ex){}
+        }
+
+        if(method == null){
+            throw new LocusReflectiveException(String.format("Callback object has no method named either get%1$s or is%1$s", propName));
+        }
+
+        //Attempt to invoke the method and get the result
+        try{
+            result = method.invoke(callback, args);
+        }
+        catch(IllegalAccessException ex){
+            throw new LocusReflectiveException(String.format("Unable to access method: %s", method.getName()), ex);
+        }
+        catch(InvocationTargetException ex){
+            throw new LocusInvocationException(String.format("Exception while trying to invoke method: %s", method.getName()), ex);
+        }
+
+        return result;
     }
 
-    public <T> T getValue(String propName, Class<?> resultType, Object...args){
-        //TODO finish this
-        return null;
+    /**
+     * Package private method exists
+     * only for use in testing.
+     *
+     * @return the callback object.
+     */
+    Object getCallback(){
+        return callback;
+    }
+
+    public <T> T getValue(String propName, Class<?> resultType, Object...args) throws LocusException{
+        Object result = getValue(propName, args);
+        if(result == null){
+            return null;
+        }
+
+        if(!resultType.isAssignableFrom(result.getClass())){
+            throw new LocusInvalidTypeException(
+                    String.format("Return value for getting \"%1$s\" doesn't match expected type. Expected: %2$s | Actual: %3$s",
+                            propName, resultType.getName(), result.getClass().getName()));
+        }
+
+        return (T) result;
     }
 
 }

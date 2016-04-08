@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -154,6 +155,29 @@ public class LocusControllerTest {
         }
 
         assertTrue("No exception was thrown", exceptionThrown);
+    }
+
+    /**
+     * Test adding and retrieving a callback object for
+     * a Controller.
+     */
+    @Test
+    public void testAddingAndRetrievingCallback(){
+        LocusStorage storage = getStorage();
+        LocusController locusController = new LocusController(storage);
+        storage.addControllerType("ControllerOne", ControllerOne.class, false);
+
+        //Using BigDecimal for the callback because it has a specific value to be tested for
+        BigDecimal callback = new BigDecimal(33.3);
+
+        Object cOne = locusController.getController("ControllerOne", callback);
+
+        assertNotNull("Controller instance is null", cOne);
+        assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
+
+        LocusControllerCallback lcc = locusController.callback(cOne);
+        assertNotNull("ControllerCallback is null", lcc);
+        assertEquals("ControllerCallback is wrapping wrong object", callback, lcc.getCallback());
     }
 
 }
