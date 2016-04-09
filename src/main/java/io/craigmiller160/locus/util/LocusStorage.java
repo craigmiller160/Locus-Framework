@@ -20,9 +20,11 @@ import io.craigmiller160.locus.reflect.ClassAndMethod;
 import io.craigmiller160.locus.reflect.ObjectAndMethod;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,6 +36,8 @@ import java.util.Set;
  * Created by craig on 3/15/16.
  */
 public class LocusStorage {
+
+    //TODO document the thread safety policy of this class
 
     private static LocusStorage instance;
 
@@ -76,40 +80,59 @@ public class LocusStorage {
 
     public Set<String> getAllModelPropertyNames(){
         Set<String> allPropNames = new HashSet<>();
-        allPropNames.addAll(modelPropGetters.keySet());
-        allPropNames.addAll(modelPropSetters.keySet());
+        synchronized (this){
+            allPropNames.addAll(modelPropGetters.keySet());
+            allPropNames.addAll(modelPropSetters.keySet());
+        }
+
         return allPropNames;
     }
 
     public Set<String> getAllViewPropNames(){
-        return viewPropSetters.keySet();
+        Set<String> allViewPropNames = new HashSet<>();
+        synchronized (this){
+            allViewPropNames.addAll(viewPropSetters.keySet());
+        }
+
+        return allViewPropNames;
     }
 
     public Set<String> getAllControllerNames(){
-        return controllerTypes.keySet();
+        Set<String> allControllerNames = new HashSet<>();
+        synchronized (this){
+            allControllerNames.addAll(controllerTypes.keySet());
+        }
+
+        return allControllerNames;
     }
 
     /*
      * Model Setter Section
      */
 
-    public void addModelPropSetter(String propName, ObjectAndMethod oam){
+    public synchronized void addModelPropSetter(String propName, ObjectAndMethod oam){
         modelPropSetters.put(propName, oam);
     }
 
-    public void removeModelPropSetter(String propName){
+    public synchronized void removeModelPropSetter(String propName){
         modelPropSetters.remove(propName);
     }
 
-    public ObjectAndMethod getModelPropSetter(String propName){
+    public synchronized ObjectAndMethod getModelPropSetter(String propName){
+        //ObjectAndMethod is immutable and a safe reference
         return modelPropSetters.get(propName);
     }
 
-    public Map<String,ObjectAndMethod> getAllModelPropSetters(){
-        return modelPropSetters;
+    public Collection<ObjectAndMethod> getAllModelPropSetters(){
+        List<ObjectAndMethod> modelPropSetterValues = new ArrayList<>();
+        synchronized (this){
+            modelPropSetterValues.addAll(modelPropSetters.values());
+        }
+
+        return modelPropSetterValues;
     }
 
-    public int getModelPropSetterCount(){
+    public synchronized int getModelPropSetterCount(){
         return modelPropSetters.size();
     }
 
@@ -117,23 +140,29 @@ public class LocusStorage {
      * Model Getter Section
      */
 
-    public void addModelPropGetter(String propName, ObjectAndMethod oam){
+    public synchronized void addModelPropGetter(String propName, ObjectAndMethod oam){
         modelPropGetters.put(propName, oam);
     }
 
-    public void removeModelPropGetter(String propName){
+    public synchronized void removeModelPropGetter(String propName){
         modelPropGetters.remove(propName);
     }
 
-    public ObjectAndMethod getModelPropGetter(String propName){
+    public synchronized ObjectAndMethod getModelPropGetter(String propName){
+        //ObjectAndMethod is immutable and a safe reference
         return modelPropGetters.get(propName);
     }
 
-    public Map<String,ObjectAndMethod> getAllModelPropGetters(){
-        return modelPropGetters;
+    public Collection<ObjectAndMethod> getAllModelPropGetters(){
+        List<ObjectAndMethod> modelPropGetterValues = new ArrayList<>();
+        synchronized (this){
+            modelPropGetterValues.addAll(modelPropGetters.values());
+        }
+
+        return modelPropGetterValues;
     }
 
-    public int getModelPropGetterCount(){
+    public synchronized int getModelPropGetterCount(){
         return modelPropGetters.size();
     }
 
@@ -141,27 +170,43 @@ public class LocusStorage {
      * View Setter Section
      */
 
-    public void addViewPropSetter(String propName, ClassAndMethod cam){
+    public synchronized void addViewPropSetter(String propName, ClassAndMethod cam){
         viewPropSetters.putValue(propName, cam);
     }
 
-    public void removeViewPropSetter(ClassAndMethod cam){
+    public synchronized void removeViewPropSetter(ClassAndMethod cam){
         viewPropSetters.removeValue(cam);
     }
 
-    public void removeAllSettersForViewProp(String propName){
+    public synchronized void removeAllSettersForViewProp(String propName){
         viewPropSetters.remove(propName);
     }
 
     public Collection<ClassAndMethod> getSettersForViewProp(String propName){
-        return viewPropSetters.get(propName);
+        Collection<ClassAndMethod> result = null;
+        synchronized (this){
+            Collection<ClassAndMethod> cams = viewPropSetters.get(propName);
+            if(cams != null){
+                result = new ArrayList<>(cams);
+            }
+        }
+
+        return result;
     }
 
-    public MultiValueMap<String,ClassAndMethod> getAllViewPropSetters(){
-        return viewPropSetters;
+    public Collection<ClassAndMethod> getAllViewPropSetters(){
+        Collection<ClassAndMethod> result = new ArrayList<>();
+        synchronized (this){
+            Collection<Collection<ClassAndMethod>> values = viewPropSetters.values();
+            for(Collection<ClassAndMethod> value : values){
+                result.addAll(value);
+            }
+        }
+
+        return result;
     }
 
-    public int getViewPropSetterCount(){
+    public synchronized int getViewPropSetterCount(){
         return viewPropSetters.fullSize();
     }
 
@@ -169,12 +214,12 @@ public class LocusStorage {
      * View Instance Section
      */
 
-    public void addViewInstance(Class<?> clazz, Object instance){
+    public synchronized void addViewInstance(Class<?> clazz, Object instance){
         WeakReference<?> weakRef = new WeakReference<>(instance);
         viewInstances.putValue(clazz, weakRef);
     }
 
-    public void removeViewInstance(Object instance){
+    public synchronized void removeViewInstance(Object instance){
         Collection<WeakReference<?>> weakRefs = viewInstances.get(instance.getClass());
         if(weakRefs != null){
             for(WeakReference<?> weakRef : weakRefs){
@@ -186,45 +231,64 @@ public class LocusStorage {
         }
     }
 
-    public void removeAllViewInstancesForClass(Class<?> clazz){
+    public synchronized void removeAllViewInstancesForClass(Class<?> clazz){
         viewInstances.remove(clazz);
     }
 
     public Collection<WeakReference<?>> getViewInstancesForClass(Class<?> clazz){
-        return viewInstances.get(clazz);
+        Collection<WeakReference<?>> result = new ArrayList<>();
+        synchronized (this){
+            Collection<WeakReference<?>> value = viewInstances.get(clazz);
+            if(value != null){
+                result.addAll(value);
+            }
+        }
+
+        return result;
     }
 
     /*
      * Controller Section
      */
 
-    public void addControllerType(String name, Class<?> clazz, boolean singleton){
+    public synchronized void addControllerType(String name, Class<?> clazz, boolean singleton){
         controllerTypes.put(name, clazz);
         controllerSingletons.put(name, singleton);
     }
 
-    public void removeControllerType(String name){
+    public synchronized void removeControllerType(String name){
         controllerTypes.remove(name);
         controllerSingletons.remove(name);
     }
 
-    public Class<?> getControllerType(String name){
+    public synchronized Class<?> getControllerType(String name){
         return controllerTypes.get(name);
     }
 
-    public boolean isControllerSingleton(String name){
+    public synchronized boolean isControllerSingleton(String name){
         return controllerSingletons.get(name);
     }
 
-    public Map<String,Class<?>> getAllControllerTypes(){
-        return controllerTypes;
+    public Collection<Class<?>> getAllControllerTypes(){
+        Collection<Class<?>> result = new ArrayList<>();
+        synchronized (this){
+            result.addAll(controllerTypes.values());
+        }
+
+        return result;
     }
 
-    public Map<String,Boolean> getAllControllerSingletons(){
-        return controllerSingletons;
+    //TODO consider ultimately deleting this method as unnecessary, it returns an unqualified collection of booleans
+    public Collection<Boolean> getAllControllerSingletons(){
+        Collection<Boolean> result = new ArrayList<>();
+        synchronized (this){
+            result.addAll(controllerSingletons.values());
+        }
+
+        return result;
     }
 
-    public int getControllerCount(){
+    public synchronized int getControllerCount(){
         return controllerTypes.size();
     }
 
@@ -232,15 +296,16 @@ public class LocusStorage {
      * Controller Singleton Instance methods
      */
 
-    public void addControllerSingletonInstance(String name, Object controller){
+    public synchronized void addControllerSingletonInstance(String name, Object controller){
         controllerSingletonInstances.put(name, controller);
     }
 
-    public void remoteControllerSingletonIntance(String name){
+    public synchronized void remoteControllerSingletonIntance(String name){
         controllerSingletonInstances.remove(name);
     }
 
-    public Object getControllerSingletonInstance(String name){
+    public synchronized Object getControllerSingletonInstance(String name){
+        //The Object retrieved may not be thread-safe, but a copy should NOT be returned because the whole point of this is a shared reference
         return controllerSingletonInstances.get(name);
     }
 
@@ -248,15 +313,16 @@ public class LocusStorage {
      * Controller Callback Methods
      */
 
-    public void addControllerCallback(Object controller, Object callback){
+    public synchronized void addControllerCallback(Object controller, Object callback){
         controllerCallbacks.put(controller, callback);
     }
 
-    public Object getControllerCallback(Object controller){
+    public synchronized Object getControllerCallback(Object controller){
+        //The Object retrieved may not be thread-safe, but a copy should NOT be returned because the whole point of this is a shared reference
         return controllerCallbacks.get(controller);
     }
 
-    public void removeControllerCallback(Object controller){
+    public synchronized void removeControllerCallback(Object controller){
         controllerCallbacks.remove(controller);
     }
 

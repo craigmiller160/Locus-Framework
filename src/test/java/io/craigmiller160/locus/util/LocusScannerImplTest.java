@@ -57,31 +57,26 @@ public class LocusScannerImplTest {
 
         scanner.scanPackage(packageName, storage, scannerExclusions);
 
-        Map<String,ObjectAndMethod> modelPropSetters = storage.getAllModelPropSetters();
-        Map<String,ObjectAndMethod> modelPropGetters = storage.getAllModelPropGetters();
-        Map<String,Class<?>> controllerTypes = storage.getAllControllerTypes();
-        Map<String,Boolean> controllerSingletons = storage.getAllControllerSingletons();
-        MultiValueMap<String,ClassAndMethod> viewPropSetters = storage.getAllViewPropSetters();
+        Collection<ObjectAndMethod> modelPropSetters = storage.getAllModelPropSetters();
+        Collection<ObjectAndMethod> modelPropGetters = storage.getAllModelPropGetters();
+        Collection<Class<?>> controllerTypes = storage.getAllControllerTypes();
 
-        Set<String> modelSetterKeys = modelPropSetters.keySet();
-        Set<String> modelGetterKeys = modelPropGetters.keySet();
+        assertEquals("Wrong number of model setter props", 12, modelPropSetters.size());
+        assertEquals("Wrong number of model getter props", 12, modelPropGetters.size());
 
-        assertEquals("Wrong number of model setter props", 12, modelSetterKeys.size());
-        assertEquals("Wrong number of model getter props", 12, modelGetterKeys.size());
-
-        Set<String> controllerNames = controllerTypes.keySet();
-        assertEquals("Wrong number of controller types", 1, controllerNames.size());
+        Set<String> controllerNames = storage.getAllControllerNames();
+        assertEquals("Wrong number of controller types", 1, controllerTypes.size());
 
         String name = controllerNames.iterator().next();
-        assertFalse("Controller singleton value should be false", controllerSingletons.get(name));
+        assertFalse("Controller singleton value should be false", storage.isControllerSingleton(name));
 
-        Set<String> viewSetterKeys = viewPropSetters.keySet();
+        Set<String> viewProps = storage.getAllViewPropNames();
 
-        assertEquals("Wrong number of view setter props", 13, viewSetterKeys.size());
+        assertEquals("Wrong number of view setter props", 13, viewProps.size());
 
         //TODO this will need to be revamped once all the new methods are added
-        for(String key : viewSetterKeys){
-            Collection<ClassAndMethod> viewSetters = viewPropSetters.get(key);
+        for(String key : viewProps){
+            Collection<ClassAndMethod> viewSetters = storage.getSettersForViewProp(key);
             if(key.equals("FirstField")){
                 assertEquals("Wrong number of methods for view setter prop " + key, 2, viewSetters.size());
             }

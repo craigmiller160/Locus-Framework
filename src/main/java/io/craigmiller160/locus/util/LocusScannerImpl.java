@@ -102,7 +102,7 @@ public class LocusScannerImpl implements LocusScanner{
             Controller con = controllerType.getAnnotation(Controller.class);
             String name = con.name();
             boolean singleton = con.singleton();
-            validateUniqueController(name, controllerType, storage.getAllControllerTypes());
+            validateUniqueController(name, controllerType, storage);
             logger.trace("Adding controller type to storage. Name: {} | Class: {}", name, controllerType);
             storage.addControllerType(name, controllerType, singleton);
         }
@@ -117,7 +117,7 @@ public class LocusScannerImpl implements LocusScanner{
                 if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3);
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
-                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropSetters().values());
+                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropSetters());
                     logger.trace("Adding model property setter to storage. Property: {} | Setter: {}", propName, oam.toString());
                     storage.addModelPropSetter(propName, oam);
                 }
@@ -126,7 +126,7 @@ public class LocusScannerImpl implements LocusScanner{
                     //Set the propName differently for either a "get" or "is" prefix, based on their different lengths
                     String propName = m.getName().startsWith("get") ? m.getName().substring(3) : m.getName().substring(2);
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
-                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropGetters().values());
+                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropGetters());
                     logger.trace("Adding model property getter to storage. Property: {} | Getter: {}", propName, oam.toString());
                     storage.addModelPropGetter(propName, oam);
                 }
@@ -138,19 +138,22 @@ public class LocusScannerImpl implements LocusScanner{
         return scannerExclusions == null || scannerExclusions.isClassAllowed(clazz);
     }
 
-    private void validateUniqueController(String controllerName, Class<?> controllerType,
-                                          Map<String,Class<?>> controllerTypes) throws LocusReflectiveException{
+    private void validateUniqueController(String controllerName, Class<?> controllerType, LocusStorage storage) throws LocusReflectiveException{
+        Set<String> controllerNames = storage.getAllControllerNames();
+
         //If no map provided, no validation can occur. This is probably due to no controllers existing yet
-        if(controllerTypes == null){
+        if(controllerNames == null){
             return;
         }
 
-        Set<String> controllerNames = controllerTypes.keySet();
+        //Test the controller name to ensure it is unique
         for(String otherName : controllerNames){
             if(controllerName.equals(otherName)){
-                throw new LocusReflectiveException("Identically named controllers are not allowed." + System.lineSeparator() +
-                        "   Name: " + controllerName + " | Type: " + controllerType.getName()  + System.lineSeparator() +
-                        "   Name: " + otherName + " | Type: " + controllerTypes.get(otherName).getName()
+                throw new LocusReflectiveException(
+                        String.format("Identically named controllers are not allowed.%1$s" +
+                                "  Name: %2$s | Type: %3$s%1$s  Name: %4$s | Type: %5$s",
+                                System.lineSeparator(), controllerName, controllerType.getName(),
+                                otherName, storage.getControllerType(otherName))
                 );
             }
         }
