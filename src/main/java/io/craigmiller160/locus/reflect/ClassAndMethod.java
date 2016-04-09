@@ -27,6 +27,10 @@ public class ClassAndMethod extends ReflectiveMethodHolder<Class<?>> {
         super(obj, m);
     }
 
+    public ClassAndMethod(ClassAndMethod cam){
+        super(cam.getSource(), cam.getMethod());
+    }
+
     public boolean isAssignableFrom(Class<?> clazz){
         return getSource().isAssignableFrom(clazz);
     }

@@ -35,6 +35,10 @@ public class ObjectAndMethod extends ReflectiveMethodHolder<Object>{
         super(obj, m);
     }
 
+    public ObjectAndMethod(ObjectAndMethod oam){
+        this(oam.getSource(), oam.getMethod());
+    }
+
     @Override
     public Class<?> getSourceType(){
         return getSource().getClass();
