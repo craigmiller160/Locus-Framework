@@ -25,9 +25,14 @@
             <xs:sequence>
                 <xs:element name="packages" type="packages" minOccurs="0" maxOccurs="1"/>
                 <xs:element name="scanning-filters" type="scanning-filters" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="uiThreadExecutor" type="uiExecutor" minOccurs="0" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="uiExecutor">
+        <xs:attribute name="class" type="xs:string" use="required"/>
+    </xs:complexType>
 
     <xs:complexType name="packages">
         <xs:sequence maxOccurs="unbounded">

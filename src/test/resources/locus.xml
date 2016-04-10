@@ -32,4 +32,6 @@
         </locus:inclusions>
     </locus:scanning-filters>
 
+    <locus:uiThreadExecutor class="io.craigmiller160.locus.sample.SampleUIThreadExecutor"/>
+
 </locus:Locus>
