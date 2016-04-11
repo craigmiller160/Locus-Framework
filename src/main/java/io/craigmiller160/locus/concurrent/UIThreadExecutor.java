@@ -34,19 +34,35 @@ import java.util.concurrent.Callable;
  * a background thread, and structure the implementation
  * accordingly.
  *
+ * SUGGESTIONS FOR IMPLEMENTATION:
+ *
+ * 1) Test to see if already on the UI thread before
+ * implementing special logic.
+ *
+ * 2) All Exceptions must be RuntimeExceptions.
+ * There is a provided class, ExceptionHandler, that
+ * is perfect for parsing and re-throwing Exceptions
+ * properly for this.
+ *
+ * 3) Keep the implementation stateless, ie no instance
+ * fields, to maximize its thread safety. This is especially
+ * important because this class will be instantiated
+ * only once by the framework, and that single instnace
+ * will be used for all cases.
+ *
  * Created by craig on 4/9/16.
  */
 public interface UIThreadExecutor {
 
     /**
-     * Execute the provided task on the UI thread.
+     * Execute the provided task asynchronously on the UI thread.
      *
      * @param task the task.
      */
     void executeOnUIThread(Runnable task);
 
     /**
-     * Execute the provided task on the UI thread,
+     * Execute the provided task synchronously on the UI thread,
      * and return a result.
      *
      * @param task the task.
