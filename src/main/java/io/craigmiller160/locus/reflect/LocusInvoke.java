@@ -56,7 +56,7 @@ public class LocusInvoke {
                 logger.trace("Successfully invoked method. Method: {} | Params: {}", oam.getMethod(), Arrays.toString(params));
             }
             catch(InvocationTargetException ex){
-                InvocationExceptionHandler.rethrowInvocationTargetExceptionCause(ex);
+                ExceptionHandler.parseAndRethrowException(ex);
             }
             catch(ReflectiveOperationException ex){
                 throw new LocusReflectiveException("Unable to reflectively invoke method " + oam.getMethod().getName() +

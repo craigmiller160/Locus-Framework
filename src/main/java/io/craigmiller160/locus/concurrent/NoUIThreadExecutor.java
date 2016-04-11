@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus.concurrent;
 
+import io.craigmiller160.locus.reflect.ExceptionHandler;
+
 import java.util.concurrent.Callable;
 
 /**
@@ -39,7 +41,7 @@ public class NoUIThreadExecutor implements UIThreadExecutor {
             result = task.call();
         }
         catch(Exception ex){
-            //TODO figure out how to handle this exception
+            ExceptionHandler.parseAndRethrowException(ex);
         }
 
         return result;

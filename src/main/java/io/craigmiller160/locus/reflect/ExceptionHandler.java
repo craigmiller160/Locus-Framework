@@ -20,35 +20,36 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * A special class that parses InvocationTargetExceptions
- * and handles their causes properly.
+ * A special class that parses Exceptions where
+ * the exact nature (Checked, unchecked, error, etc)
+ * is unknown. It parses them and properly rethrows them.
  *
  * Created by craigmiller on 4/8/16.
  */
-public class InvocationExceptionHandler {
+public class ExceptionHandler {
 
     /**
-     * This method parses and rethrows the InvocationTargetException's
-     * cause in the appropriate manner.
+     * This method parses and rethrows the Exception in
+     * the appropriate manner based on its type.
      *
      * Errors are rethrown as Errors.
      * RuntimeExceptions are rethrown as RuntimeExceptions.
      * Exceptions are wrapped in LocusInvocationException and rethrown.
      *
-     * @param ex the InvocationTargetException to rethrow.
+     * @param ex the Exception to parse and rethrow.
      * @throws LocusInvocationException if a checked exception is the cause.
      * @throws RuntimeException if an unchecked exception is the cause.
      * @throws Error if an error is the cause.
      */
-    public static void rethrowInvocationTargetExceptionCause(InvocationTargetException ex){
-        if(ex.getCause() instanceof Error){
-            throw (Error) ex.getCause();
+    public static void parseAndRethrowException(Throwable ex){
+        if(ex instanceof Error){
+            throw (Error) ex;
         }
-        else if(ex.getCause() instanceof RuntimeException){
-            throw (RuntimeException) ex.getCause();
+        else if(ex instanceof RuntimeException){
+            throw (RuntimeException) ex;
         }
         else{
-            throw new LocusInvocationException(ex.getCause());
+            throw new LocusInvocationException(ex);
         }
     }
 
