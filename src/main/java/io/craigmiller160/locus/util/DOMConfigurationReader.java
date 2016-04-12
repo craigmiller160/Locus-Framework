@@ -94,7 +94,7 @@ public class DOMConfigurationReader implements ConfigurationReader{
             }
 
             //Get the "uiThreadExecutor" element, and parse it
-            NodeList uiThreadNodes = rootElement.getElementsByTagName(UI_THREAD_EXECUTOR_NODE);
+            NodeList uiThreadNodes = rootElement.getElementsByTagNameNS(NAMESPACE, UI_THREAD_EXECUTOR_NODE);
             if(uiThreadNodes.getLength() > 0){
                 Element uiThreadElement = (Element) uiThreadNodes.item(0);
                 parseUIThreadElement(uiThreadElement, locusConfig);

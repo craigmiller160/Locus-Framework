@@ -22,6 +22,7 @@ import org.junit.Test;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -46,6 +47,11 @@ public class DOMConfigurationReaderTest {
 
         assertTrue(exclusions.contains("org.foo"));
         assertTrue(inclusions.contains("org.foo.foo2"));
+
+        String uiThreadExecutorClassName = locusConfig.getUIThreadExecutorClassName();
+        assertNotNull("UiThreadExecutorClassName is null", uiThreadExecutorClassName);
+        assertEquals("UIThreadExecutorClassName has the wrong value", uiThreadExecutorClassName,
+                "io.craigmiller160.locus.sample.SampleUIThreadExecutor");
     }
 
 }
