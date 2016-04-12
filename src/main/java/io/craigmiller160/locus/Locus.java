@@ -16,7 +16,10 @@
 
 package io.craigmiller160.locus;
 
-import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.locus.concurrent.UIThreadExecutor;
+import io.craigmiller160.locus.util.*;
+
+import java.util.List;
 
 /**
  * The central class of the Locus Framework.
@@ -28,12 +31,13 @@ import io.craigmiller160.locus.util.LocusStorage;
  */
 public class Locus {
 
-    //TODO this needs to be made totally thread safe
-
-    static final int GETTER = 101;
-    static final int SETTER = 102;
+    public static final int GETTER = 101;
+    public static final int SETTER = 102;
+    public static final String DEFAULT_CONFIG = "locus.xml";
 
     private static final LocusStorage storage = LocusStorage.getInstance();
+    private static final ConfigurationReader configReader = ConfigurationReaderFactory.newInstance().newConfigurationReader();
+    private static final LocusScanner scanner = LocusScannerFactory.newInstance().newLocusScanner();
 
     public static LocusModel model = new LocusModel();
 
@@ -43,10 +47,25 @@ public class Locus {
 
     public static LocusDebug debug = new LocusDebug();
 
+    @SuppressWarnings("unchecked")
     public static void initialize(){
-        //TODO critical method that needs to be finished
-        //TODO this must validate that every model setter/getter is unique
-        //TODO this must also validate that every view getter is unique
+        LocusConfiguration config = configReader.readConfiguration(DEFAULT_CONFIG);
+
+        String uiThreadExecutorClassName = config.getUIThreadExecutorClassName();
+        if(!StringUtil.isEmpty(uiThreadExecutorClassName)){
+            try{
+                Class<? extends UIThreadExecutor> clazz = (Class<? extends UIThreadExecutor>) Class.forName(uiThreadExecutorClassName);
+                storage.setUIThreadExecutorType(clazz);
+            }
+            catch(ClassNotFoundException | ClassCastException ex){
+                throw new LocusException(String.format("\"%s\" is not a valid name for a class implementing the UIThreadExecutor interface", uiThreadExecutorClassName), ex);
+            }
+        }
+
+        List<String> packageNames = config.getPackageNames();
+        for(String name : packageNames){
+            scanner.scanPackage(name, storage, config.getScannerExclusions());
+        }
     }
 
 }

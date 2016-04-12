@@ -23,8 +23,6 @@ import io.craigmiller160.locus.reflect.LocusReflectiveException;
  */
 public interface LocusScanner {
 
-    String DEFAULT_CONFIG = "locus.xml";
-
     void scanPackage(String packageName, LocusStorage storage) throws LocusReflectiveException;
 
     void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException;
