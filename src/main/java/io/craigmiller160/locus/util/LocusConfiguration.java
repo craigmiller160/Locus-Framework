@@ -46,6 +46,29 @@ public class LocusConfiguration {
     private ScannerExclusions scannerExclusions = new ScannerExclusions();
 
     /**
+     * The name of the UIThreadExecutor implementation class.
+     */
+    private String uiThreadExecutorClassName;
+
+    /**
+     * Set the name of the UIThreadExecutor implementation class.
+     *
+     * @param uiThreadExecutorClassName the name of the UIThreadExecutor implementation class.
+     */
+    public void setUIThreadExecutorClassName(String uiThreadExecutorClassName){
+        this.uiThreadExecutorClassName = uiThreadExecutorClassName;
+    }
+
+    /**
+     * Get the name of the UIThreadExecutor implementation class.
+     *
+     * @return the name of the UIThreadExecutor implementation class.
+     */
+    public String getUIThreadExecutorClassName(){
+        return uiThreadExecutorClassName;
+    }
+
+    /**
      * Add the name of a package to the list of packages to be scanned for
      * annotated classes.
      *

@@ -55,8 +55,10 @@ public class DOMConfigurationReader implements ConfigurationReader{
     private static final String INCLUSIONS_NODE = "inclusions";
     private static final String INCLUSION_NODE = "inclusion";
     private static final String SCANNING_FILTERS_NODE = "scanning-filters";
+    private static final String UI_THREAD_EXECUTOR_NODE = "uiThreadExecutor";
     private static final String PACKAGE_NAME_ATTR = "name";
     private static final String PREFIX_ATTR = "prefix";
+    private static final String CLASS_ATTR = "class";
 
     DOMConfigurationReader(){}
 
@@ -90,6 +92,13 @@ public class DOMConfigurationReader implements ConfigurationReader{
                 Element scanningFiltersElement = (Element) scanningFiltersNodes.item(0);
                 parseScanningFiltersElement(scanningFiltersElement, locusConfig);
             }
+
+            //Get the "uiThreadExecutor" element, and parse it
+            NodeList uiThreadNodes = rootElement.getElementsByTagName(UI_THREAD_EXECUTOR_NODE);
+            if(uiThreadNodes.getLength() > 0){
+                Element uiThreadElement = (Element) uiThreadNodes.item(0);
+                parseUIThreadElement(uiThreadElement, locusConfig);
+            }
         }
         catch(ParserConfigurationException | SAXException | IOException ex){
             throw new LocusParsingException("Unable tp parse Locus configuration file", ex);
@@ -106,6 +115,14 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
 
         return locusConfig;
+    }
+
+    private void parseUIThreadElement(Element uiThreadElement, LocusConfiguration locusConfiguration){
+        NamedNodeMap attrs = uiThreadElement.getAttributes();
+        Node clazz = attrs.getNamedItem(CLASS_ATTR);
+        if(clazz != null){
+            locusConfiguration.setUIThreadExecutorClassName(clazz.getTextContent());
+        }
     }
 
     private void parsePackagesElement(Element packagesElement, LocusConfiguration locusConfig){
