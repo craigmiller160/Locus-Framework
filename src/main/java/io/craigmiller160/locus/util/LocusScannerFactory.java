@@ -13,7 +13,7 @@ public class LocusScannerFactory {
      *
      * @return a new instance of LocusScannerFactory.
      */
-    public static LocusScannerFactory getInstance() {
+    public static LocusScannerFactory newInstance() {
         return new LocusScannerFactory();
     }
 
