@@ -31,7 +31,7 @@ public class ConfigurationReaderFactory {
      *
      * @return a new instance of ConfigurationReaderyFactory.
      */
-    public static ConfigurationReaderFactory getInstance(){
+    public static ConfigurationReaderFactory newInstance(){
         return new ConfigurationReaderFactory();
     }
 
