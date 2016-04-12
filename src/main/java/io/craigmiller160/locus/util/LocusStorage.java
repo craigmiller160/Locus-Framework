@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.reflect.ClassAndMethod;
 import io.craigmiller160.locus.reflect.ObjectAndMethod;
 
@@ -53,6 +54,8 @@ public class LocusStorage {
 
     private Map<Object,Object> controllerCallbacks;
 
+    private Class<? extends UIThreadExecutor> uiThreadExecutorType;
+
     public static LocusStorage getInstance(){
         if(instance == null){
             synchronized (LocusStorage.class){
@@ -77,6 +80,22 @@ public class LocusStorage {
 
         controllerCallbacks = new HashMap<>();
     }
+
+    /*
+     * UIThreadExecutor section
+     */
+
+    public void setUIThreadExecutorType(Class<? extends UIThreadExecutor> uiThreadExecutorType){
+        this.uiThreadExecutorType = uiThreadExecutorType;
+    }
+
+    public Class<? extends UIThreadExecutor> getUIThreadExecutorType(){
+        return uiThreadExecutorType;
+    }
+
+    /*
+     * Get all names section
+     */
 
     public Set<String> getAllModelPropertyNames(){
         Set<String> allPropNames = new HashSet<>();
