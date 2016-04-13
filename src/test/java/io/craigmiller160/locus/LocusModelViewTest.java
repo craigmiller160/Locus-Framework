@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
+import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
 import io.craigmiller160.locus.reflect.ClassAndMethod;
 import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.sample.ModelOne;
@@ -55,12 +57,25 @@ public class LocusModelViewTest {
     private ViewOne viewOne;
     private ViewThree viewThree;
     private ModelOne modelOne;
+    private UIThreadExecutorFactory factory;
 
     private void setupStorage(){
         try{
             Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
             constructor.setAccessible(true);
             storage = constructor.newInstance();
+            storage.setUIThreadExecutorType(NoUIThreadExecutor.class);
+        }
+        catch(Exception ex){
+            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
+        }
+    }
+
+    private void setupUIThreadExecutor(){
+        try{
+            Constructor<UIThreadExecutorFactory> constructor = UIThreadExecutorFactory.class.getDeclaredConstructor(LocusStorage.class);
+            constructor.setAccessible(true);
+            factory = constructor.newInstance(storage);
         }
         catch(Exception ex){
             throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
@@ -111,13 +126,14 @@ public class LocusModelViewTest {
     }
 
     private void setupLocus(){
-        this.locusView = new LocusView(storage);
+        this.locusView = new LocusView(storage, factory);
         this.locusModel = new LocusModel(storage, locusView);
     }
 
     @Before
     public void initialize(){
         setupStorage();
+        setupUIThreadExecutor();
         setupViews();
         setupModels();
         setupLocus();
