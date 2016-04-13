@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.util.*;
 
@@ -51,16 +52,23 @@ public class Locus {
     public static void initialize(){
         LocusConfiguration config = configReader.readConfiguration(DEFAULT_CONFIG);
 
+        Class<? extends UIThreadExecutor> clazz = null;
         String uiThreadExecutorClassName = config.getUIThreadExecutorClassName();
         if(!StringUtil.isEmpty(uiThreadExecutorClassName)){
             try{
-                Class<? extends UIThreadExecutor> clazz = (Class<? extends UIThreadExecutor>) Class.forName(uiThreadExecutorClassName);
-                storage.setUIThreadExecutorType(clazz);
+                clazz = (Class<? extends UIThreadExecutor>) Class.forName(uiThreadExecutorClassName);
             }
             catch(ClassNotFoundException | ClassCastException ex){
                 throw new LocusException(String.format("\"%s\" is not a valid name for a class implementing the UIThreadExecutor interface", uiThreadExecutorClassName), ex);
             }
         }
+
+        //If it's still null, it was not provided properly in the configuration
+        if(clazz == null){
+            clazz = NoUIThreadExecutor.class;
+        }
+
+        storage.setUIThreadExecutorType(clazz);
 
         List<String> packageNames = config.getPackageNames();
         for(String name : packageNames){
