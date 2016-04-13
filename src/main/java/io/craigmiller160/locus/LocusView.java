@@ -79,7 +79,7 @@ class LocusView {
      * @throws LocusException if an error occurs.
      */
     public void setValue(String propName, Object... values) throws LocusException{
-        uiThreadExecutor.executeOnUIThread(new SetValueTask(propName, values));
+        uiThreadExecutor.executeOnUIThread(new SetValueTask(storage, propName, values));
     }
 
     /**
@@ -89,12 +89,12 @@ class LocusView {
      */
     private static class SetValueTask implements Runnable{
 
-        private static final LocusStorage storage = LocusStorage.getInstance();
-
         private String propName;
         private Object[] values;
+        private LocusStorage storage;
 
-        public SetValueTask(String propName, Object... values){
+        public SetValueTask(LocusStorage storage, String propName, Object... values){
+            this.storage = storage;
             this.propName = propName;
             this.values = values;
         }
