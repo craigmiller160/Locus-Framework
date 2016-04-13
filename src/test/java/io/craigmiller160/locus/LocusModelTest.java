@@ -16,9 +16,12 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
+import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
 import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.util.LocusStorage;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -39,45 +42,101 @@ public class LocusModelTest {
     private static LocusStorage storage;
     private static LocusModel locusModel;
     private static ModelOne modelOne;
+    private UIThreadExecutorFactory factory;
 
-    private static LocusView locusView = new LocusView(){
-        @Override
-        public void setValue(String propName, Object... value) throws LocusException{
-            //Do nothing, this is just killing the behavior of this object so
-            //this test class can run in a more controlled way
+    private static LocusView locusView;
+
+    private void setupUIThreadExecutor(){
+        try{
+            Constructor<UIThreadExecutorFactory> constructor = UIThreadExecutorFactory.class.getDeclaredConstructor(LocusStorage.class);
+            constructor.setAccessible(true);
+            factory = constructor.newInstance(storage);
         }
-    };
+        catch(Exception ex){
+            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
+        }
+    }
+
+    private void setupStorage(){
+        try{
+            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            storage = constructor.newInstance();
+            storage.setUIThreadExecutorType(NoUIThreadExecutor.class);
+        }
+        catch(Exception ex){
+            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
+        }
+    }
+
+    private void setupLocusView(){
+        locusView = new LocusView(storage, factory){
+            @Override
+            public void setValue(String propName, Object... value) throws LocusException{
+                //Do nothing, this is just killing the behavior of this object so
+                //this test class can run in a more controlled way
+            }
+        };
+    }
+
+    private void setupLocusModel(){
+        locusModel = new LocusModel(storage, locusView);
+    }
+
+    private void setupModels(){
+        modelOne = new ModelOne();
+        Method[] methods = ModelOne.class.getDeclaredMethods();
+        for(Method m : methods){
+            if(m.getName().startsWith("set")){
+                String propName = m.getName().substring(3);
+                storage.addModelPropSetter(propName, new ObjectAndMethod(modelOne, m));
+            }
+            else if(m.getName().startsWith("get")){
+                String propName = m.getName().substring(3);
+                storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
+            }
+        }
+    }
+
+    @Before
+    public void beforeTest(){
+        setupStorage();
+        setupModels();
+        setupUIThreadExecutor();
+        setupLocusView();
+        setupLocusModel();
+    }
 
     /**
      * Static initializer to set up the LocusStorage properly for
      * use in these tests. It's created reflectively because
      * there's no access to its constructor normally.
      */
-    static{
-        try{
-            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            storage = constructor.newInstance();
-
-            modelOne = new ModelOne();
-            Method[] methods = ModelOne.class.getDeclaredMethods();
-            for(Method m : methods){
-                if(m.getName().startsWith("set")){
-                    String propName = m.getName().substring(3);
-                    storage.addModelPropSetter(propName, new ObjectAndMethod(modelOne, m));
-                }
-                else if(m.getName().startsWith("get")){
-                    String propName = m.getName().substring(3);
-                    storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
-                }
-            }
-
-            locusModel = new LocusModel(storage, locusView);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception at initialization", ex);
-        }
-    }
+//    static{
+//        try{
+//            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
+//            constructor.setAccessible(true);
+//            storage = constructor.newInstance();
+//
+//            modelOne = new ModelOne();
+//            Method[] methods = ModelOne.class.getDeclaredMethods();
+//            for(Method m : methods){
+//                if(m.getName().startsWith("set")){
+//                    String propName = m.getName().substring(3);
+//                    storage.addModelPropSetter(propName, new ObjectAndMethod(modelOne, m));
+//                }
+//                else if(m.getName().startsWith("get")){
+//                    String propName = m.getName().substring(3);
+//                    storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
+//                }
+//            }
+//
+//            locusModel = new LocusModel(storage, locusView);
+//        }
+//        catch(Exception ex){
+//            throw new RuntimeException("Fatal exception at initialization", ex);
+//        }
+//    }
 
     /**
      * Test invoking a getter with arguments.
