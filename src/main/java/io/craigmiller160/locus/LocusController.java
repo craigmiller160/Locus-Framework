@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.concurrent.UIThreadExecutor;
+import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
 import io.craigmiller160.locus.reflect.ObjectCreator;
 import io.craigmiller160.locus.util.LocusStorage;
 import org.slf4j.Logger;
@@ -38,23 +40,30 @@ class LocusController {
      */
     private final LocusStorage storage;
 
+    private final UIThreadExecutor uiThreadExecutor;
+
     /**
      * The default constructor for this class.
      */
     LocusController(){
         this.storage = LocusStorage.getInstance();
+        this.uiThreadExecutor = UIThreadExecutorFactory.newInstance().getUIThreadExecutor();
     }
 
     /**
      * A special constructor provided exclusively for
      * testing. It allows the LocusStorage to be set
      * externally a more controlled testing environment.
+     * It also accepts the UIThreadExecutor, for use in
+     * testing.
      *
      * @param storage the LocusStorage, passed this way
      *                primarily for more controlled testing.
+     * @param factory the UIThreadExecutorFactory for testing.
      */
-    LocusController(LocusStorage storage){
+    LocusController(LocusStorage storage, UIThreadExecutorFactory factory){
         this.storage = storage;
+        this.uiThreadExecutor = factory.getUIThreadExecutor();
     }
 
     public LocusControllerCallback callback(Object controller) throws LocusException{
@@ -63,7 +72,7 @@ class LocusController {
             throw new LocusException(String.format("No callback Object assigned to controller"));
         }
 
-        return new LocusControllerCallback(callback);
+        return new LocusControllerCallback(callback, uiThreadExecutor);
     }
 
     public Object getController(String controllerName) throws LocusException{

@@ -16,8 +16,11 @@
 
 package io.craigmiller160.locus;
 
+import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
+import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
 import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.util.LocusStorage;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,25 +43,57 @@ public class LocusControllerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusControllerTest.class);
 
+    private UIThreadExecutorFactory factory;
+    private LocusStorage storage;
+    private LocusController locusController;
+
     /**
      * Get a LocusStorage instance for use in tests. It's created reflectively
      * because there's no access to its constructor normally.
      *
-     * @return the LocusStorage instance.
      * @throws RuntimeException if unable to create the LocusStorage.
      */
-    private LocusStorage getStorage(){
-        LocusStorage storage = null;
+    private void setupStorage(){
         try{
             Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
             constructor.setAccessible(true);
             storage = constructor.newInstance();
+            storage.setUIThreadExecutorType(NoUIThreadExecutor.class);
         }
         catch(Exception ex){
             throw new RuntimeException("Unable to reflectively create LocusStorage for test", ex);
         }
+    }
 
-        return storage;
+    /**
+     * Setup the LocusController.
+     */
+    private void setupLocusController(){
+        locusController = new LocusController(storage, factory);
+    }
+
+    /**
+     * Setup the UIThreadExecutorFactory.
+     */
+    private void setupUIThreadExecutor(){
+        try{
+            Constructor<UIThreadExecutorFactory> constructor = UIThreadExecutorFactory.class.getDeclaredConstructor(LocusStorage.class);
+            constructor.setAccessible(true);
+            factory = constructor.newInstance(storage);
+        }
+        catch(Exception ex){
+            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
+        }
+    }
+
+    /**
+     * Setup each test before executing it.
+     */
+    @Before
+    public void before(){
+        setupStorage();
+        setupUIThreadExecutor();
+        setupLocusController();
     }
 
     /**
@@ -66,8 +101,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testGetControllerNonSingleton(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         Object controller = locusController.getController("ControllerOne");
@@ -81,8 +114,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testGetControllerWrongName(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         boolean exceptionThrown = false;
@@ -102,8 +133,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerSingleton(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, true);
 
         Object one = locusController.getController("ControllerOne");
@@ -127,8 +156,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerSpecificType(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         ControllerOne cOne = locusController.getController("ControllerOne", ControllerOne.class);
@@ -143,8 +170,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerInvalidType(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         boolean exceptionThrown = false;
@@ -165,8 +190,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testAddingAndRetrievingCallback(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         //Using BigDecimal for the callback because it has a specific value to be tested for
@@ -188,8 +211,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testUsingControllerCallback(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         Object callback = new Object();
@@ -215,8 +236,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testUsingControllerCallbackGeneric(){
-        LocusStorage storage = getStorage();
-        LocusController locusController = new LocusController(storage);
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
         //I know, odd choice for a callback, first thing I could think of with a standard getter
