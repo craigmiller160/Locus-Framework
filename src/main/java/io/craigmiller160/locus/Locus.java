@@ -19,6 +19,7 @@ package io.craigmiller160.locus;
 import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.util.*;
+import io.craigmiller160.utils.util.StringUtil;
 
 import java.util.List;
 
