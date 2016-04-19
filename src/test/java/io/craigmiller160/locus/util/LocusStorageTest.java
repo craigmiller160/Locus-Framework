@@ -16,10 +16,10 @@
 
 package io.craigmiller160.locus.util;
 
-import io.craigmiller160.locus.reflect.ClassAndMethod;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.ViewOne;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.junit.Before;
 import org.junit.Test;
 

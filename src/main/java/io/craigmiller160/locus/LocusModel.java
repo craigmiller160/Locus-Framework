@@ -16,10 +16,10 @@
 
 package io.craigmiller160.locus;
 
-import io.craigmiller160.locus.reflect.LocusInvoke;
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ReflectiveException;
+import io.craigmiller160.utils.reflect.RemoteInvoke;
 
 /**
  * One of the core components of the Locus Framework.
@@ -80,7 +80,7 @@ class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setValue(String propName, Object... value) throws LocusException{
-        LocusInvoke.invokeMethod(getMethod(propName, Locus.SETTER), value);
+        RemoteInvoke.invokeMethod(getMethod(propName, Locus.SETTER), value);
         locusView.setValue(propName, value);
     }
 
@@ -92,7 +92,7 @@ class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public Object getValue(String propName, Object... args) throws LocusException{
-        return LocusInvoke.invokeMethod(getMethod(propName, Locus.GETTER), args);
+        return RemoteInvoke.invokeMethod(getMethod(propName, Locus.GETTER), args);
     }
 
     /**
@@ -124,10 +124,10 @@ class LocusModel {
      * @param methodType the type of method (setter, getter, etc) to
      *                   retrieve.
      * @return the ObjectAndMethod of the specified type for the property.
-     * @throws LocusReflectiveException if unable to find a method matching
+     * @throws ReflectiveException if unable to find a method matching
      *                   the specifications.
      */
-    private ObjectAndMethod getMethod(String propName, int methodType) throws LocusReflectiveException{
+    private ObjectAndMethod getMethod(String propName, int methodType) throws ReflectiveException{
         ObjectAndMethod oam = null;
         String typeName = "";
         if(methodType == Locus.GETTER){
@@ -140,7 +140,7 @@ class LocusModel {
         }
 
         if(oam == null){
-            throw new LocusReflectiveException("No model " + typeName + " found matching the property name \"" + propName + "\"");
+            throw new ReflectiveException("No model " + typeName + " found matching the property name \"" + propName + "\"");
         }
         return oam;
     }

@@ -16,7 +16,8 @@
 
 package io.craigmiller160.locus.concurrent;
 
-import io.craigmiller160.locus.reflect.ExceptionHandler;
+
+import io.craigmiller160.utils.reflect.ExceptionHandler;
 
 import java.util.concurrent.Callable;
 

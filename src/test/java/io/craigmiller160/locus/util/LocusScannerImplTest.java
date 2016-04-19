@@ -16,10 +16,10 @@
 
 package io.craigmiller160.locus.util;
 
-import io.craigmiller160.locus.reflect.ClassAndMethod;
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.sample.ModelOne;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ReflectiveException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +107,7 @@ public class LocusScannerImplTest {
         try{
             scanner.scanPackage(package1, storage, scannerExclusions);
         }
-        catch(LocusReflectiveException ex){
+        catch(ReflectiveException ex){
             firstScanException = true;
             logger.error("First Scan Stack Trace", ex);
         }
@@ -116,7 +116,7 @@ public class LocusScannerImplTest {
         try{
             scanner.scanPackage(package2, storage, scannerExclusions);
         }
-        catch(LocusReflectiveException ex){
+        catch(ReflectiveException ex){
             secondScanException = true;
             logger.error("Second Scan Stack Trace", ex);
         }
@@ -147,7 +147,7 @@ public class LocusScannerImplTest {
         try{
             scanner.scanPackage(package1, storage, scannerExclusions);
         }
-        catch(LocusReflectiveException ex){
+        catch(ReflectiveException ex){
             firstScanException = true;
             logger.error("First Scan Stack Trace", ex);
         }
@@ -156,7 +156,7 @@ public class LocusScannerImplTest {
         try{
             scanner.scanPackage(package2, storage, scannerExclusions);
         }
-        catch(LocusReflectiveException ex){
+        catch(ReflectiveException ex){
             secondScanException = true;
             logger.error("Second Scan Stack Trace", ex);
         }

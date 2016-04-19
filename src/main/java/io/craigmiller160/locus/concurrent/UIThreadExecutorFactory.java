@@ -1,9 +1,8 @@
 package io.craigmiller160.locus.concurrent;
 
 import io.craigmiller160.locus.LocusException;
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.reflect.ObjectCreator;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.ObjectCreator;
 
 /**
  * A factory to provide UIThreadExecutor instances.

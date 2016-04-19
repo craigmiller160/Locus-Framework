@@ -18,12 +18,12 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
-import io.craigmiller160.locus.reflect.ClassAndMethod;
-import io.craigmiller160.locus.reflect.LocusInvocationException;
-import io.craigmiller160.locus.reflect.LocusInvoke;
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.InvocationException;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ReflectiveException;
+import io.craigmiller160.utils.reflect.RemoteInvoke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +103,7 @@ class LocusView {
         public void run() {
             Collection<ClassAndMethod> setters = storage.getSettersForViewProp(propName);
             if(setters == null || setters.size() <= 0){
-                throw new LocusReflectiveException("No setters available in registered views to invoke for property. Property Name: " + propName);
+                throw new ReflectiveException("No setters available in registered views to invoke for property. Property Name: " + propName);
             }
 
             boolean success = false;
@@ -115,15 +115,15 @@ class LocusView {
                         if(ref != null){
                             ObjectAndMethod oam = new ObjectAndMethod(ref, cam.getMethod());
                             try{
-                                LocusInvoke.invokeMethod(oam, values);
+                                RemoteInvoke.invokeMethod(oam, values);
                                 success = true;
                             }
-                            catch(LocusInvocationException ex){
+                            catch(InvocationException ex){
                                 //InvocationExceptions are when the method was successfully invoked, but during its operation an exception occurred
                                 //This should NOT be swallowed, and should be propagated
                                 throw ex;
                             }
-                            catch(LocusReflectiveException ex){
+                            catch(ReflectiveException ex){
                                 logger.trace("Failed to invoke view setter method. Note that certain invocations are expected to fail.\n" +
                                         "   Method: {} | Param: {}", oam.getMethod(), Arrays.toString(values), ex);
                             }
@@ -133,7 +133,7 @@ class LocusView {
             }
 
             if(!success){
-                throw new LocusReflectiveException("Unable to successfully invoke any view setter for property. Check TRACE level logs for details");
+                throw new ReflectiveException("Unable to successfully invoke any view setter for property. Check TRACE level logs for details");
             }
         }
     }

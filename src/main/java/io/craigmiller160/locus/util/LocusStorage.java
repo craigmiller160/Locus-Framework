@@ -17,8 +17,9 @@
 package io.craigmiller160.locus.util;
 
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
-import io.craigmiller160.locus.reflect.ClassAndMethod;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.collection.MultiValueMap;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

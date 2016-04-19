@@ -16,8 +16,8 @@
 
 package io.craigmiller160.locus;
 
-import io.craigmiller160.locus.reflect.ClassAndMethod;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

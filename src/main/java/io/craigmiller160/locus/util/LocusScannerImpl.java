@@ -19,12 +19,11 @@ package io.craigmiller160.locus.util;
 import io.craigmiller160.locus.annotations.Controller;
 import io.craigmiller160.locus.annotations.Model;
 import io.craigmiller160.locus.annotations.View;
-import io.craigmiller160.locus.reflect.ClassAndMethod;
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.reflect.MethodUtils;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
-import io.craigmiller160.locus.reflect.ObjectCreator;
-import io.craigmiller160.locus.reflect.ReflectiveMethodHolder;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ObjectCreator;
+import io.craigmiller160.utils.reflect.ReflectiveException;
+import io.craigmiller160.utils.reflect.ReflectiveMethodHolder;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -35,9 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -57,7 +54,7 @@ public class LocusScannerImpl implements LocusScanner{
     LocusScannerImpl(){}
 
     @Override
-    public void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
+    public void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{
         logger.debug("Beginning scan of package \"{}\" for annotated classes", packageName);
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage(packageName))
@@ -77,11 +74,11 @@ public class LocusScannerImpl implements LocusScanner{
     }
 
     @Override
-    public void scanPackage(String packageName, LocusStorage storage) throws LocusReflectiveException{
+    public void scanPackage(String packageName, LocusStorage storage) throws ReflectiveException{
         scanPackage(packageName, storage, null);
     }
 
-    private void parseViewClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
+    private void parseViewClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{
         Set<Class<?>> views = reflections.getTypesAnnotatedWith(View.class);
         for(Class<?> viewType : views){
             Method[] publicMethods = viewType.getMethods();
@@ -96,7 +93,7 @@ public class LocusScannerImpl implements LocusScanner{
         }
     }
 
-    private void parseControllerClasses(Reflections reflections, LocusStorage storage) throws LocusReflectiveException{
+    private void parseControllerClasses(Reflections reflections, LocusStorage storage) throws ReflectiveException{
         Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(Controller.class);
         for(Class<?> controllerType : controllers){
             Controller con = controllerType.getAnnotation(Controller.class);
@@ -108,7 +105,7 @@ public class LocusScannerImpl implements LocusScanner{
         }
     }
 
-    private void parseModelClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException{
+    private void parseModelClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{
         Set<Class<?>> models = reflections.getTypesAnnotatedWith(Model.class);
         for(Class<?> modelType : models){
             Object model = ObjectCreator.instantiateClass(modelType);
@@ -138,7 +135,7 @@ public class LocusScannerImpl implements LocusScanner{
         return scannerExclusions == null || scannerExclusions.isClassAllowed(clazz);
     }
 
-    private void validateUniqueController(String controllerName, Class<?> controllerType, LocusStorage storage) throws LocusReflectiveException{
+    private void validateUniqueController(String controllerName, Class<?> controllerType, LocusStorage storage) throws ReflectiveException{
         Set<String> controllerNames = storage.getAllControllerNames();
 
         //If no map provided, no validation can occur. This is probably due to no controllers existing yet
@@ -149,7 +146,7 @@ public class LocusScannerImpl implements LocusScanner{
         //Test the controller name to ensure it is unique
         for(String otherName : controllerNames){
             if(controllerName.equals(otherName)){
-                throw new LocusReflectiveException(
+                throw new ReflectiveException(
                         String.format("Identically named controllers are not allowed.%1$s" +
                                 "  Name: %2$s | Type: %3$s%1$s  Name: %4$s | Type: %5$s",
                                 System.lineSeparator(), controllerName, controllerType.getName(),
@@ -160,7 +157,7 @@ public class LocusScannerImpl implements LocusScanner{
     }
 
     private void validateUniqueMethod(String propName, String category, ReflectiveMethodHolder<?> rmh,
-                                      Collection<? extends ReflectiveMethodHolder<?>> otherOams) throws LocusReflectiveException{
+                                      Collection<? extends ReflectiveMethodHolder<?>> otherOams) throws ReflectiveException{
         //If no collection provided, no validation can occur. This is probably due to no methods for that property existing
         if(otherOams == null){
             return;
@@ -170,7 +167,7 @@ public class LocusScannerImpl implements LocusScanner{
         for(ReflectiveMethodHolder<?> rmh2 : otherOams){
             Method m2= rmh2.getMethod();
             if(m1.getName().equals(m2.getName())){
-                throw new LocusReflectiveException("Identical methods for single property in single category not allowed." + System.lineSeparator() +
+                throw new ReflectiveException("Identical methods for single property in single category not allowed." + System.lineSeparator() +
                         "   Category: " + category + " | Property: " + propName + System.lineSeparator() +
                         "   Class: " + rmh.getSourceType().getName() + " | Method: " + m1.getName() +
                         "   Class: " + rmh2.getSourceType().getName() + " | Method: " + m2.getName()

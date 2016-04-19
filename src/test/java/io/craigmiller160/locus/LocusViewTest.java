@@ -18,11 +18,11 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
-import io.craigmiller160.locus.reflect.ClassAndMethod;
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
 import io.craigmiller160.locus.sample.ViewOne;
 import io.craigmiller160.locus.sample.ViewThree;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.ReflectiveException;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -165,7 +165,7 @@ public class LocusViewTest {
         try{
             locusView.setValue("TwoFields", value);
         }
-        catch(LocusReflectiveException ex){
+        catch(ReflectiveException ex){
             exceptionWasThrown = true;
             logger.error("testFailedInvocation exception stack trace", ex);
         }
@@ -185,7 +185,7 @@ public class LocusViewTest {
         try{
             locusView.setValue("NoField", value);
         }
-        catch(LocusReflectiveException ex){
+        catch(ReflectiveException ex){
             exceptionWasThrown = true;
             logger.error("testNoMethod exception stack trace", ex);
         }

@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.utils.collection.MultiValueMap;
+
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 

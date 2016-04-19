@@ -16,15 +16,16 @@
 
 package io.craigmiller160.locus.util;
 
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
+
+import io.craigmiller160.utils.reflect.ReflectiveException;
 
 /**
  * Created by craig on 3/16/16.
  */
 public interface LocusScanner {
 
-    void scanPackage(String packageName, LocusStorage storage) throws LocusReflectiveException;
+    void scanPackage(String packageName, LocusStorage storage) throws ReflectiveException;
 
-    void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws LocusReflectiveException;
+    void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException;
 
 }

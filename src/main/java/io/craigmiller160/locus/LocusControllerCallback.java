@@ -18,9 +18,9 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
-import io.craigmiller160.locus.reflect.LocusInvoke;
-import io.craigmiller160.locus.reflect.LocusReflectiveException;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ReflectiveException;
+import io.craigmiller160.utils.reflect.RemoteInvoke;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -121,12 +121,12 @@ class LocusControllerCallback {
             }
 
             if(method == null){
-                throw new LocusReflectiveException(String.format("Callback object has no method named either get%1$s or is%1$s", propName));
+                throw new ReflectiveException(String.format("Callback object has no method named either get%1$s or is%1$s", propName));
             }
 
             //Attempt to invoke the method and get the result
             ObjectAndMethod oam = new ObjectAndMethod(callback, method);
-            result = LocusInvoke.invokeMethod(oam, args);
+            result = RemoteInvoke.invokeMethod(oam, args);
 
             return result;
         }

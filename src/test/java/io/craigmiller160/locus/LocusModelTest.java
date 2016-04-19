@@ -18,9 +18,9 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
-import io.craigmiller160.locus.reflect.ObjectAndMethod;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -18,8 +18,8 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
-import io.craigmiller160.locus.reflect.ObjectCreator;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.ObjectCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
