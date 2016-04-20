@@ -85,7 +85,7 @@ public class LocusStorage {
     /**
      * Clear all values currently in this storage.
      */
-    public void clear(){
+    public synchronized void clear(){
         modelPropSetters.clear();
         modelPropGetters.clear();
         viewPropSetters.clear();
@@ -101,11 +101,11 @@ public class LocusStorage {
      * UIThreadExecutor section
      */
 
-    public void setUIThreadExecutorType(Class<? extends UIThreadExecutor> uiThreadExecutorType){
+    public synchronized void setUIThreadExecutorType(Class<? extends UIThreadExecutor> uiThreadExecutorType){
         this.uiThreadExecutorType = uiThreadExecutorType;
     }
 
-    public Class<? extends UIThreadExecutor> getUIThreadExecutorType(){
+    public synchronized Class<? extends UIThreadExecutor> getUIThreadExecutorType(){
         return uiThreadExecutorType;
     }
 
