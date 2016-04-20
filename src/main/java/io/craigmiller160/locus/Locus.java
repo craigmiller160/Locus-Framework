@@ -18,6 +18,8 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
+import io.craigmiller160.locus.scan.LocusScanner;
+import io.craigmiller160.locus.scan.LocusScannerFactory;
 import io.craigmiller160.locus.util.*;
 import io.craigmiller160.utils.util.StringUtil;
 

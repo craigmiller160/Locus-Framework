@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package io.craigmiller160.locus.util;
+package io.craigmiller160.locus.scan;
 
 import io.craigmiller160.locus.annotations.LController;
 import io.craigmiller160.locus.annotations.LModel;
 import io.craigmiller160.locus.annotations.LView;
+import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.locus.util.ScannerExclusions;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ObjectCreator;
@@ -45,7 +47,7 @@ import static io.craigmiller160.locus.util.LocusConstants.*;
  *
  * Created by craig on 3/12/16.
  */
-public class LocusScannerImpl implements LocusScanner{
+public class LocusScannerImpl implements LocusScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusScannerImpl.class);
 

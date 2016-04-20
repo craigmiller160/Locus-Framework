@@ -1,4 +1,4 @@
-package io.craigmiller160.locus.util;
+package io.craigmiller160.locus.scan;
 
 /**
  * Created by craig on 3/16/16.
