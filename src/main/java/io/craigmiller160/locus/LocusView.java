@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
+ * The Locus component that manages access to the view classes.
+ *
  * Created by craig on 3/12/16.
  */
 class LocusView {
@@ -66,8 +68,25 @@ class LocusView {
         this.uiThreadExecutor = factory.getUIThreadExecutor();
     }
 
+    /**
+     * Register the provided view with the storage, so it
+     * can be accessed later on.
+     *
+     * @param view the view to register.
+     */
     public void registerView(Object view){
         storage.addViewInstance(view.getClass(), view);
+    }
+
+    /**
+     * Unregister the provided view. If it is registered
+     * with the storage, it will be removed. Otherwise,
+     * nothing will occur.
+     *
+     * @param view the view to unregister.
+     */
+    public void unregisterView(Object view){
+        storage.removeViewInstance(view);
     }
 
     /**
