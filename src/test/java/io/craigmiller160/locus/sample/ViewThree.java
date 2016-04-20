@@ -16,7 +16,7 @@
 
 package io.craigmiller160.locus.sample;
 
-import io.craigmiller160.locus.annotations.View;
+import io.craigmiller160.locus.annotations.LView;
 
 /**
  * Another sample view object for use in
@@ -24,7 +24,7 @@ import io.craigmiller160.locus.annotations.View;
  *
  * Created by craig on 3/28/16.
  */
-@View
+@LView
 public class ViewThree {
 
     private String firstField;

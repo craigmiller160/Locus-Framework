@@ -16,9 +16,9 @@
 
 package io.craigmiller160.locus.util;
 
-import io.craigmiller160.locus.annotations.Controller;
-import io.craigmiller160.locus.annotations.Model;
-import io.craigmiller160.locus.annotations.View;
+import io.craigmiller160.locus.annotations.LController;
+import io.craigmiller160.locus.annotations.LModel;
+import io.craigmiller160.locus.annotations.LView;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ObjectCreator;
@@ -79,7 +79,7 @@ public class LocusScannerImpl implements LocusScanner{
     }
 
     private void parseViewClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{
-        Set<Class<?>> views = reflections.getTypesAnnotatedWith(View.class);
+        Set<Class<?>> views = reflections.getTypesAnnotatedWith(LView.class);
         for(Class<?> viewType : views){
             Method[] publicMethods = viewType.getMethods();
             for(Method m : publicMethods){
@@ -94,9 +94,9 @@ public class LocusScannerImpl implements LocusScanner{
     }
 
     private void parseControllerClasses(Reflections reflections, LocusStorage storage) throws ReflectiveException{
-        Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(Controller.class);
+        Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(LController.class);
         for(Class<?> controllerType : controllers){
-            Controller con = controllerType.getAnnotation(Controller.class);
+            LController con = controllerType.getAnnotation(LController.class);
             String name = con.name();
             boolean singleton = con.singleton();
             validateUniqueController(name, controllerType, storage);
@@ -106,7 +106,7 @@ public class LocusScannerImpl implements LocusScanner{
     }
 
     private void parseModelClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{
-        Set<Class<?>> models = reflections.getTypesAnnotatedWith(Model.class);
+        Set<Class<?>> models = reflections.getTypesAnnotatedWith(LModel.class);
         for(Class<?> modelType : models){
             Object model = ObjectCreator.instantiateClass(modelType);
             Method[] publicMethods = modelType.getMethods();

@@ -16,7 +16,7 @@
 
 package io.craigmiller160.locus.othercontroller;
 
-import io.craigmiller160.locus.annotations.Controller;
+import io.craigmiller160.locus.annotations.LController;
 
 /**
  * A second sample controller with the same
@@ -26,6 +26,6 @@ import io.craigmiller160.locus.annotations.Controller;
  *
  * Created by craigmiller on 3/19/16.
  */
-@Controller(name="ControllerOne")
+@LController(name="ControllerOne")
 public class ControllerTwo {
 }

@@ -16,7 +16,7 @@
 
 package io.craigmiller160.locus.othermodel;
 
-import io.craigmiller160.locus.annotations.Model;
+import io.craigmiller160.locus.annotations.LModel;
 
 /**
  * A second model in a package not specified
@@ -30,7 +30,7 @@ import io.craigmiller160.locus.annotations.Model;
  *
  * Created by craig on 3/16/16.
  */
-@Model
+@LModel
 public class ModelTwo {
 
     private String stringField;

@@ -16,15 +16,15 @@
 
 package io.craigmiller160.locus.sample;
 
-import io.craigmiller160.locus.annotations.Controller;
+import io.craigmiller160.locus.annotations.LController;
 
 /**
- * A sample class with a @Controller annotation,
+ * A sample class with a @LController annotation,
  * used for testing the Locus Framework.
  *
  * Created by craigmiller on 3/19/16.
  */
-@Controller(name="ControllerOne")
+@LController(name="ControllerOne")
 public class ControllerOne {
 
     private String id;

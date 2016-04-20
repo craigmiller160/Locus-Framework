@@ -16,7 +16,7 @@
 
 package io.craigmiller160.locus.sample;
 
-import io.craigmiller160.locus.annotations.Model;
+import io.craigmiller160.locus.annotations.LModel;
 
 
 /**
@@ -25,7 +25,7 @@ import io.craigmiller160.locus.annotations.Model;
  *
  * Created by craig on 3/16/16.
  */
-@Model
+@LModel
 public class ModelOne {
 
     public static final int STRING_FIELD = 1;

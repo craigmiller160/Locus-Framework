@@ -16,7 +16,7 @@
 
 package io.craigmiller160.locus.otherview;
 
-import io.craigmiller160.locus.annotations.View;
+import io.craigmiller160.locus.annotations.LView;
 
 /**
  * A second view in a separate package. Used
@@ -27,7 +27,7 @@ import io.craigmiller160.locus.annotations.View;
  *
  * Created by craigmiller on 3/19/16.
  */
-@View
+@LView
 public class ViewTwo {
 
     private String firstField;

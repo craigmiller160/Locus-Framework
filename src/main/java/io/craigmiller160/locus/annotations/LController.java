@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * A special annotation used to mark that this
  * class is a Controller in this framework.
  *
- * Unlike the Model or View annotations, Controller
+ * Unlike the LModel or LView annotations, LController
  * requires a single parameter, a String representing
  * its name. This allows it to be called from the convenience
  * methods in the Locus class. It also has an optional parameter
@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Controller {
+public @interface LController {
 
     String name();
 
