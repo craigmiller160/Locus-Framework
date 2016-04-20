@@ -20,26 +20,76 @@
            targetNamespace="io.craigmiller160.github.com/locus-schema"
            elementFormDefault="qualified">
 
+    <!-- The Root Locus element of the schema-->
     <xs:element name="Locus">
         <xs:complexType>
+            <!-- All child elements in a sequence -->
             <xs:sequence>
-                <xs:element name="packages" type="packages" minOccurs="0" maxOccurs="1"/>
+                <!-- Either packages or classes is allowed, not both -->
+                <xs:choice>
+                    <xs:element name="packages" type="packages" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="classes" type="packages" minOccurs="0" maxOccurs="1"/>
+                </xs:choice>
                 <xs:element name="scanning-filters" type="scanning-filters" minOccurs="0" maxOccurs="1"/>
                 <xs:element name="uiThreadExecutor" type="uiExecutor" minOccurs="0" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
+    <!-- The UIThreadExecutor class type is here -->
     <xs:complexType name="uiExecutor">
         <xs:attribute name="class" type="xs:string" use="required"/>
     </xs:complexType>
 
+    <!-- The sequence of package names is here -->
     <xs:complexType name="packages">
         <xs:sequence maxOccurs="unbounded">
             <xs:element name="package" type="package"/>
         </xs:sequence>
     </xs:complexType>
 
+    <!-- The sequence of class names is here, organized by type of class -->
+    <xs:complexType name="classes">
+        <xs:sequence>
+            <xs:element name="models" type="models" maxOccurs="1"/>
+            <xs:element name="views" type="views" maxOccurs="1"/>
+            <xs:element name="controllers" type="controllers" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- The sequence of model class names is here -->
+    <xs:complexType name="models">
+        <xs:sequence>
+            <xs:element name="model" type="standardClass" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- The sequence of view class names is here -->
+    <xs:complexType name="views">
+        <xs:sequence>
+            <xs:element name="view" type="standardClass" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- The sequence of controller class names is here -->
+    <xs:complexType name="controllers">
+        <xs:sequence>
+            <xs:element name="controller" type="controllerClass" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- A standard class type, used for model & view -->
+    <xs:complexType name="standardClass">
+        <xs:attribute name="class" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- A controller class type, used for controller -->
+    <xs:complexType name="controllerClass">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="class" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- The sequence of scanning-filters, organized by exclusions and inclusions -->
     <xs:complexType name="scanning-filters">
         <xs:sequence>
             <xs:element name="exclusions" type="exclusions" minOccurs="0" maxOccurs="1"/>
@@ -47,22 +97,26 @@
         </xs:sequence>
     </xs:complexType>
 
+    <!-- The sequence of exclusions is here -->
     <xs:complexType name="exclusions">
         <xs:choice maxOccurs="unbounded">
             <xs:element name="exclusion" type="filter" />
         </xs:choice>
     </xs:complexType>
 
+    <!-- The sequence of inclusions is here -->
     <xs:complexType name="inclusions">
         <xs:choice maxOccurs="unbounded">
             <xs:element name="inclusion" type="filter" />
         </xs:choice>
     </xs:complexType>
 
+    <!-- A package name type -->
     <xs:complexType name="package">
         <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
 
+    <!-- A filter type -->
     <xs:complexType name="filter">
         <xs:attribute name="prefix" type="xs:string" use="required"/>
     </xs:complexType>
