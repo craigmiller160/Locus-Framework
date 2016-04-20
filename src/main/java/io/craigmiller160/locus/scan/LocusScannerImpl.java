@@ -45,8 +45,13 @@ import static io.craigmiller160.locus.util.LocusConstants.*;
  * The current default implementation of the
  * LocusScanner API.
  *
+ * DEPRECATED: As of 4/20/16, this class has been
+ * deprecated. Its logic is divided between ScanParser
+ * and the new LocusPackageScanner.
+ *
  * Created by craig on 3/12/16.
  */
+@Deprecated
 public class LocusScannerImpl implements LocusScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocusScannerImpl.class);

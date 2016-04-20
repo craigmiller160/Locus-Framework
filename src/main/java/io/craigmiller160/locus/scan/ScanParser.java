@@ -170,7 +170,7 @@ class ScanParser {
             if(m1.getName().equals(m2.getName())){
                 throw new ReflectiveException(String.format(
                         "Identical methods for single property in single category not allowed.%n" +
-                        "   Category: %1$s | Property: %$2s%n" +
+                        "   Category: %1$s | Property: %2$s%n" +
                         "   Class: %3$s | Method: %4$s%n" +
                         "   Class: %5$s | Method: %6$s",
                         category, propName, rmh.getSourceType().getName(), m1.getName(),

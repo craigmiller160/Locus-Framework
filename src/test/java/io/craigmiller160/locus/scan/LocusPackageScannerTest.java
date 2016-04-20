@@ -36,14 +36,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * A JUnit test class for the LocusScannerImpl
+ * A JUnit test class for the LocusPackageScanner
  * class.
  *
  * Created by craig on 3/16/16.
  */
-public class LocusScannerImplTest {
+public class LocusPackageScannerTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocusScannerImplTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocusPackageScannerTest.class);
 
     private LocusStorage storage;
 
@@ -76,7 +76,7 @@ public class LocusScannerImplTest {
      */
     @Test
     public void testScanPackage(){
-        LocusScanner scanner = new LocusScannerImpl();
+        LocusScanner scanner = new LocusPackageScanner();
         String packageName = "io.craigmiller160.locus.sample";
         ScannerExclusions scannerExclusions = new ScannerExclusions();
 
@@ -117,7 +117,7 @@ public class LocusScannerImplTest {
      */
     @Test
     public void testScanInvalidModel(){
-        LocusScanner scanner = new LocusScannerImpl();
+        LocusScanner scanner = new LocusPackageScanner();
         String package1 = "io.craigmiller160.locus.sample";
         String package2 = "io.craigmiller160.locus.othermodel";
 
@@ -156,7 +156,7 @@ public class LocusScannerImplTest {
      */
     @Test
     public void testScanInvalidController(){
-        LocusScanner scanner = new LocusScannerImpl();
+        LocusScanner scanner = new LocusPackageScanner();
         String package1 = "io.craigmiller160.locus.sample";
         String package2 = "io.craigmiller160.locus.othercontroller";
 

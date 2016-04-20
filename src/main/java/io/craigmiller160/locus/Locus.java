@@ -22,6 +22,8 @@ import io.craigmiller160.locus.scan.LocusScanner;
 import io.craigmiller160.locus.scan.LocusScannerFactory;
 import io.craigmiller160.locus.util.*;
 import io.craigmiller160.utils.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -37,9 +39,11 @@ import static io.craigmiller160.locus.util.LocusConstants.*;
  */
 public class Locus {
 
+    private static final Logger logger = LoggerFactory.getLogger(Locus.class);
     private static final LocusStorage storage = LocusStorage.getInstance();
     private static final ConfigurationReader configReader = ConfigurationReaderFactory.newInstance().newConfigurationReader();
-    private static final LocusScanner scanner = LocusScannerFactory.newInstance().newLocusScanner();
+    private static final LocusScanner packageScanner = LocusScannerFactory.newPackageScanner();
+    private static final LocusScanner classScanner = LocusScannerFactory.newClassScanner();
 
     /**
      * A boolean flag for whether or not Locus has already been
@@ -129,10 +133,13 @@ public class Locus {
                 return;
             }
 
+            logger.debug("Initializing Locus Framework");
+
             //Clear any pre-existing values
             storage.clear();
 
             //Read the configuration file
+            logger.trace("Reading Locus configuration file: {}", configFilePath);
             LocusConfiguration config = configReader.readConfiguration(configFilePath);
 
             //Identify the UIThreadExecutor, if a value has been provided
@@ -153,16 +160,19 @@ public class Locus {
             }
 
             //Set the UIThreadExecutor in the LocusStorage
+            logger.trace("Setting UIThreadExecutor type: {}", clazz.getName());
             storage.setUIThreadExecutorType(clazz);
 
             //Scan the provided packages and organize them in the storage
             List<String> packageNames = config.getPackageNames();
             for(String name : packageNames){
-                scanner.scan(name, storage, config.getScannerExclusions());
+                packageScanner.scan(name, storage, config.getScannerExclusions());
             }
 
             //Set the initialized flag to true
             initialized = true;
+
+            logger.info("Locus Framework initialized");
         }
     }
 

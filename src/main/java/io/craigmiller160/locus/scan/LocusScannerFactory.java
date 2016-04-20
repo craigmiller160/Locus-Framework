@@ -1,6 +1,9 @@
 package io.craigmiller160.locus.scan;
 
 /**
+ * A factory class that produces instances
+ * of LocusScanner implementations.
+ *
  * Created by craig on 3/16/16.
  */
 public class LocusScannerFactory {
@@ -8,16 +11,23 @@ public class LocusScannerFactory {
     private LocusScannerFactory() {}
 
     /**
-     * Get a new instance of this factory class.
+     * Get a new instance of the LocusScanner interface
+     * for scanning packages.
      *
-     * @return a new instance of LocusScannerFactory.
+     * @return a scanner for packages.
      */
-    public static LocusScannerFactory newInstance() {
-        return new LocusScannerFactory();
+    public static LocusScanner newPackageScanner(){
+        return new LocusPackageScanner();
     }
 
-    public LocusScanner newLocusScanner(){
-        return new LocusScannerImpl();
+    /**
+     * Get a new instance of the LocusScanner interface
+     * for scanning classes.
+     *
+     * @return a scanner for classes.
+     */
+    public static LocusScanner newClassScanner(){
+        return new LocusClassScanner();
     }
 
 }
