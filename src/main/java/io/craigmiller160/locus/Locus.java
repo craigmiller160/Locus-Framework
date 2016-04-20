@@ -64,22 +64,52 @@ public class Locus {
 
 
     /**
-     * Initialize the Locus framework. This method will only
+     * Initialize the Locus framework with a configuration
+     * file with the default name (locus.xml), at the root
+     * of the classpath. This method will only
      * execute if it has not already been initialized.
      */
-    @SuppressWarnings("unchecked")
     public static void initialize(){
         initialize(false);
     }
 
     /**
-     * Initialize the Locus framework, with the option to
+     * Initialize the Locus frameworkwith a configuration
+     * file with the default name (locus.xml), at the root
+     * of the classpath. This method has the option to
      * force a re-initialization.
      *
      * @param force if it should be re-initialized if already initialized.
      */
-    @SuppressWarnings("unchecked")
     public static void initialize(boolean force){
+        initialize(DEFAULT_CONFIG, force);
+    }
+
+    /**
+     * Initialize Locus with a configuration file
+     * specified by the provided String path. The path
+     * should be a relative path from the root of the
+     * classpath. This method will only execute if it
+     * has not already been initialized.
+     *
+     * @param configFilePath the path to the configuration file.
+     */
+    public static void initialize(String configFilePath){
+        initialize(configFilePath, false);
+    }
+
+    /**
+     * Initialize Locus with a configuration file
+     * specified by the provided String path. The path
+     * should be a relative path from the root of the
+     * classpath. This method has the option to
+     * force a re-initialization.
+     *
+     * @param configFilePath the path to the configuration file.
+     * @param force if it should be re-initialized if already initialized.
+     */
+    @SuppressWarnings("unchecked")
+    public static void initialize(String configFilePath, boolean force){
         //Using this lock here to ensure that the initialization process can't be called by multiple threads simultaneously.
         synchronized (initializeLock){
             if(initialized && !force){
@@ -90,7 +120,7 @@ public class Locus {
             storage.clear();
 
             //Read the configuration file
-            LocusConfiguration config = configReader.readConfiguration(DEFAULT_CONFIG);
+            LocusConfiguration config = configReader.readConfiguration(configFilePath);
 
             //Identify the UIThreadExecutor, if a value has been provided
             Class<? extends UIThreadExecutor> clazz = null;
