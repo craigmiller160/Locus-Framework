@@ -151,8 +151,8 @@ public class LocusModelViewTest {
         assertNotNull("ModelOne ObjectField is null", modelOne.getObjectField());
         assertNotNull("ViewOne ObjectField is null", viewOne.getObjectField());
 
-        assertEquals("ModelOne ObjectField wrong value", modelOne.getObjectField(), value);
-        assertEquals("ViewOne ObjectField wrong value", viewOne.getObjectField(), value);
+        assertEquals("ModelOne ObjectField wrong value", value, modelOne.getObjectField());
+        assertEquals("ViewOne ObjectField wrong value", value, viewOne.getObjectField());
     }
 
     /**
@@ -167,18 +167,9 @@ public class LocusModelViewTest {
         assertNotNull("ViewOne StringField is null", viewOne.getStringField());
         assertNotNull("ViewThree StringField is null", viewThree.getStringField());
 
-        assertEquals("ModelOne StringField wrong value", modelOne.getStringField(), value);
-        assertEquals("ViewOne StringField wrong value", viewOne.getStringField(), value);
-        assertEquals("ViewThree StringField wrong value", viewThree.getStringField(), value);
-    }
-
-    /**
-     * Test setting multiple values in a model
-     * and having them be updated in the views.
-     */
-    @Test
-    public void testSetMultipleValues(){
-
+        assertEquals("ModelOne StringField wrong value", value, modelOne.getStringField());
+        assertEquals("ViewOne StringField wrong value", value, viewOne.getStringField());
+        assertEquals("ViewThree StringField wrong value", value, viewThree.getStringField());
     }
 
 }

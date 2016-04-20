@@ -108,37 +108,6 @@ public class LocusModelTest {
     }
 
     /**
-     * Static initializer to set up the LocusStorage properly for
-     * use in these tests. It's created reflectively because
-     * there's no access to its constructor normally.
-     */
-//    static{
-//        try{
-//            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
-//            constructor.setAccessible(true);
-//            storage = constructor.newInstance();
-//
-//            modelOne = new ModelOne();
-//            Method[] methods = ModelOne.class.getDeclaredMethods();
-//            for(Method m : methods){
-//                if(m.getName().startsWith("set")){
-//                    String propName = m.getName().substring(3);
-//                    storage.addModelPropSetter(propName, new ObjectAndMethod(modelOne, m));
-//                }
-//                else if(m.getName().startsWith("get")){
-//                    String propName = m.getName().substring(3);
-//                    storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
-//                }
-//            }
-//
-//            locusModel = new LocusModel(storage, locusView);
-//        }
-//        catch(Exception ex){
-//            throw new RuntimeException("Fatal exception at initialization", ex);
-//        }
-//    }
-
-    /**
      * Test invoking a getter with arguments.
      */
     @Test
@@ -213,7 +182,7 @@ public class LocusModelTest {
     public void testSetWithInheritance(){
         BigDecimal bigDecimal = new BigDecimal(5.12345);
         locusModel.setValue("ObjectField", bigDecimal);
-        assertEquals("Invalid ObjectField value", modelOne.getObjectField(), bigDecimal);
+        assertEquals("Invalid ObjectField value", bigDecimal, modelOne.getObjectField());
     }
 
     /**
@@ -238,7 +207,7 @@ public class LocusModelTest {
     public void testGetWithInheritance(){
         BigDecimal bigDecimal = new BigDecimal(567890.1234);
         modelOne.setObjectField(bigDecimal);
-        assertEquals("Invalid ObjectField value", locusModel.getValue("ObjectField"), bigDecimal);
+        assertEquals("Invalid ObjectField value", bigDecimal, locusModel.getValue("ObjectField"));
     }
 
     /**
@@ -248,10 +217,9 @@ public class LocusModelTest {
     public void testGenericGet(){
         BigDecimal bigDecimal = new BigDecimal(543210.6789);
         modelOne.setObjectField(bigDecimal);
-        assertEquals("Invalid class type returned",
-                locusModel.getValue("ObjectField", BigDecimal.class).getClass(),
-                BigDecimal.class);
-        assertEquals("Invalid ObjectField value", locusModel.getValue("ObjectField", BigDecimal.class), bigDecimal);
+        assertEquals("Invalid class type returned", BigDecimal.class,
+                locusModel.getValue("ObjectField", BigDecimal.class).getClass());
+        assertEquals("Invalid ObjectField value", bigDecimal, locusModel.getValue("ObjectField", BigDecimal.class));
     }
 
 }

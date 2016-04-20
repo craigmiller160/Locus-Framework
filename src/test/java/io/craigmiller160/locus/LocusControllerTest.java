@@ -105,7 +105,7 @@ public class LocusControllerTest {
 
         Object controller = locusController.getController("ControllerOne");
         assertNotNull("Controller is null", controller);
-        assertEquals("Controller wrong type", controller.getClass(), ControllerOne.class);
+        assertEquals("Controller wrong type", ControllerOne.class, controller.getClass());
     }
 
     /**
@@ -140,8 +140,8 @@ public class LocusControllerTest {
 
         assertNotNull("First controller ref is null", one);
         assertNotNull("Second controller ref is null", two);
-        assertEquals("First controller ref is wrong type", one.getClass(), ControllerOne.class);
-        assertEquals("Second controller ref is wrong type", two.getClass(), ControllerOne.class);
+        assertEquals("First controller ref is wrong type", ControllerOne.class, one.getClass());
+        assertEquals("Second controller ref is wrong type", ControllerOne.class, two.getClass());
 
         ControllerOne cOne = (ControllerOne) one;
         ControllerOne cTwo = (ControllerOne) two;
@@ -161,7 +161,7 @@ public class LocusControllerTest {
         ControllerOne cOne = locusController.getController("ControllerOne", ControllerOne.class);
 
         assertNotNull("Controller instance is null", cOne);
-        assertEquals("Controller instance is wrong type", cOne.getClass(), ControllerOne.class);
+        assertEquals("Controller instance is wrong type", ControllerOne.class, cOne.getClass());
     }
 
     /**

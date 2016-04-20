@@ -38,8 +38,8 @@ public class DOMConfigurationReaderTest {
         ConfigurationReader configReader = new DOMConfigurationReader();
         LocusConfiguration locusConfig = configReader.readConfiguration("locus.xml");
 
-        assertEquals("Wrong number of packages returned", locusConfig.getPackageCount(), 1);
-        assertEquals("Wrong package name returned", locusConfig.getPackageNames().get(0), "io.craigmiller160.locus.sample");
+        assertEquals("Wrong number of packages returned", 1, locusConfig.getPackageCount());
+        assertEquals("Wrong package name returned", "io.craigmiller160.locus.sample", locusConfig.getPackageNames().get(0));
 
         ScannerExclusions scannerExclusions = locusConfig.getScannerExclusions();
         Set<String> exclusions = scannerExclusions.getAllExclusions();
@@ -50,8 +50,8 @@ public class DOMConfigurationReaderTest {
 
         String uiThreadExecutorClassName = locusConfig.getUIThreadExecutorClassName();
         assertNotNull("UiThreadExecutorClassName is null", uiThreadExecutorClassName);
-        assertEquals("UIThreadExecutorClassName has the wrong value", uiThreadExecutorClassName,
-                "io.craigmiller160.locus.sample.SampleUIThreadExecutor");
+        assertEquals("UIThreadExecutorClassName has the wrong value", "io.craigmiller160.locus.sample.SampleUIThreadExecutor",
+                uiThreadExecutorClassName);
     }
 
 }
