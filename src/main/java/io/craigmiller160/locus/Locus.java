@@ -23,6 +23,8 @@ import io.craigmiller160.utils.util.StringUtil;
 
 import java.util.List;
 
+import static io.craigmiller160.locus.util.LocusConstants.*;
+
 /**
  * The central class of the Locus Framework.
  * This class provides easy, static access to
@@ -32,10 +34,6 @@ import java.util.List;
  * Created by craig on 3/12/16.
  */
 public class Locus {
-
-    public static final int GETTER = 101;
-    public static final int SETTER = 102;
-    public static final String DEFAULT_CONFIG = "locus.xml";
 
     private static final LocusStorage storage = LocusStorage.getInstance();
     private static final ConfigurationReader configReader = ConfigurationReaderFactory.newInstance().newConfigurationReader();
@@ -95,7 +93,7 @@ public class Locus {
      * @param force if it should be re-initialized if already initialized.
      */
     public static void initialize(boolean force){
-        initialize(DEFAULT_CONFIG, force);
+        initialize(DEFAULT_CONFIG_FILE, force);
     }
 
     /**

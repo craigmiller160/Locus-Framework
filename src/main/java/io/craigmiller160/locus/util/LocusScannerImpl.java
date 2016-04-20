@@ -37,6 +37,8 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Set;
 
+import static io.craigmiller160.locus.util.LocusConstants.*;
+
 /**
  * The current default implementation of the
  * LocusScanner API.
@@ -46,10 +48,6 @@ import java.util.Set;
 public class LocusScannerImpl implements LocusScanner{
 
     private static final Logger logger = LoggerFactory.getLogger(LocusScannerImpl.class);
-
-    private static final String MODEL_CATEGORY = "Model";
-    private static final String VIEW_CATEGORY = "View";
-    private static final String CONTROLLER_CATEGORY = "Controller";
 
     LocusScannerImpl(){}
 
@@ -114,7 +112,7 @@ public class LocusScannerImpl implements LocusScanner{
                 if(m.getName().startsWith("set") && isClassAllowed(m.getDeclaringClass(), scannerExclusions)){
                     String propName = m.getName().substring(3);
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
-                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropSetters());
+                    validateUniqueMethod(propName, MODEL_TYPE, oam, storage.getAllModelPropSetters());
                     logger.trace("Adding model property setter to storage. Property: {} | Setter: {}", propName, oam.toString());
                     storage.addModelPropSetter(propName, oam);
                 }
@@ -123,7 +121,7 @@ public class LocusScannerImpl implements LocusScanner{
                     //Set the propName differently for either a "get" or "is" prefix, based on their different lengths
                     String propName = m.getName().startsWith("get") ? m.getName().substring(3) : m.getName().substring(2);
                     ObjectAndMethod oam = new ObjectAndMethod(model, m);
-                    validateUniqueMethod(propName, MODEL_CATEGORY, oam, storage.getAllModelPropGetters());
+                    validateUniqueMethod(propName, MODEL_TYPE, oam, storage.getAllModelPropGetters());
                     logger.trace("Adding model property getter to storage. Property: {} | Getter: {}", propName, oam.toString());
                     storage.addModelPropGetter(propName, oam);
                 }

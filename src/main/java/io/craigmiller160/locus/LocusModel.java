@@ -21,6 +21,8 @@ import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 import io.craigmiller160.utils.reflect.RemoteInvoke;
 
+import static io.craigmiller160.locus.util.LocusConstants.*;
+
 /**
  * One of the core components of the Locus Framework.
  * This class handles manipulating data in the models
@@ -80,7 +82,7 @@ class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public void setValue(String propName, Object... value) throws LocusException{
-        RemoteInvoke.invokeMethod(getMethod(propName, Locus.SETTER), value);
+        RemoteInvoke.invokeMethod(getMethod(propName, SETTER), value);
         locusView.setValue(propName, value);
     }
 
@@ -92,7 +94,7 @@ class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public Object getValue(String propName, Object... args) throws LocusException{
-        return RemoteInvoke.invokeMethod(getMethod(propName, Locus.GETTER), args);
+        return RemoteInvoke.invokeMethod(getMethod(propName, GETTER), args);
     }
 
     /**
@@ -130,7 +132,7 @@ class LocusModel {
     private ObjectAndMethod getMethod(String propName, int methodType) throws ReflectiveException{
         ObjectAndMethod oam = null;
         String typeName = "";
-        if(methodType == Locus.GETTER){
+        if(methodType == GETTER){
             oam = storage.getModelPropGetter(propName);
             typeName = "getter";
         }
