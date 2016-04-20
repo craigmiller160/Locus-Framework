@@ -54,12 +54,25 @@ public class Locus {
      */
     private static final Object initializeLock = new Object();
 
+    /**
+     * Handles all operations affecting registered models.
+     */
     public static LocusModel model = new LocusModel();
 
+    /**
+     * Handles all operations affecting registered controllers.
+     */
     public static LocusController controller = new LocusController();
 
+    /**
+     * Handles all operations affecting regsitered views.
+     */
     public static LocusView view = new LocusView();
 
+    /**
+     * Handles all operations related to debugging this
+     * framework.
+     */
     public static LocusDebug debug = new LocusDebug();
 
 
