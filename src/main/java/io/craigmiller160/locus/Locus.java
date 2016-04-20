@@ -86,9 +86,13 @@ public class Locus {
                 return;
             }
 
+            //Clear any pre-existing values
             storage.clear();
+
+            //Read the configuration file
             LocusConfiguration config = configReader.readConfiguration(DEFAULT_CONFIG);
 
+            //Identify the UIThreadExecutor, if a value has been provided
             Class<? extends UIThreadExecutor> clazz = null;
             String uiThreadExecutorClassName = config.getUIThreadExecutorClassName();
             if(!StringUtil.isEmpty(uiThreadExecutorClassName)){
@@ -100,18 +104,21 @@ public class Locus {
                 }
             }
 
-            //If it's still null, it was not provided properly in the configuration
+            //If the UIThreadExecutor class is null, set it to the default
             if(clazz == null){
                 clazz = NoUIThreadExecutor.class;
             }
 
+            //Set the UIThreadExecutor in the LocusStorage
             storage.setUIThreadExecutorType(clazz);
 
+            //Scan the provided packages and organize them in the storage
             List<String> packageNames = config.getPackageNames();
             for(String name : packageNames){
                 scanner.scanPackage(name, storage, config.getScannerExclusions());
             }
 
+            //Set the initialized flag to true
             initialized = true;
         }
     }
