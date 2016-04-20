@@ -1,17 +1,17 @@
 /*
  * Copyright 2016 Craig Miller
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package io.craigmiller160.locus;
@@ -20,14 +20,17 @@ import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.scan.LocusScanner;
 import io.craigmiller160.locus.scan.LocusScannerFactory;
-import io.craigmiller160.locus.util.*;
+import io.craigmiller160.locus.util.ConfigurationReader;
+import io.craigmiller160.locus.util.ConfigurationReaderFactory;
+import io.craigmiller160.locus.util.LocusConfiguration;
+import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.utils.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static io.craigmiller160.locus.util.LocusConstants.*;
+import static io.craigmiller160.locus.util.LocusConstants.DEFAULT_CONFIG_FILE;
 
 /**
  * The central class of the Locus Framework.
