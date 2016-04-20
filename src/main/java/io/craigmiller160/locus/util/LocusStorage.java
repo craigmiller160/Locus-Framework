@@ -82,6 +82,21 @@ public class LocusStorage {
         controllerCallbacks = new HashMap<>();
     }
 
+    /**
+     * Clear all values currently in this storage.
+     */
+    public void clear(){
+        modelPropSetters.clear();
+        modelPropGetters.clear();
+        viewPropSetters.clear();
+        viewInstances.clear();
+        controllerSingletons.clear();
+        controllerTypes.clear();
+        controllerSingletonInstances.clear();
+        controllerCallbacks.clear();
+        uiThreadExecutorType = null; //TODO this may cause errors, having this null at any point in time...
+    }
+
     /*
      * UIThreadExecutor section
      */
