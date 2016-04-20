@@ -85,8 +85,9 @@
 
     <!-- A controller class type, used for controller -->
     <xs:complexType name="controllerClass">
-        <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="class" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="singleton" type="xs:boolean" default="false"/>
     </xs:complexType>
 
     <!-- The sequence of scanning-filters, organized by exclusions and inclusions -->
