@@ -54,7 +54,7 @@ public class LocusScannerImpl implements LocusScanner{
     LocusScannerImpl(){}
 
     @Override
-    public void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{
+    public void scan(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{
         logger.debug("Beginning scan of package \"{}\" for annotated classes", packageName);
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage(packageName))
@@ -74,8 +74,8 @@ public class LocusScannerImpl implements LocusScanner{
     }
 
     @Override
-    public void scanPackage(String packageName, LocusStorage storage) throws ReflectiveException{
-        scanPackage(packageName, storage, null);
+    public void scan(String packageName, LocusStorage storage) throws ReflectiveException{
+        scan(packageName, storage, null);
     }
 
     private void parseViewClasses(Reflections reflections, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException{

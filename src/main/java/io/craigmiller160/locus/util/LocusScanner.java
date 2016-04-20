@@ -20,12 +20,33 @@ package io.craigmiller160.locus.util;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 
 /**
+ * The interface defining the API for scanning elements
+ * in the Locus framework.
+ *
  * Created by craig on 3/16/16.
  */
 public interface LocusScanner {
 
-    void scanPackage(String packageName, LocusStorage storage) throws ReflectiveException;
+    /**
+     * Scan an item denoted by the provided String name, and
+     * update the provided LocusStorage instance.
+     *
+     * @param itemToScan the path of the item to scan.
+     * @param storage the LocusStorage to update.
+     * @throws ReflectiveException if unable to reflectively scan the item.
+     */
+    void scan(String itemToScan, LocusStorage storage) throws ReflectiveException;
 
-    void scanPackage(String packageName, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException;
+    /**
+     * Scan an item denoted by the provided String name, and
+     * update the provided LocusStorage instance. To ensure that
+     * nothing invalid is scooped up, ScannerExclusions are provided.
+     *
+     * @param itemToScan the path of the item to scan.
+     * @param storage the LocusStorage to update.
+     * @param scannerExclusions the ScannerExclusions.
+     * @throws ReflectiveException if unable to reflectively scan the item.
+     */
+    void scan(String itemToScan, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException;
 
 }

@@ -16,7 +16,6 @@
 
 package io.craigmiller160.locus.util;
 
-import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ReflectiveException;
@@ -24,10 +23,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +51,7 @@ public class LocusScannerImplTest {
         LocusStorage storage = new LocusStorage();
         ScannerExclusions scannerExclusions = new ScannerExclusions();
 
-        scanner.scanPackage(packageName, storage, scannerExclusions);
+        scanner.scan(packageName, storage, scannerExclusions);
 
         Collection<ObjectAndMethod> modelPropSetters = storage.getAllModelPropSetters();
         Collection<ObjectAndMethod> modelPropGetters = storage.getAllModelPropGetters();
@@ -105,7 +101,7 @@ public class LocusScannerImplTest {
 
         //Scanning the first package should work with no exception, because everything is valid
         try{
-            scanner.scanPackage(package1, storage, scannerExclusions);
+            scanner.scan(package1, storage, scannerExclusions);
         }
         catch(ReflectiveException ex){
             firstScanException = true;
@@ -114,7 +110,7 @@ public class LocusScannerImplTest {
 
         //Scanning the second package should find an invalid, duplicate method, and throw an exception
         try{
-            scanner.scanPackage(package2, storage, scannerExclusions);
+            scanner.scan(package2, storage, scannerExclusions);
         }
         catch(ReflectiveException ex){
             secondScanException = true;
@@ -145,7 +141,7 @@ public class LocusScannerImplTest {
 
         //Scanning the first package should work with no exception because there's no name conflict
         try{
-            scanner.scanPackage(package1, storage, scannerExclusions);
+            scanner.scan(package1, storage, scannerExclusions);
         }
         catch(ReflectiveException ex){
             firstScanException = true;
@@ -154,7 +150,7 @@ public class LocusScannerImplTest {
 
         //Scanning the second package should throw an exception because of a duplicate name
         try{
-            scanner.scanPackage(package2, storage, scannerExclusions);
+            scanner.scan(package2, storage, scannerExclusions);
         }
         catch(ReflectiveException ex){
             secondScanException = true;

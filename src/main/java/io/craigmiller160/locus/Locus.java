@@ -158,7 +158,7 @@ public class Locus {
             //Scan the provided packages and organize them in the storage
             List<String> packageNames = config.getPackageNames();
             for(String name : packageNames){
-                scanner.scanPackage(name, storage, config.getScannerExclusions());
+                scanner.scan(name, storage, config.getScannerExclusions());
             }
 
             //Set the initialized flag to true
