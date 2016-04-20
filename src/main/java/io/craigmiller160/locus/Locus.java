@@ -41,6 +41,19 @@ public class Locus {
     private static final ConfigurationReader configReader = ConfigurationReaderFactory.newInstance().newConfigurationReader();
     private static final LocusScanner scanner = LocusScannerFactory.newInstance().newLocusScanner();
 
+    /**
+     * A boolean flag for whether or not Locus has already been
+     * initialized.
+     */
+    private static volatile boolean initialized = false;
+
+    /**
+     * A special object to provide a lock for synchronizing
+     * the initialization process, so it can't be called
+     * by more than one thread at a time.
+     */
+    private static final Object initializeLock = new Object();
+
     public static LocusModel model = new LocusModel();
 
     public static LocusController controller = new LocusController();
@@ -49,7 +62,6 @@ public class Locus {
 
     public static LocusDebug debug = new LocusDebug();
 
-    public static volatile boolean initialized = false;
 
     /**
      * Initialize the Locus framework. This method will only
@@ -68,37 +80,40 @@ public class Locus {
      */
     @SuppressWarnings("unchecked")
     public static void initialize(boolean force){
-        if(initialized && !force){
-            return;
-        }
-
-        storage.clear();
-        LocusConfiguration config = configReader.readConfiguration(DEFAULT_CONFIG);
-
-        Class<? extends UIThreadExecutor> clazz = null;
-        String uiThreadExecutorClassName = config.getUIThreadExecutorClassName();
-        if(!StringUtil.isEmpty(uiThreadExecutorClassName)){
-            try{
-                clazz = (Class<? extends UIThreadExecutor>) Class.forName(uiThreadExecutorClassName);
+        //Using this lock here to ensure that the initialization process can't be called by multiple threads simultaneously.
+        synchronized (initializeLock){
+            if(initialized && !force){
+                return;
             }
-            catch(ClassNotFoundException | ClassCastException ex){
-                throw new LocusException(String.format("\"%s\" is not a valid name for a class implementing the UIThreadExecutor interface", uiThreadExecutorClassName), ex);
+
+            storage.clear();
+            LocusConfiguration config = configReader.readConfiguration(DEFAULT_CONFIG);
+
+            Class<? extends UIThreadExecutor> clazz = null;
+            String uiThreadExecutorClassName = config.getUIThreadExecutorClassName();
+            if(!StringUtil.isEmpty(uiThreadExecutorClassName)){
+                try{
+                    clazz = (Class<? extends UIThreadExecutor>) Class.forName(uiThreadExecutorClassName);
+                }
+                catch(ClassNotFoundException | ClassCastException ex){
+                    throw new LocusException(String.format("\"%s\" is not a valid name for a class implementing the UIThreadExecutor interface", uiThreadExecutorClassName), ex);
+                }
             }
+
+            //If it's still null, it was not provided properly in the configuration
+            if(clazz == null){
+                clazz = NoUIThreadExecutor.class;
+            }
+
+            storage.setUIThreadExecutorType(clazz);
+
+            List<String> packageNames = config.getPackageNames();
+            for(String name : packageNames){
+                scanner.scanPackage(name, storage, config.getScannerExclusions());
+            }
+
+            initialized = true;
         }
-
-        //If it's still null, it was not provided properly in the configuration
-        if(clazz == null){
-            clazz = NoUIThreadExecutor.class;
-        }
-
-        storage.setUIThreadExecutorType(clazz);
-
-        List<String> packageNames = config.getPackageNames();
-        for(String name : packageNames){
-            scanner.scanPackage(name, storage, config.getScannerExclusions());
-        }
-
-        initialized = true;
     }
 
 }
