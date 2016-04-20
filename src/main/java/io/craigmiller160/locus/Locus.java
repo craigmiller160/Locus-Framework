@@ -49,8 +49,30 @@ public class Locus {
 
     public static LocusDebug debug = new LocusDebug();
 
+    public static volatile boolean initialized = false;
+
+    /**
+     * Initialize the Locus framework. This method will only
+     * execute if it has not already been initialized.
+     */
     @SuppressWarnings("unchecked")
     public static void initialize(){
+        initialize(false);
+    }
+
+    /**
+     * Initialize the Locus framework, with the option to
+     * force a re-initialization.
+     *
+     * @param force if it should be re-initialized if already initialized.
+     */
+    @SuppressWarnings("unchecked")
+    public static void initialize(boolean force){
+        if(initialized && !force){
+            return;
+        }
+
+        storage.clear();
         LocusConfiguration config = configReader.readConfiguration(DEFAULT_CONFIG);
 
         Class<? extends UIThreadExecutor> clazz = null;
@@ -75,6 +97,8 @@ public class Locus {
         for(String name : packageNames){
             scanner.scanPackage(name, storage, config.getScannerExclusions());
         }
+
+        initialized = true;
     }
 
 }
