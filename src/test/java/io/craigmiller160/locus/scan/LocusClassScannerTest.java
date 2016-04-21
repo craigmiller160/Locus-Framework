@@ -19,6 +19,9 @@ package io.craigmiller160.locus.scan;
 import io.craigmiller160.locus.TestUtils;
 import io.craigmiller160.locus.util.LocusStorage;
 import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * A JUnit test class to test the LocusClassScanner
@@ -28,11 +31,25 @@ import org.junit.Before;
  */
 public class LocusClassScannerTest {
 
+    private static final String MODEL_ONE_PATH = "io.craigmiller160.locus.sample.ModelOne";
+
     private LocusStorage storage;
+    private LocusClassScanner scanner;
 
     @Before
     public void before(){
         storage = TestUtils.setupStorage();
+        scanner = new LocusClassScanner();
+    }
+
+    @Test
+    public void testScanClass(){
+        scanner.scan(MODEL_ONE_PATH, storage);
+        int modelPropSetterCount = storage.getModelPropSetterCount();
+        int modelPropGetterCount = storage.getModelPropSetterCount();
+
+        assertEquals("Wrong number of model prop setters", 12, modelPropSetterCount);
+        assertEquals("Wrong number of model prop getters", 12, modelPropGetterCount);
     }
 
 }
