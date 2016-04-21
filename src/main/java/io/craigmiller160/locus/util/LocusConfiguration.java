@@ -40,6 +40,12 @@ public class LocusConfiguration {
     private List<String> packageNames = new ArrayList<>();
 
     /**
+     * The list of names of classes to be scanned and loaded
+     * into the storage.
+     */
+    private List<String> classNames = new ArrayList<>();
+
+    /**
      * The container for the ScannerExclusions used for validation
      * during package scanning.
      */
@@ -66,6 +72,35 @@ public class LocusConfiguration {
      */
     public String getUIThreadExecutorClassName(){
         return uiThreadExecutorClassName;
+    }
+
+    /**
+     * Add this class name to the list of classes
+     * to be scanned.
+     *
+     * @param className the name of the class to add.
+     */
+    public void addClassName(String className){
+        classNames.add(className);
+    }
+
+    /**
+     * Remove this class name from the list of classes
+     * to be scanned.
+     *
+     * @param className the name of the class to remove.
+     */
+    public void removeClassName(String className){
+        classNames.remove(className);
+    }
+
+    /**
+     * Get the list of class names to scan.
+     *
+     * @return the list of class names to scan.
+     */
+    public List<String> getClassNames(){
+        return classNames;
     }
 
     /**
