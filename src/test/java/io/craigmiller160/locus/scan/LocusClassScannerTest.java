@@ -17,6 +17,8 @@
 package io.craigmiller160.locus.scan;
 
 import io.craigmiller160.locus.TestUtils;
+import io.craigmiller160.locus.annotations.LController;
+import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.util.LocusStorage;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +34,8 @@ import static org.junit.Assert.assertEquals;
 public class LocusClassScannerTest {
 
     private static final String MODEL_ONE_PATH = "io.craigmiller160.locus.sample.ModelOne";
+    private static final String VIEW_ONE_PATH = "io.craigmiller160.locus.sample.ViewOne";
+    private static final String CONTROLLER_ONE_PATH = "io.craigmiller160.locus.sample.ControllerOne";
 
     private LocusStorage storage;
     private LocusClassScanner scanner;
@@ -43,13 +47,31 @@ public class LocusClassScannerTest {
     }
 
     @Test
-    public void testScanClass(){
+    public void testScanModelClass(){
         scanner.scan(MODEL_ONE_PATH, storage);
         int modelPropSetterCount = storage.getModelPropSetterCount();
         int modelPropGetterCount = storage.getModelPropSetterCount();
 
         assertEquals("Wrong number of model prop setters", 12, modelPropSetterCount);
         assertEquals("Wrong number of model prop getters", 12, modelPropGetterCount);
+    }
+
+    @Test
+    public void testScanViewClass(){
+        scanner.scan(VIEW_ONE_PATH, storage);
+        int viewPropSetterCount = storage.getViewPropSetterCount();
+
+        assertEquals("Wrong number of view prop setters", 13, viewPropSetterCount);
+    }
+
+    @Test
+    public void testScanControllerClass(){
+        scanner.scan(CONTROLLER_ONE_PATH, storage);
+        int controllerTypeCount = storage.getControllerCount();
+        String name = ControllerOne.class.getAnnotation(LController.class).name();
+
+        assertEquals("Wrong number of controller types", 1, controllerTypeCount);
+        assertEquals("Controller type doesn't match its name", ControllerOne.class, storage.getControllerType(name));
     }
 
 }
