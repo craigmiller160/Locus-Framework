@@ -51,32 +51,30 @@
     <!-- The sequence of class names is here, organized by type of class -->
     <xs:complexType name="classes">
         <xs:sequence>
-            <xs:element name="models" type="models" maxOccurs="1"/>
-            <xs:element name="views" type="views" maxOccurs="1"/>
-            <xs:element name="controllers" type="controllers" maxOccurs="1"/>
+            <xs:element name="class" type="standardClass" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
     <!-- The sequence of model class names is here -->
-    <xs:complexType name="models">
-        <xs:sequence>
-            <xs:element name="model" type="standardClass" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
+    <!--<xs:complexType name="models">-->
+        <!--<xs:sequence>-->
+            <!--<xs:element name="model" type="standardClass" maxOccurs="unbounded"/>-->
+        <!--</xs:sequence>-->
+    <!--</xs:complexType>-->
 
     <!-- The sequence of view class names is here -->
-    <xs:complexType name="views">
-        <xs:sequence>
-            <xs:element name="view" type="standardClass" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
+    <!--<xs:complexType name="views">-->
+        <!--<xs:sequence>-->
+            <!--<xs:element name="view" type="standardClass" maxOccurs="unbounded"/>-->
+        <!--</xs:sequence>-->
+    <!--</xs:complexType>-->
 
     <!-- The sequence of controller class names is here -->
-    <xs:complexType name="controllers">
-        <xs:sequence>
-            <xs:element name="controller" type="controllerClass" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
+    <!--<xs:complexType name="controllers">-->
+        <!--<xs:sequence>-->
+            <!--<xs:element name="controller" type="controllerClass" maxOccurs="unbounded"/>-->
+        <!--</xs:sequence>-->
+    <!--</xs:complexType>-->
 
     <!-- A standard class type, used for model & view -->
     <xs:complexType name="standardClass">
@@ -84,11 +82,11 @@
     </xs:complexType>
 
     <!-- A controller class type, used for controller -->
-    <xs:complexType name="controllerClass">
-        <xs:attribute name="class" type="xs:string" use="required"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="singleton" type="xs:boolean" default="false"/>
-    </xs:complexType>
+    <!--<xs:complexType name="controllerClass">-->
+        <!--<xs:attribute name="class" type="xs:string" use="required"/>-->
+        <!--<xs:attribute name="name" type="xs:string" use="required"/>-->
+        <!--<xs:attribute name="singleton" type="xs:boolean" default="false"/>-->
+    <!--</xs:complexType>-->
 
     <!-- The sequence of scanning-filters, organized by exclusions and inclusions -->
     <xs:complexType name="scanning-filters">

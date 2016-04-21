@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus.scan;
 
+import io.craigmiller160.locus.LocusException;
+import io.craigmiller160.locus.annotations.LController;
 import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.locus.util.ScannerExclusions;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
@@ -86,11 +88,16 @@ class ScanParser {
      *
      * @param controllerType the class type of the controller.
      * @param storage the LocusStorage.
-     * @param name the name of the controller.
-     * @param singleton whether or not the controller is a singleton.
      * @throws ReflectiveException if unable to parse the controller class.
      */
-    void parseControllerClass(Class<?> controllerType, LocusStorage storage, String name, boolean singleton){
+    void parseControllerClass(Class<?> controllerType, LocusStorage storage){
+        LController con = controllerType.getAnnotation(LController.class);
+        if(con == null){
+            throw new LocusException(String.format("Controller Class does not have LController annotation: %s", controllerType.getName()));
+        }
+
+        String name = con.name();
+        boolean singleton = con.singleton();
         validateUniqueController(name, controllerType, storage);
         logger.trace("Adding controller type to storage. Name: {} | Class: {}", name, controllerType);
         storage.addControllerType(name, controllerType, singleton);

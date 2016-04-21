@@ -74,10 +74,7 @@ public class LocusPackageScanner extends AbstractLocusScanner{
     private void parseControllerClasses(Reflections reflections, LocusStorage storage){
         Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(LController.class);
         for(Class<?> controllerType : controllers) {
-            LController con = controllerType.getAnnotation(LController.class);
-            String name = con.name();
-            boolean singleton = con.singleton();
-            parseControllerClass(controllerType, storage, name, singleton);
+            parseControllerClass(controllerType, storage);
         }
     }
 

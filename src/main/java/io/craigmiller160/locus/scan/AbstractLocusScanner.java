@@ -40,8 +40,8 @@ public abstract class AbstractLocusScanner implements LocusScanner {
         parser.parseModelClass(modelType, storage, exclusions);
     }
 
-    protected void parseControllerClass(Class<?> controllerType, LocusStorage storage, String name, boolean singleton){
-        parser.parseControllerClass(controllerType, storage, name, singleton);
+    protected void parseControllerClass(Class<?> controllerType, LocusStorage storage){
+        parser.parseControllerClass(controllerType, storage);
     }
 
     protected void parseViewClass(Class<?> viewType, LocusStorage storage, ScannerExclusions exclusions){

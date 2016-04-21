@@ -16,6 +16,9 @@
 
 package io.craigmiller160.locus.scan;
 
+import io.craigmiller160.locus.annotations.LController;
+import io.craigmiller160.locus.annotations.LModel;
+import io.craigmiller160.locus.annotations.LView;
 import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.locus.util.ScannerExclusions;
 import io.craigmiller160.utils.reflect.ReflectiveException;
@@ -23,6 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * An implementation of LocusScanner to scan individual
+ * classes denoted by their full, qualified path name.
+ *
  * Created by craig on 4/20/16.
  */
 public class LocusClassScanner extends AbstractLocusScanner {
@@ -32,12 +38,46 @@ public class LocusClassScanner extends AbstractLocusScanner {
     LocusClassScanner(){}
 
     @Override
-    public void scan(String itemToScan, LocusStorage storage) throws ReflectiveException {
-
+    public void scan(String className, LocusStorage storage) throws ReflectiveException {
+        scan(className, storage, null);
     }
 
+    //TODO add the use of this scanner to the initialization process, and fix LocusConfiguration and config reader to look for the XML elements.
     @Override
-    public void scan(String itemToScan, LocusStorage storage, ScannerExclusions scannerExclusions) throws ReflectiveException {
+    public void scan(String className, LocusStorage storage, ScannerExclusions exclusions) throws ReflectiveException {
+        Class<?> clazz = findClass(className);
+        logger.debug("Scanning class {}", className);
 
+        if(clazz.getAnnotation(LModel.class) != null){
+            parseModelClass(clazz, storage, exclusions);
+        }
+        else if(clazz.getAnnotation(LView.class) != null){
+            parseViewClass(clazz, storage, exclusions);
+        }
+        else if(clazz.getAnnotation(LController.class) != null){
+            parseControllerClass(clazz, storage);
+        }
+        else{
+            throw new ReflectiveException(String.format("Class must have a Locus annotation (LModel, LView, LController): %s", className));
+        }
+    }
+
+    /**
+     * Find a class with the provided name. If it is not found,
+     * rethrow the exception as an unchecked LocusException.
+     *
+     * @param className the name of the class to find.
+     * @return the class for the provided name.
+     * @throws ReflectiveException if unable to find the class.
+     */
+    private Class<?> findClass(String className){
+        Class<?> clazz = null;
+        try{
+            clazz = Class.forName(className);
+        }
+        catch(ClassNotFoundException ex){
+            throw new ReflectiveException(String.format("Unable to find class: %s", className), ex);
+        }
+        return clazz;
     }
 }
