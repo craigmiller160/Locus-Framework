@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.scan;
 
+import io.craigmiller160.locus.TestUtils;
 import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.locus.util.ScannerExclusions;
@@ -47,27 +48,9 @@ public class LocusPackageScannerTest {
 
     private LocusStorage storage;
 
-    /**
-     * Get a LocusStorage instance for use in tests. It's created reflectively
-     * because there's no access to its constructor normally.
-     *
-     * @throws RuntimeException if unable to create the LocusStorage.
-     */
-    private void setupStorage(){
-        try{
-            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            storage = constructor.newInstance();
-            storage.setUIThreadExecutorType(NoUIThreadExecutor.class);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Unable to reflectively create LocusStorage for test", ex);
-        }
-    }
-
     @Before
     public void before(){
-        setupStorage();
+        storage = TestUtils.setupStorage();
     }
 
     /**

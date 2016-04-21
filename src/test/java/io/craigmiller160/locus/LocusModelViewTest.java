@@ -30,6 +30,7 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -59,70 +60,15 @@ public class LocusModelViewTest {
     private ModelOne modelOne;
     private UIThreadExecutorFactory factory;
 
-    private void setupStorage(){
-        try{
-            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            storage = constructor.newInstance();
-            storage.setUIThreadExecutorType(NoUIThreadExecutor.class);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
-        }
-    }
-
-    private void setupUIThreadExecutor(){
-        try{
-            Constructor<UIThreadExecutorFactory> constructor = UIThreadExecutorFactory.class.getDeclaredConstructor(LocusStorage.class);
-            constructor.setAccessible(true);
-            factory = constructor.newInstance(storage);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
-        }
-    }
-
     private void setupViews(){
-        try{
-            viewOne = new ViewOne();
-            viewThree = new ViewThree();
-
-            Method m1 = viewOne.getClass().getMethod("setStringField", String.class);
-            Method m2 = viewThree.getClass().getMethod("setStringField", String.class);
-            Method m4 = viewOne.getClass().getMethod("setObjectField", Object.class);
-
-            ClassAndMethod cam1 = new ClassAndMethod(viewOne.getClass(), m1);
-            ClassAndMethod cam2 = new ClassAndMethod(viewThree.getClass(), m2);
-            ClassAndMethod cam4 = new ClassAndMethod(viewOne.getClass(), m4);
-
-            storage.addViewPropSetter("StringField", cam1);
-            storage.addViewPropSetter("StringField", cam2);
-            storage.addViewPropSetter("ObjectField", cam4);
-
-            storage.addViewInstance(viewOne.getClass(), viewOne);
-            storage.addViewInstance(viewThree.getClass(), viewThree);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception while trying to setup views for test", ex);
-        }
+        Map<Class<?>,Object> views = TestUtils.setupViews(storage);
+        viewOne = (ViewOne) views.get(ViewOne.class);
+        viewThree = (ViewThree) views.get(ViewThree.class);
     }
 
     private void setupModels(){
-        try{
-            modelOne = new ModelOne();
-
-            Method m1 = modelOne.getClass().getMethod("setStringField", String.class);
-            Method m2 = modelOne.getClass().getMethod("setObjectField", Object.class);
-
-            ObjectAndMethod oam1 = new ObjectAndMethod(modelOne, m1);
-            ObjectAndMethod oam2 = new ObjectAndMethod(modelOne, m2);
-
-            storage.addModelPropSetter("StringField", oam1);
-            storage.addModelPropSetter("ObjectField", oam2);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception while trying to setup models for test", ex);
-        }
+        Map<Class<?>,Object> models = TestUtils.setupModels(storage);
+        modelOne = (ModelOne) models.get(ModelOne.class);
     }
 
     private void setupLocus(){
@@ -132,8 +78,8 @@ public class LocusModelViewTest {
 
     @Before
     public void initialize(){
-        setupStorage();
-        setupUIThreadExecutor();
+        storage = TestUtils.setupStorage();
+        factory = TestUtils.setupUIThreadExecutor(storage);
         setupViews();
         setupModels();
         setupLocus();

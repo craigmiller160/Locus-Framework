@@ -46,24 +46,6 @@ public class LocusControllerTest {
     private LocusController locusController;
 
     /**
-     * Get a LocusStorage instance for use in tests. It's created reflectively
-     * because there's no access to its constructor normally.
-     *
-     * @throws RuntimeException if unable to create the LocusStorage.
-     */
-    private void setupStorage(){
-        try{
-            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            storage = constructor.newInstance();
-            storage.setUIThreadExecutorType(NoUIThreadExecutor.class);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Unable to reflectively create LocusStorage for test", ex);
-        }
-    }
-
-    /**
      * Setup the LocusController.
      */
     private void setupLocusController(){
@@ -71,26 +53,12 @@ public class LocusControllerTest {
     }
 
     /**
-     * Setup the UIThreadExecutorFactory.
-     */
-    private void setupUIThreadExecutor(){
-        try{
-            Constructor<UIThreadExecutorFactory> constructor = UIThreadExecutorFactory.class.getDeclaredConstructor(LocusStorage.class);
-            constructor.setAccessible(true);
-            factory = constructor.newInstance(storage);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
-        }
-    }
-
-    /**
      * Setup each test before executing it.
      */
     @Before
     public void before(){
-        setupStorage();
-        setupUIThreadExecutor();
+        storage = TestUtils.setupStorage();
+        factory = TestUtils.setupUIThreadExecutor(storage);
         setupLocusController();
     }
 

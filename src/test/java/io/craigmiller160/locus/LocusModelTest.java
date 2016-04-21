@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -46,29 +47,6 @@ public class LocusModelTest {
 
     private static LocusView locusView;
 
-    private void setupUIThreadExecutor(){
-        try{
-            Constructor<UIThreadExecutorFactory> constructor = UIThreadExecutorFactory.class.getDeclaredConstructor(LocusStorage.class);
-            constructor.setAccessible(true);
-            factory = constructor.newInstance(storage);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
-        }
-    }
-
-    private void setupStorage(){
-        try{
-            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            storage = constructor.newInstance();
-            storage.setUIThreadExecutorType(NoUIThreadExecutor.class);
-        }
-        catch(Exception ex){
-            throw new RuntimeException("Fatal exception while trying to construct LocusStorage for test", ex);
-        }
-    }
-
     private void setupLocusView(){
         locusView = new LocusView(storage, factory){
             @Override
@@ -84,25 +62,15 @@ public class LocusModelTest {
     }
 
     private void setupModels(){
-        modelOne = new ModelOne();
-        Method[] methods = ModelOne.class.getDeclaredMethods();
-        for(Method m : methods){
-            if(m.getName().startsWith("set")){
-                String propName = m.getName().substring(3);
-                storage.addModelPropSetter(propName, new ObjectAndMethod(modelOne, m));
-            }
-            else if(m.getName().startsWith("get")){
-                String propName = m.getName().substring(3);
-                storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
-            }
-        }
+        Map<Class<?>,Object> models = TestUtils.setupModels(storage);
+        modelOne = (ModelOne) models.get(ModelOne.class);
     }
 
     @Before
     public void beforeTest(){
-        setupStorage();
+        storage = TestUtils.setupStorage();
+        factory = TestUtils.setupUIThreadExecutor(storage);
         setupModels();
-        setupUIThreadExecutor();
         setupLocusView();
         setupLocusModel();
     }

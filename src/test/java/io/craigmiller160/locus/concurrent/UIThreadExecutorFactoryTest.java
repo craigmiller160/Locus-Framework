@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.concurrent;
 
+import io.craigmiller160.locus.TestUtils;
 import io.craigmiller160.locus.sample.SampleUIThreadExecutor;
 import io.craigmiller160.locus.util.LocusStorage;
 import org.junit.Before;
@@ -46,27 +47,12 @@ public class UIThreadExecutorFactoryTest {
     }
 
     /**
-     * Create the LocusStorage instance for this test class.
-     */
-    private void createStorage(){
-        try{
-            Constructor<LocusStorage> constructor = LocusStorage.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            storage = constructor.newInstance();
-
-            storage.setUIThreadExecutorType(SampleUIThreadExecutor.class);
-        }
-        catch(InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException ex){
-            throw new RuntimeException("Critical exception while trying to setup test", ex);
-        }
-    }
-
-    /**
      * Run setup methods before each test.
      */
     @Before
     public void begin(){
-        createStorage();
+        storage = TestUtils.setupStorage();
+        storage.setUIThreadExecutorType(SampleUIThreadExecutor.class);
         createFactory();
     }
 
