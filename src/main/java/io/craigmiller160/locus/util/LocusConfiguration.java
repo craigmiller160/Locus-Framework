@@ -104,6 +104,16 @@ public class LocusConfiguration {
     }
 
     /**
+     * Get a count of all class names registered
+     * with this configuration.
+     *
+     * @return a count of all the class names.
+     */
+    public int getClassNameCount(){
+        return classNames.size();
+    }
+
+    /**
      * Add the name of a package to the list of packages to be scanned for
      * annotated classes.
      *

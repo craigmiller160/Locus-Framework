@@ -28,7 +28,7 @@
                 <!-- Either packages or classes is allowed, not both -->
                 <xs:choice>
                     <xs:element name="packages" type="packages" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="classes" type="packages" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="classes" type="classes" minOccurs="0" maxOccurs="1"/>
                 </xs:choice>
                 <xs:element name="scanning-filters" type="scanning-filters" minOccurs="0" maxOccurs="1"/>
                 <xs:element name="uiThreadExecutor" type="uiExecutor" minOccurs="0" maxOccurs="1"/>

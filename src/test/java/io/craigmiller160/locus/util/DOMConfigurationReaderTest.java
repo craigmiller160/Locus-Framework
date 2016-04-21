@@ -32,13 +32,43 @@ import static org.junit.Assert.assertTrue;
  */
 public class DOMConfigurationReaderTest {
 
+    /**
+     * Test reading a locus configuration file
+     * with a "packages", and not a "classes", element.
+     */
     @Test
-    public void testReadConfiguration(){
+    public void testReadPackageConfiguration(){
         ConfigurationReader configReader = new DOMConfigurationReader();
         LocusConfiguration locusConfig = configReader.readConfiguration("locus.xml");
 
         assertEquals("Wrong number of packages returned", 1, locusConfig.getPackageCount());
+        assertEquals("No classes should've been returned", 0, locusConfig.getClassNameCount());
         assertEquals("Wrong package name returned", "io.craigmiller160.locus.sample", locusConfig.getPackageNames().get(0));
+
+        ScannerExclusions scannerExclusions = locusConfig.getScannerExclusions();
+        Set<String> exclusions = scannerExclusions.getAllExclusions();
+        Set<String> inclusions = scannerExclusions.getAllInclusions();
+
+        assertTrue(exclusions.contains("org.foo"));
+        assertTrue(inclusions.contains("org.foo.foo2"));
+
+        String uiThreadExecutorClassName = locusConfig.getUIThreadExecutorClassName();
+        assertNotNull("UiThreadExecutorClassName is null", uiThreadExecutorClassName);
+        assertEquals("UIThreadExecutorClassName has the wrong value", "io.craigmiller160.locus.sample.SampleUIThreadExecutor",
+                uiThreadExecutorClassName);
+    }
+
+    /**
+     * Test reading a locus configuration file with
+     * a "classes", and not a "packages", element.
+     */
+    @Test
+    public void testReadClassConfiguration(){
+        ConfigurationReader configReader = new DOMConfigurationReader();
+        LocusConfiguration locusConfig = configReader.readConfiguration("locus2.xml");
+
+        assertEquals("No packages should've been returned", 0, locusConfig.getPackageCount());
+        assertEquals("Wrong number of classes returned", 3, locusConfig.getClassNameCount());
 
         ScannerExclusions scannerExclusions = locusConfig.getScannerExclusions();
         Set<String> exclusions = scannerExclusions.getAllExclusions();
