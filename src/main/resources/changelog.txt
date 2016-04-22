@@ -4,6 +4,7 @@ Version 1.1
 + Expanded scanning to be either package based or class based. New class based scanning requires full, qualified class names in configuration.
 + Package and class based scanning is mutually exclusive. Only one or the other can be specified in the Locus XML configuration.
 + Expanded reflective method calls to include add/remove for collection based operations.
++ Spun off reflection logic into independent CM160-Utils project, and included that project as a dependency.
 + Code refactoring and improvements.
 
 Version 1.0

@@ -89,6 +89,18 @@ public class LocusViewTest {
     }
 
     /**
+     * Test setting a single value in a view.
+     */
+    @Test
+    public void testSetValue(){
+        double value = 22.33;
+        locusView.setValue("DoubleField", value);
+
+        double result = viewOne.getDoubleField();
+        assertTrue("DoubleField value is incorrect", value == result);
+    }
+
+    /**
      * Test setting a value that should call
      * multiple setters.
      */
@@ -123,7 +135,7 @@ public class LocusViewTest {
         }
         catch(ReflectiveException ex){
             exceptionWasThrown = true;
-            logger.error("testFailedInvocation exception stack trace", ex);
+            logger.error("LocusViewTest testFailedInvocation() exception stack trace", ex);
         }
 
         assertTrue("No exception was thrown for an invocation attempt that should've found no valid matches", exceptionWasThrown);
@@ -143,7 +155,7 @@ public class LocusViewTest {
         }
         catch(ReflectiveException ex){
             exceptionWasThrown = true;
-            logger.error("testNoMethod exception stack trace", ex);
+            logger.error("LocusViewTest testNoMethod() exception stack trace", ex);
         }
 
         assertTrue("No exception was thrown for an attempt to invoke non-existent method", exceptionWasThrown);
@@ -190,6 +202,42 @@ public class LocusViewTest {
         assertNotNull("Post-Nulling Instances collection is null, it shouldn't be", instances);
         assertEquals("Post-Nulling Instances collection wrong size", 0, instances.size());
 
+    }
+
+    /**
+     * Test adding a value to a collection property in
+     * a view.
+     */
+    @Test
+    public void testAddValue(){
+        String value = "Value";
+        locusView.addValue("String", value);
+
+        String result = viewOne.getString(0);
+        assertNotNull("ViewOne result is null", result);
+        assertEquals("ViewOne result is wrong value", value, result);
+    }
+
+    /**
+     * Test removing a value from a collection property
+     * in a view.
+     */
+    @Test
+    public void testRemoveValue(){
+        String value = "Value";
+        viewOne.addString(value);
+        locusView.removeValue("String", value);
+
+        boolean exception = false;
+        try{
+            viewOne.getString(0);
+        }
+        catch(IndexOutOfBoundsException ex){
+            exception = true;
+            logger.error("LocusViewTest testRemoveValue() exception stack trace");
+        }
+
+        assertTrue("No exception was thrown when there should've been one", exception);
     }
 
 }

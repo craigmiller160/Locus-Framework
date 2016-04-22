@@ -81,9 +81,9 @@ class LocusModel {
      *
      * @param propName the name of the property to set.
      * @param values the value(s) to set to the property.
-     * @throws LocusException if an error occurs.
+     * @throws ReflectiveException if an error occurs.
      */
-    public void setValue(String propName, Object... values) throws LocusException{
+    public void setValue(String propName, Object... values) throws ReflectiveException{
         RemoteInvoke.invokeMethod(getMethod(propName, SETTER), values);
         locusView.setValue(propName, values);
     }
@@ -96,9 +96,9 @@ class LocusModel {
      *
      * @param propName the name of the model property.
      * @param values the value(s) to add.
-     * @throws LocusException if an error occurs.
+     * @throws ReflectiveException if an error occurs.
      */
-    public void addValue(String propName, Object...values) throws LocusException{
+    public void addValue(String propName, Object...values) throws ReflectiveException{
         RemoteInvoke.invokeMethod(getMethod(propName, ADDER), values);
         locusView.addValue(propName, values);
     }
@@ -111,9 +111,9 @@ class LocusModel {
      *
      * @param propName the name of the model property.
      * @param values the value(s) to remove.
-     * @throws LocusException if an error occurs.
+     * @throws ReflectiveException if an error occurs.
      */
-    public void removeValue(String propName, Object...values) throws LocusException{
+    public void removeValue(String propName, Object...values) throws ReflectiveException{
         RemoteInvoke.invokeMethod(getMethod(propName, REMOVER), values);
         locusView.removeValue(propName, values);
     }

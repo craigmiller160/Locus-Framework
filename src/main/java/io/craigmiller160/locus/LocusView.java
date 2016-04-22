@@ -38,10 +38,21 @@ import java.util.Collection;
  */
 class LocusView {
 
+    /**
+     * The logger for this class.
+     */
     private static final Logger logger = LoggerFactory.getLogger(LocusView.class);
 
+    /**
+     * The LocusStorage, with all the method references to reflectively invoke.
+     */
     private final LocusStorage storage;
 
+    /**
+     * The UIThreadExecutor, which ensures that all
+     * operations are safely executed on the appropriate
+     * UI Thread.
+     */
     private UIThreadExecutor uiThreadExecutor;
 
     /**
@@ -95,20 +106,73 @@ class LocusView {
      *
      * @param propName the name of the property.
      * @param values the value(s) of the property.
-     * @throws LocusException if an error occurs.
+     * @throws ReflectiveException if an error occurs.
      */
-    public void setValue(String propName, Object... values) throws LocusException{
+    public void setValue(String propName, Object... values) throws ReflectiveException{
         uiThreadExecutor.executeOnUIThread(new SetValueTask(storage, propName, values));
     }
 
-    //TODO document this
-    public void addValue(String propName, Object... values) throws LocusException{
-        //TODO finish this
+    /**
+     * Add a value to a collection in any view instances
+     * that display the specified property.
+     *
+     * @param propName the name of the property.
+     * @param values the value(s) to add.
+     * @throws ReflectiveException if an error occurs.
+     */
+    public void addValue(String propName, Object... values) throws ReflectiveException{
+        uiThreadExecutor.executeOnUIThread(new AddValueTask(storage, propName, values));
     }
 
-    //TODO document this
-    public void removeValue(String propName, Object... values) throws LocusException{
-        //TODO finish this
+    /**
+     * Remove a value from a collection in any view
+     * instances that display the specified property.
+     *
+     * @param propName the name of the property.
+     * @param values the value(s) to add.
+     * @throws ReflectiveException if an error occurs.
+     */
+    public void removeValue(String propName, Object... values) throws ReflectiveException{
+        uiThreadExecutor.executeOnUIThread(new RemoveValueTask(storage, propName, values));
+    }
+
+    /**
+     * Execute the methods, if they match the provided arguments, in
+     * any view instances that have them.
+     *
+     * @param storage the LocusStorage.
+     * @param methods the methods to execute.
+     * @param values the arguments for the methods.
+     * @return true if the operation successfully invoked at least one method.
+     * @throws ReflectiveException if an error occurs.
+     */
+    private static boolean executeMethods(LocusStorage storage, Collection<ClassAndMethod> methods, Object...values) throws ReflectiveException{
+        boolean success = false;
+        for(ClassAndMethod cam : methods) {
+            Collection<WeakReference<?>> viewInstances = storage.getViewInstancesForClass(cam.getSourceType());
+            if (viewInstances != null && viewInstances.size() > 0) {
+                for (WeakReference<?> weakRef : viewInstances) {
+                    Object ref = weakRef.get();
+                    if (ref != null) {
+                        ObjectAndMethod oam = new ObjectAndMethod(ref, cam.getMethod());
+                        try {
+                            RemoteInvoke.invokeMethod(oam, values);
+                            success = true;
+                        } catch (InvocationException ex) {
+                            //InvocationExceptions are when the method was successfully invoked, but during its operation an exception occurred
+                            //This should NOT be swallowed, and should be propagated
+                            throw ex;
+                        } catch (ReflectiveException ex) {
+                            logger.trace("Failed to invoke view method method. Note that certain invocations are expected to fail.\n" +
+                                    "   Method: {} | Param: {}", oam.getMethod(), Arrays.toString(values), ex);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return success;
     }
 
     /**
@@ -135,34 +199,74 @@ class LocusView {
                 throw new ReflectiveException("No setters available in registered views to invoke for property. Property Name: " + propName);
             }
 
-            boolean success = false;
-            for(ClassAndMethod cam : setters){
-                Collection<WeakReference<?>> viewInstances = storage.getViewInstancesForClass(cam.getSourceType());
-                if(viewInstances != null && viewInstances.size() > 0){
-                    for(WeakReference<?> weakRef : viewInstances){
-                        Object ref = weakRef.get();
-                        if(ref != null){
-                            ObjectAndMethod oam = new ObjectAndMethod(ref, cam.getMethod());
-                            try{
-                                RemoteInvoke.invokeMethod(oam, values);
-                                success = true;
-                            }
-                            catch(InvocationException ex){
-                                //InvocationExceptions are when the method was successfully invoked, but during its operation an exception occurred
-                                //This should NOT be swallowed, and should be propagated
-                                throw ex;
-                            }
-                            catch(ReflectiveException ex){
-                                logger.trace("Failed to invoke view setter method. Note that certain invocations are expected to fail.\n" +
-                                        "   Method: {} | Param: {}", oam.getMethod(), Arrays.toString(values), ex);
-                            }
-                        }
-                    }
-                }
-            }
+            boolean success = executeMethods(storage, setters, values);
 
             if(!success){
                 throw new ReflectiveException("Unable to successfully invoke any view setter for property. Check TRACE level logs for details");
+            }
+        }
+    }
+
+    /**
+     * The process of adding a value to a collection in
+     * a View, wrapped in an implementation of Runnable
+     * so it can be executed on the appropriate UI Thread.
+     */
+    private static class AddValueTask implements Runnable{
+
+        private String propName;
+        private Object[] values;
+        private LocusStorage storage;
+
+        public AddValueTask(LocusStorage storage, String propName, Object... values){
+            this.storage = storage;
+            this.propName = propName;
+            this.values = values;
+        }
+
+        @Override
+        public void run() {
+            Collection<ClassAndMethod> adders = storage.getAddersForViewProp(propName);
+            if(adders == null || adders.size() <= 0){
+                throw new ReflectiveException("No adders available in registered views to invoke for property. Property Name: " + propName);
+            }
+
+            boolean success = executeMethods(storage, adders, values);
+
+            if(!success){
+                throw new ReflectiveException("Unable to successfully invoke any view adder for property. Check TRACE level logs for details");
+            }
+        }
+    }
+
+    /**
+     * The process of removing a value from a collection
+     * in a View, wrapped in an implementation of Runnable
+     * so it can be executed on the appropriate UI Thread.
+     */
+    public static class RemoveValueTask implements Runnable{
+
+        private String propName;
+        private Object[] values;
+        private LocusStorage storage;
+
+        public RemoveValueTask(LocusStorage storage, String propName, Object... values){
+            this.storage = storage;
+            this.propName = propName;
+            this.values = values;
+        }
+
+        @Override
+        public void run() {
+            Collection<ClassAndMethod> removers = storage.getRemoversForViewProp(propName);
+            if(removers == null || removers.size() <= 0){
+                throw new ReflectiveException("No removers available in registered views to invoke for property. Property Name: " + propName);
+            }
+
+            boolean success = executeMethods(storage, removers, values);
+
+            if(!success){
+                throw new ReflectiveException("Unable to successfully invoke any view remover for property. Check TRACE level logs for details");
             }
         }
     }
