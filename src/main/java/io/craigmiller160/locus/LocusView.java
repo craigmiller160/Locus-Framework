@@ -101,6 +101,16 @@ class LocusView {
         uiThreadExecutor.executeOnUIThread(new SetValueTask(storage, propName, values));
     }
 
+    //TODO document this
+    public void addValue(String propName, Object... values) throws LocusException{
+        //TODO finish this
+    }
+
+    //TODO document this
+    public void removeValue(String propName, Object... values) throws LocusException{
+        //TODO finish this
+    }
+
     /**
      * The process of setting a value in a View, wrapped in
      * an implementation of Runnable so it can be executed

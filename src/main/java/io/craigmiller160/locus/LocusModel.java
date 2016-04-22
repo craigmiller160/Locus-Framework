@@ -23,6 +23,8 @@ import io.craigmiller160.utils.reflect.RemoteInvoke;
 
 import static io.craigmiller160.locus.util.LocusConstants.GETTER;
 import static io.craigmiller160.locus.util.LocusConstants.SETTER;
+import static io.craigmiller160.locus.util.LocusConstants.ADDER;
+import static io.craigmiller160.locus.util.LocusConstants.REMOVER;
 
 /**
  * One of the core components of the Locus Framework.
@@ -73,22 +75,51 @@ class LocusModel {
     }
 
     /**
-     * Set an Object value in one of the model classes.
+     * Set a property in one of the model classes.
      * After being called, this method will update any
-     * corresponding views that have been configured
-     * to accept this behavior.
+     * corresponding views with the same property.
      *
      * @param propName the name of the property to set.
-     * @param value the value(s) to set to the property.
+     * @param values the value(s) to set to the property.
      * @throws LocusException if an error occurs.
      */
-    public void setValue(String propName, Object... value) throws LocusException{
-        RemoteInvoke.invokeMethod(getMethod(propName, SETTER), value);
-        locusView.setValue(propName, value);
+    public void setValue(String propName, Object... values) throws LocusException{
+        RemoteInvoke.invokeMethod(getMethod(propName, SETTER), values);
+        locusView.setValue(propName, values);
     }
 
     /**
-     * Get an Object value from one of the model classes.
+     * Add a value to a collection property in
+     * one of the model classes. After being called,
+     * this method will updated any corresponding
+     * views with the same property.
+     *
+     * @param propName the name of the model property.
+     * @param values the value(s) to add.
+     * @throws LocusException if an error occurs.
+     */
+    public void addValue(String propName, Object...values) throws LocusException{
+        RemoteInvoke.invokeMethod(getMethod(propName, ADDER), values);
+        locusView.addValue(propName, values);
+    }
+
+    /**
+     * Remove a value from a collection property in
+     * one of the model classes. After being called,
+     * this method will updated any corresponding
+     * views with the same property.
+     *
+     * @param propName the name of the model property.
+     * @param values the value(s) to remove.
+     * @throws LocusException if an error occurs.
+     */
+    public void removeValue(String propName, Object...values) throws LocusException{
+        RemoteInvoke.invokeMethod(getMethod(propName, REMOVER), values);
+        locusView.removeValue(propName, values);
+    }
+
+    /**
+     * Get the value from a property in one of the model classes.
      *
      * @param propName the name of the property to get.
      * @param args any arguments to be passed to the method.
@@ -132,18 +163,23 @@ class LocusModel {
      */
     private ObjectAndMethod getMethod(String propName, int methodType) throws ReflectiveException{
         ObjectAndMethod oam = null;
-        String typeName = "";
-        if(methodType == GETTER){
-            oam = storage.getModelPropGetter(propName);
-            typeName = "getter";
-        }
-        else{
-            oam = storage.getModelPropSetter(propName);
-            typeName = "setter";
+        switch(methodType){
+            case GETTER:
+                oam = storage.getModelPropGetter(propName);
+                break;
+            case SETTER:
+                oam = storage.getModelPropSetter(propName);
+                break;
+            case ADDER:
+                oam = storage.getModelPropAdder(propName);
+                break;
+            case REMOVER:
+                oam = storage.getModelPropRemover(propName);
+                break;
         }
 
         if(oam == null){
-            throw new ReflectiveException("No model " + typeName + " found matching the property name \"" + propName + "\"");
+            throw new ReflectiveException("No model " + methodType + " found matching the property name \"" + propName + "\"");
         }
         return oam;
     }

@@ -26,6 +26,8 @@ public class LocusConstants {
 
     public static final int GETTER = 101;
     public static final int SETTER = 102;
+    public static final int ADDER = 103;
+    public static final int REMOVER = 104;
     public static final String DEFAULT_CONFIG_FILE = "locus.xml";
 
     public static final String MODEL_TYPE = "Model";

@@ -23,6 +23,8 @@ import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -47,10 +49,24 @@ public class LocusModelTest {
 
     private static LocusView locusView;
 
+    private static final Logger logger = LoggerFactory.getLogger(LocusModelTest.class);
+
     private void setupLocusView(){
         locusView = new LocusView(storage, factory){
             @Override
-            public void setValue(String propName, Object... value) throws LocusException{
+            public void setValue(String propName, Object... values) throws LocusException{
+                //Do nothing, this is just killing the behavior of this object so
+                //this test class can run in a more controlled way
+            }
+
+            @Override
+            public void addValue(String propName, Object... values) throws LocusException{
+                //Do nothing, this is just killing the behavior of this object so
+                //this test class can run in a more controlled way
+            }
+
+            @Override
+            public void removeValue(String propName, Object... values) throws LocusException{
                 //Do nothing, this is just killing the behavior of this object so
                 //this test class can run in a more controlled way
             }
@@ -188,6 +204,37 @@ public class LocusModelTest {
         assertEquals("Invalid class type returned", BigDecimal.class,
                 locusModel.getValue("ObjectField", BigDecimal.class).getClass());
         assertEquals("Invalid ObjectField value", bigDecimal, locusModel.getValue("ObjectField", BigDecimal.class));
+    }
+
+    /**
+     * Test adding a value to a collection
+     */
+    @Test
+    public void testAdd(){
+        String value = "Value";
+        locusModel.addValue("String", value);
+
+        String result = modelOne.getString(0);
+        assertEquals("First list element is not correct value", value, result);
+    }
+
+    @Test
+    public void testRemove(){
+        String value = "Value";
+        modelOne.addString(value);
+
+        locusModel.removeValue("String", value);
+
+        boolean exception = false;
+        try{
+            modelOne.getString(0);
+        }
+        catch(IndexOutOfBoundsException ex){
+            exception = true;
+            logger.error("LocusModelTest testRemove() stack trace", ex);
+        }
+
+        assertTrue("No exception was thrown when trying to get a value at an index that shouldn't exist", exception);
     }
 
 }

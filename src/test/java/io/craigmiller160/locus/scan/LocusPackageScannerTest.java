@@ -87,17 +87,6 @@ public class LocusPackageScannerTest {
         assertEquals("Wrong number of view prop setters", 15, storage.getViewPropSetterCount());
         assertEquals("Wrong number of view prop adders", 1, storage.getViewPropAdderCount());
         assertEquals("Wrong number of view prop removers", 1, storage.getViewPropRemoverCount());
-
-        //TODO this will need to be revamped once all the new methods are added
-        for(String key : viewProps){
-            Collection<ClassAndMethod> viewSetters = storage.getSettersForViewProp(key);
-            if(key.equals("FirstField")){
-                assertEquals("Wrong number of methods for view setter prop " + key, 2, viewSetters.size());
-            }
-            else if(key.equals("SecondField")){
-                assertEquals("Wrong number of methods for view setter prop " + key, 1, viewSetters.size());
-            }
-        }
     }
 
     /**
@@ -122,7 +111,7 @@ public class LocusPackageScannerTest {
         }
         catch(ReflectiveException ex){
             firstScanException = true;
-            logger.error("First Scan Stack Trace", ex);
+            logger.error("LocusPackageScannerTest testScanInvalidModel() First Scan Stack Trace", ex);
         }
 
         //Scanning the second package should find an invalid, duplicate method, and throw an exception
@@ -131,7 +120,7 @@ public class LocusPackageScannerTest {
         }
         catch(ReflectiveException ex){
             secondScanException = true;
-            logger.error("Second Scan Stack Trace", ex);
+            logger.error("LocusPackageScannerTest testScanInvalidModel() Second Scan Stack Trace", ex);
         }
 
         assertFalse("The first scan threw an exception, it shouldn't have", firstScanException);
@@ -161,7 +150,7 @@ public class LocusPackageScannerTest {
         }
         catch(ReflectiveException ex){
             firstScanException = true;
-            logger.error("First Scan Stack Trace", ex);
+            logger.error("LocusPackageScannerTest testScanInvalidController() First Scan Stack Trace", ex);
         }
 
         //Scanning the second package should throw an exception because of a duplicate name
@@ -170,7 +159,7 @@ public class LocusPackageScannerTest {
         }
         catch(ReflectiveException ex){
             secondScanException = true;
-            logger.error("Second Scan Stack Trace", ex);
+            logger.error("LocusPackageScannerTest testScanInvalidController() Second Scan Stack Trace", ex);
         }
 
         assertFalse("The first scan threw an exception, it shouldn't have", firstScanException);
