@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.locus.TestUtils;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.ViewOne;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
@@ -38,41 +39,15 @@ public class LocusStorageTest {
 
     private LocusStorage storage;
 
-    public void setupStorage(){
-        storage = new LocusStorage();
-
-        ModelOne modelOne = new ModelOne();
-        Method[] methods = modelOne.getClass().getDeclaredMethods();
-        for(Method m : methods){
-            if(m.getName().startsWith("set")){
-                String propName = m.getName().substring(3);
-                ObjectAndMethod oam = new ObjectAndMethod(modelOne, m);
-                storage.addModelPropSetter(propName, oam);
-            }
-            else if(m.getName().startsWith("get") || m.getName().startsWith("is")){
-                String propName = m.getName().startsWith("get") ? m.getName().substring(3) : m.getName().substring(2);
-                ObjectAndMethod oam = new ObjectAndMethod(modelOne, m);
-                storage.addModelPropGetter(propName, oam);
-            }
-        }
-
-        ViewOne viewOne = new ViewOne();
-        methods = viewOne.getClass().getDeclaredMethods();
-        for(Method m : methods){
-            if(m.getName().startsWith("set")){
-                String propName = m.getName().substring(3);
-                ClassAndMethod cam = new ClassAndMethod(ViewOne.class, m);
-                storage.addViewPropSetter(propName, cam);
-            }
-        }
-    }
-
     /**
      * Setup before each test.
      */
     @Before
     public void preTest(){
-        setupStorage();
+        storage = TestUtils.setupStorage();
+        TestUtils.setupModels(storage);
+        TestUtils.setupViews(storage);
+        TestUtils.setupControllers(storage);
     }
 
     /**
@@ -87,6 +62,55 @@ public class LocusStorageTest {
 
         assertNotNull("Model PropNames Set is null", propNames);
         assertEquals("Model PropNames Set is wrong size", 14, propNames.size());
+    }
+
+    /**
+     * Test getting all view property names. This should
+     * return a set of the unique property names for all
+     * the views registered with the storage.
+     */
+    @Test
+    public void testGetAllViewPropNames(){
+        Set<String> propNames = storage.getAllViewPropNames();
+
+        assertNotNull("View PropNames Set is null", propNames);
+        assertEquals("View PropNames Set is wrong size", 13, propNames.size());
+    }
+
+    /**
+     * Test getting all controller names.
+     */
+    @Test
+    public void testGetAllControllerNames(){
+        Set<String> controllerNames = storage.getAllControllerNames();
+
+        assertNotNull("ControllerNames Set is null", controllerNames);
+        assertEquals("ControllerNames Set is wrong size", 2, controllerNames.size());
+    }
+
+    /**
+     * Test that all model prop setters were added
+     * correctly.
+     */
+    @Test
+    public void testModelPropSetters(){
+        assertEquals("Wrong number of model prop setters", 12, storage.getModelPropSetterCount());
+    }
+
+    /**
+     * Test that all model prop getters were added correctly.
+     */
+    @Test
+    public void testModelPropGetters(){
+        assertEquals("Wrong number of model prop getters", 12, storage.getModelPropGetterCount());
+    }
+
+    /**
+     * Test that all controllers were added correctly.
+     */
+    @Test
+    public void testControllers(){
+        assertEquals("Wrong number of controllers", 2, storage.getControllerCount());
     }
 
 }

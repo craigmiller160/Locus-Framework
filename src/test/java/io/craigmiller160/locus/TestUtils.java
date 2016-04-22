@@ -84,6 +84,10 @@ public class TestUtils {
                 String propName = m.getName().substring(3);
                 storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
             }
+            else if(m.getName().startsWith("is")){
+                String propName = m.getName().substring(2);
+                storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
+            }
         }
 
         Map<Class<?>,Object> models = new HashMap<>();

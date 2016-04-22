@@ -135,6 +135,8 @@ public class LocusStorage {
         synchronized (this){
             allPropNames.addAll(modelPropGetters.keySet());
             allPropNames.addAll(modelPropSetters.keySet());
+            allPropNames.addAll(modelPropAdders.keySet());
+            allPropNames.addAll(modelPropRemovers.keySet());
         }
 
         return allPropNames;
@@ -144,6 +146,8 @@ public class LocusStorage {
         Set<String> allViewPropNames = new HashSet<>();
         synchronized (this){
             allViewPropNames.addAll(viewPropSetters.keySet());
+            allViewPropNames.addAll(viewPropAdders.keySet());
+            allViewPropNames.addAll(viewPropRemovers.keySet());
         }
 
         return allViewPropNames;
