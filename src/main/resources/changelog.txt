@@ -2,6 +2,7 @@ Locus Framework Version Changelog
 
 Version 1.1
 + Expanded scanning to be either package based or class based. New class based scanning requires full, qualified class names in configuration.
++ Package and class based scanning is mutually exclusive. Only one or the other can be specified in the Locus XML configuration.
 + Expanded reflective method calls to include add/remove for collection based operations.
 + Code refactoring and improvements.
 
@@ -13,4 +14,6 @@ Version 1.0
 + LocusDebug provides handy instant logging to the console, useful for debugging Locus issues and getting a snapshot of the current configuration.
 + Restrictions: Model setters/getters must have unique names. setFoo() cannot exist more than once, even if in separate classes or with different parameters. Views do not have this restriction.
 + XML based configuration, read into memory at framework initialization.
++ Ability to exclude/include classes & packages in the inheritence hierarchy. This allows superclass methods to be excluded, or default excluded superclasses to be included.
++ By default, all standard Java SDK classes are excluded from having their methods added to Locus storage.
 + Classpath package scanning to detect annotated classes, with package names specified in configuration.
