@@ -26,6 +26,8 @@ import io.craigmiller160.utils.reflect.ClassAndMethod;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -34,6 +36,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A special test class to test the combined
@@ -51,6 +54,8 @@ import static org.junit.Assert.assertNotNull;
  * Created by craig on 4/1/16.
  */
 public class LocusModelViewTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(LocusModelViewTest.class);
 
     private LocusStorage storage;
     private LocusModel locusModel;
@@ -116,6 +121,56 @@ public class LocusModelViewTest {
         assertEquals("ModelOne StringField wrong value", value, modelOne.getStringField());
         assertEquals("ViewOne StringField wrong value", value, viewOne.getStringField());
         assertEquals("ViewThree StringField wrong value", value, viewThree.getStringField());
+    }
+
+    /**
+     * Test adding a value to a collection property in both
+     * a model and a view.
+     */
+    @Test
+    public void testAddModelAndView(){
+        String value = "Value";
+        locusModel.addValue("String", value);
+
+        String mResult = modelOne.getString(0);
+        String vResult = viewOne.getString(0);
+
+        assertEquals("ModeOne has the wrong value in the first position in its String collection", value, mResult);
+        assertEquals("ViewOne has the wrong value in the first position in its String collection", value, vResult);
+    }
+
+    /**
+     * Test removing a value from a collection property in
+     * both a model and a view.
+     */
+    @Test
+    public void testRemoveModelAndView(){
+        String value = "Value";
+        modelOne.addString(value);
+        viewOne.addString(value);
+
+        locusModel.removeValue("String", value);
+
+        boolean modelException = false;
+        try{
+            modelOne.getString(0);
+        }
+        catch(IndexOutOfBoundsException ex){
+            modelException = true;
+            logger.error("LocusModelViewTest testRemoveModelAndView() model exception stack trace", ex);
+        }
+
+        boolean viewException = false;
+        try{
+            viewOne.getString(0);
+        }
+        catch(IndexOutOfBoundsException ex){
+            viewException = true;
+            logger.error("LocusModelViewTest testRemoveModelAndView() model exception stack trace", ex);
+        }
+
+        assertTrue("ModelOne should've thrown an exception for the value not being in the collection", modelException);
+        assertTrue("ViewOne should've thrown an exception for the value not being in the collection", viewException);
     }
 
 }

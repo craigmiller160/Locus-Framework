@@ -234,7 +234,7 @@ public class LocusViewTest {
         }
         catch(IndexOutOfBoundsException ex){
             exception = true;
-            logger.error("LocusViewTest testRemoveValue() exception stack trace");
+            logger.error("LocusViewTest testRemoveValue() exception stack trace", ex);
         }
 
         assertTrue("No exception was thrown when there should've been one", exception);
