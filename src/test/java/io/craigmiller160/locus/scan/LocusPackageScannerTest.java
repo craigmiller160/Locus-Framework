@@ -70,7 +70,7 @@ public class LocusPackageScannerTest {
         Collection<Class<?>> controllerTypes = storage.getAllControllerTypes();
 
         assertEquals("Wrong number of model setter props", 12, modelPropSetters.size());
-        assertEquals("Wrong number of model getter props", 12, modelPropGetters.size());
+        assertEquals("Wrong number of model getter props", 13, modelPropGetters.size());
 
         Set<String> controllerNames = storage.getAllControllerNames();
         assertEquals("Wrong number of controller types", 1, controllerTypes.size());

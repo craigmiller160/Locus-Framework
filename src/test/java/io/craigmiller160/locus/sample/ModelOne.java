@@ -18,6 +18,9 @@ package io.craigmiller160.locus.sample;
 
 import io.craigmiller160.locus.annotations.LModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A sample Model class to use for testing
@@ -42,6 +45,8 @@ public class ModelOne {
     private boolean booleanField;
     private char charField;
     private Object objectField;
+
+    private List<String> strings = new ArrayList<>();
 
     public String getStringField() {
         return stringField;
@@ -171,5 +176,17 @@ public class ModelOne {
 
     public void setObjectField(Object objectField) {
         this.objectField = objectField;
+    }
+
+    public void addString(String s){
+        strings.add(s);
+    }
+
+    public void removeString(String s){
+        strings.remove(s);
+    }
+
+    public String getString(int i){
+        return strings.get(i);
     }
 }

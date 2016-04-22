@@ -17,6 +17,7 @@
 package io.craigmiller160.locus.util;
 
 import io.craigmiller160.locus.TestUtils;
+import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.ViewOne;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
@@ -61,7 +62,7 @@ public class LocusStorageTest {
         Set<String> propNames = storage.getAllModelPropertyNames();
 
         assertNotNull("Model PropNames Set is null", propNames);
-        assertEquals("Model PropNames Set is wrong size", 14, propNames.size());
+        assertEquals("Model PropNames Set is wrong size", 15, propNames.size());
     }
 
     /**
@@ -74,7 +75,7 @@ public class LocusStorageTest {
         Set<String> propNames = storage.getAllViewPropNames();
 
         assertNotNull("View PropNames Set is null", propNames);
-        assertEquals("View PropNames Set is wrong size", 13, propNames.size());
+        assertEquals("View PropNames Set is wrong size", 14, propNames.size());
     }
 
     /**
@@ -102,15 +103,64 @@ public class LocusStorageTest {
      */
     @Test
     public void testModelPropGetters(){
-        assertEquals("Wrong number of model prop getters", 12, storage.getModelPropGetterCount());
+        assertEquals("Wrong number of model prop getters", 13, storage.getModelPropGetterCount());
+    }
+
+    /**
+     * Test that all model prop adders were added correctly.
+     */
+    @Test
+    public void testModelPropAdders(){
+        assertEquals("Wrong number of model prop adders", 1, storage.getModelPropAdderCount());
+    }
+
+    /**
+     * Test that all model prop removers were added correctly.
+     */
+    @Test
+    public void testModelPropRemovers(){
+        assertEquals("Wrong number of model prop removers", 1, storage.getModelPropRemoverCount());
     }
 
     /**
      * Test that all controllers were added correctly.
      */
     @Test
-    public void testControllers(){
+    public void testControllers() {
         assertEquals("Wrong number of controllers", 2, storage.getControllerCount());
+    }
+
+    /**
+     * Test that the UIThreadExecutor has been set.
+     */
+    @Test
+    public void testUIThreadExecutor(){
+        assertNotNull("UIThreadExecutor is null", storage.getUIThreadExecutorType());
+        assertEquals("UIThreadExecutor is the wrong type", NoUIThreadExecutor.class, storage.getUIThreadExecutorType());
+    }
+
+    /**
+     * Test that all view prop setters were added correctly.
+     */
+    @Test
+    public void testViewPropSetters(){
+        assertEquals("Wrong number of view prop setters", 15, storage.getViewPropSetterCount());
+    }
+
+    /**
+     * Test that all view prop adders were added correctly.
+     */
+    @Test
+    public void testViewPropAdders(){
+        assertEquals("Wrong number of view prop adders", 1, storage.getViewPropAdderCount());
+    }
+
+    /**
+     * Test that all view prop removers were added correctly.
+     */
+    @Test
+    public void testViewPropRemovers(){
+        assertEquals("Wrong number of view prop removers", 1, storage.getViewPropRemoverCount());
     }
 
 }

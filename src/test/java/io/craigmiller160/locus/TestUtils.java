@@ -88,6 +88,14 @@ public class TestUtils {
                 String propName = m.getName().substring(2);
                 storage.addModelPropGetter(propName, new ObjectAndMethod(modelOne, m));
             }
+            else if(m.getName().startsWith("add")){
+                String propName = m.getName().substring(3);
+                storage.addModelPropAdder(propName, new ObjectAndMethod(modelOne, m));
+            }
+            else if(m.getName().startsWith("remove")){
+                String propName = m.getName().substring(6);
+                storage.addModelPropRemover(propName, new ObjectAndMethod(modelOne, m));
+            }
         }
 
         Map<Class<?>,Object> models = new HashMap<>();
@@ -107,6 +115,14 @@ public class TestUtils {
             if(m.getName().startsWith("set")){
                 String propName = m.getName().substring(3);
                 storage.addViewPropSetter(propName, new ClassAndMethod(ViewOne.class, m));
+            }
+            else if(m.getName().startsWith("add")){
+                String propName = m.getName().substring(3);
+                storage.addViewPropAdder(propName, new ClassAndMethod(ViewOne.class, m));
+            }
+            else if(m.getName().startsWith("remove")){
+                String propName = m.getName().substring(6);
+                storage.addViewPropRemover(propName, new ClassAndMethod(ViewOne.class, m));
             }
         }
 

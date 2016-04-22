@@ -18,6 +18,9 @@ package io.craigmiller160.locus.sample;
 
 import io.craigmiller160.locus.annotations.LView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A sample View class used for testing
  * Locus components.
@@ -40,6 +43,8 @@ public class ViewOne {
     private boolean booleanField;
     private char charField;
     private Object objectField;
+
+    private List<String> strings = new ArrayList<>();
 
     public String getStringField() {
         return stringField;
@@ -141,6 +146,18 @@ public class ViewOne {
         this.firstField = firstField;
         this.intField = intField;
         this.doubleField = doubleField;
+    }
+
+    public void addString(String s){
+        strings.add(s);
+    }
+
+    public void removeString(String s){
+        strings.remove(s);
+    }
+
+    public String getString(int i){
+        return strings.get(i);
     }
 
 }
