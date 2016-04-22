@@ -51,15 +51,21 @@ public class LocusClassScannerTest {
         scanner.scan(MODEL_ONE_PATH, storage);
         int modelPropSetterCount = storage.getModelPropSetterCount();
         int modelPropGetterCount = storage.getModelPropSetterCount();
+        int modelPropAdderCount = storage.getModelPropAdderCount();
+        int modelPropRemoverCount = storage.getModelPropRemoverCount();
 
         assertEquals("Wrong number of model prop setters", 12, modelPropSetterCount);
         assertEquals("Wrong number of model prop getters", 12, modelPropGetterCount);
+        assertEquals("Wrong number of model prop removers", 1, modelPropRemoverCount);
+        assertEquals("Wrong number of model prop adders", 1, modelPropAdderCount);
     }
 
     @Test
     public void testScanViewClass(){
         scanner.scan(VIEW_ONE_PATH, storage);
         int viewPropSetterCount = storage.getViewPropSetterCount();
+        int viewPropAdderCount = storage.getViewPropAdderCount();
+        int viewPropRemoverCount = storage.getViewPropRemoverCount();
 
         assertEquals("Wrong number of view prop setters", 13, viewPropSetterCount);
     }

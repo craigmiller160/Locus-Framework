@@ -69,8 +69,11 @@ public class LocusPackageScannerTest {
         Collection<ObjectAndMethod> modelPropGetters = storage.getAllModelPropGetters();
         Collection<Class<?>> controllerTypes = storage.getAllControllerTypes();
 
-        assertEquals("Wrong number of model setter props", 12, modelPropSetters.size());
-        assertEquals("Wrong number of model getter props", 13, modelPropGetters.size());
+        assertEquals("Wrong number of model property names", 15, storage.getAllModelPropertyNames().size());
+        assertEquals("Wrong number of model prop setters", 12, modelPropSetters.size());
+        assertEquals("Wrong number of model prop getters", 13, modelPropGetters.size());
+        assertEquals("Wrong number of model prop adders", 1, storage.getModelPropAdderCount());
+        assertEquals("Wrong number of model prop removers", 1, storage.getModelPropRemoverCount());
 
         Set<String> controllerNames = storage.getAllControllerNames();
         assertEquals("Wrong number of controller types", 1, controllerTypes.size());
@@ -80,7 +83,10 @@ public class LocusPackageScannerTest {
 
         Set<String> viewProps = storage.getAllViewPropNames();
 
-        assertEquals("Wrong number of view setter props", 13, viewProps.size());
+        assertEquals("Wrong number of view prop names", 14, viewProps.size());
+        assertEquals("Wrong number of view prop setters", 15, storage.getViewPropSetterCount());
+        assertEquals("Wrong number of view prop adders", 1, storage.getViewPropAdderCount());
+        assertEquals("Wrong number of view prop removers", 1, storage.getViewPropRemoverCount());
 
         //TODO this will need to be revamped once all the new methods are added
         for(String key : viewProps){
