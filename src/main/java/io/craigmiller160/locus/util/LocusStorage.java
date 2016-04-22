@@ -39,14 +39,16 @@ import java.util.Set;
  */
 public class LocusStorage {
 
-    //TODO document the thread safety policy of this class
-
     private static LocusStorage instance;
 
     private Map<String,ObjectAndMethod> modelPropSetters;
     private Map<String,ObjectAndMethod> modelPropGetters;
+    private Map<String,ObjectAndMethod> modelPropAdders;
+    private Map<String,ObjectAndMethod> modelPropRemovers;
 
     private MultiValueMap<String,ClassAndMethod> viewPropSetters;
+    private MultiValueMap<String,ClassAndMethod> viewPropAdders;
+    private MultiValueMap<String,ClassAndMethod> viewPropRemovers;
     private ViewObjectTracker viewInstances;
 
     private Map<String,Boolean> controllerSingletons;
@@ -71,8 +73,12 @@ public class LocusStorage {
     LocusStorage(){
         modelPropSetters = new HashMap<>();
         modelPropGetters = new HashMap<>();
+        modelPropAdders = new HashMap<>();
+        modelPropRemovers = new HashMap<>();
 
         viewPropSetters = new MultiValueMap<>();
+        viewPropAdders = new MultiValueMap<>();
+        viewPropRemovers = new MultiValueMap<>();
         viewInstances = new ViewObjectTracker();
 
         controllerSingletons = new HashMap<>();
@@ -84,17 +90,28 @@ public class LocusStorage {
 
     /**
      * Clear all values currently in this storage.
+     *
+     * IMPORTANT: Clearly all values breaks the Locus Framework.
+     * This method should only be used if a re-initialization is
+     * being performed, and the values are about to be re-populated.
      */
     public synchronized void clear(){
         modelPropSetters.clear();
         modelPropGetters.clear();
+        modelPropAdders.clear();
+        modelPropRemovers.clear();
+
         viewPropSetters.clear();
+        viewPropAdders.clear();
+        viewPropRemovers.clear();
         viewInstances.clear();
+
         controllerSingletons.clear();
         controllerTypes.clear();
         controllerSingletonInstances.clear();
         controllerCallbacks.clear();
-        uiThreadExecutorType = null; //TODO this may cause errors, having this null at any point in time...
+
+        uiThreadExecutorType = null;
     }
 
     /*
@@ -202,6 +219,62 @@ public class LocusStorage {
     }
 
     /*
+     * Model Adder Section
+     */
+
+    public synchronized void addModelPropAdder(String propName, ObjectAndMethod oam){
+        modelPropAdders.put(propName, oam);
+    }
+
+    public synchronized void removeModelPropAdder(String propName){
+        modelPropAdders.remove(propName);
+    }
+
+    public synchronized ObjectAndMethod getModelPropAdder(String propName){
+        return modelPropAdders.get(propName);
+    }
+
+    public Collection<ObjectAndMethod> getAllModelPropAdders(){
+        List<ObjectAndMethod> modelPropAdderValues = new ArrayList<>();
+        synchronized (this){
+            modelPropAdderValues.addAll(modelPropAdders.values());
+        }
+        return modelPropAdderValues;
+    }
+
+    public synchronized int getModelPropAdderCount(){
+        return modelPropAdders.size();
+    }
+
+    /*
+     * Model Remover Section
+     */
+
+    public synchronized void addModelPropRemover(String propName, ObjectAndMethod oam){
+        modelPropRemovers.put(propName, oam);
+    }
+
+    public synchronized void removeModelPropRemover(String propName){
+        modelPropRemovers.remove(propName);
+    }
+
+    public synchronized ObjectAndMethod getModelPropRemover(String propName){
+        return modelPropRemovers.get(propName);
+    }
+
+    public Collection<ObjectAndMethod> getAllModelPropRemovers(){
+        List<ObjectAndMethod> modelPropRemoverValues = new ArrayList<>();
+        synchronized (this){
+            modelPropRemoverValues.addAll(modelPropRemovers.values());
+        }
+        return modelPropRemoverValues;
+    }
+
+    public synchronized int getModelPropRemoverCount(){
+        return modelPropRemovers.size();
+    }
+
+    /*
      * View Setter Section
      */
 
@@ -283,6 +356,94 @@ public class LocusStorage {
     }
 
     /*
+     * View Adder Section
+     */
+
+    public synchronized void addViewPropAdder(String propName, ClassAndMethod cam){
+        viewPropAdders.putValue(propName, cam);
+    }
+
+    public synchronized void removeViewPropAdder(ClassAndMethod cam){
+        viewPropAdders.removeValue(cam);
+    }
+
+    public synchronized void removeAllAddersForViewProp(String propName){
+        viewPropAdders.remove(propName);
+    }
+
+    public synchronized Collection<ClassAndMethod> getAddersForViewProp(String propName){
+        Collection<ClassAndMethod> result = null;
+        synchronized (this){
+            Collection<ClassAndMethod> cams = viewPropAdders.get(propName);
+            if(cams != null){
+                result = new ArrayList<>(cams);
+            }
+        }
+
+        return result;
+    }
+
+    public Collection<ClassAndMethod> getAllViewPropAdders(){
+        Collection<ClassAndMethod> result = new ArrayList<>();
+        synchronized (this){
+            Collection<Collection<ClassAndMethod>> values = viewPropAdders.values();
+            for(Collection<ClassAndMethod> value : values){
+                result.addAll(value);
+            }
+        }
+
+        return result;
+    }
+
+    public synchronized int getViewPropAdderCount(){
+        return viewPropAdders.fullSize();
+    }
+
+    /*
+     * View Remover Section
+     */
+
+    public synchronized void addViewPropRemover(String propName, ClassAndMethod cam){
+        viewPropRemovers.putValue(propName, cam);
+    }
+
+    public synchronized void removeViewPropRemover(ClassAndMethod cam){
+        viewPropRemovers.removeValue(cam);
+    }
+
+    public synchronized void removeAllRemoversForViewProp(String propName){
+        viewPropRemovers.remove(propName);
+    }
+
+    public synchronized Collection<ClassAndMethod> getRemoversForViewProp(String propName){
+        Collection<ClassAndMethod> result = null;
+        synchronized (this){
+            Collection<ClassAndMethod> cams = viewPropRemovers.get(propName);
+            if(cams != null){
+                result = new ArrayList<>(cams);
+            }
+        }
+
+        return result;
+    }
+
+    public Collection<ClassAndMethod> getAllViewPropRemovers(){
+        Collection<ClassAndMethod> result = new ArrayList<>();
+        synchronized (this){
+            Collection<Collection<ClassAndMethod>> values = viewPropRemovers.values();
+            for(Collection<ClassAndMethod> value : values){
+                result.addAll(value);
+            }
+        }
+
+        return result;
+    }
+
+    public synchronized int getViewPropRemoverCount(){
+        return viewPropRemovers.fullSize();
+    }
+
+    /*
      * Controller Section
      */
 
@@ -308,16 +469,6 @@ public class LocusStorage {
         Collection<Class<?>> result = new ArrayList<>();
         synchronized (this){
             result.addAll(controllerTypes.values());
-        }
-
-        return result;
-    }
-
-    //TODO consider ultimately deleting this method as unnecessary, it returns an unqualified collection of booleans
-    public Collection<Boolean> getAllControllerSingletons(){
-        Collection<Boolean> result = new ArrayList<>();
-        synchronized (this){
-            result.addAll(controllerSingletons.values());
         }
 
         return result;
