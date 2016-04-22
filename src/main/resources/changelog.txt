@@ -1,0 +1,16 @@
+Locus Framework Version Changelog
+
+Version 1.1
++ Expanded scanning to be either package based or class based. New class based scanning requires full, qualified class names in configuration.
++ Expanded reflective method calls to include add/remove for collection based operations.
++ Code refactoring and improvements.
+
+Version 1.0
++ Created main Locus components: View, Model, Controller, and Debug.
++ Ability to invoke any setter/getter reflectively in views and models.
++ Ability to reflectively retrieve Controller classes.
++ LocusControllerCallback allows the controller to retrieve values from the view without needing a reference to the view.
++ LocusDebug provides handy instant logging to the console, useful for debugging Locus issues and getting a snapshot of the current configuration.
++ Restrictions: Model setters/getters must have unique names. setFoo() cannot exist more than once, even if in separate classes or with different parameters. Views do not have this restriction.
++ XML based configuration, read into memory at framework initialization.
++ Classpath package scanning to detect annotated classes, with package names specified in configuration.
