@@ -18,6 +18,8 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
+import io.craigmiller160.locus.othercontroller.ControllerTwo;
+import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.ViewOne;
 import io.craigmiller160.locus.sample.ViewThree;
@@ -37,6 +39,9 @@ import java.util.Map;
  * Created by craigmiller on 4/21/16.
  */
 public class TestUtils {
+
+    public static final String CONTROLLER_ONE_NAME = "ControllerOne";
+    public static final String CONTROLLER_TWO_NAME = "ControllerTwo";
 
     public static LocusStorage setupStorage(){
         LocusStorage storage = null;
@@ -116,6 +121,11 @@ public class TestUtils {
         views.put(viewThree.getClass(), viewThree);
 
         return views;
+    }
+
+    public static void setupControllers(LocusStorage storage){
+        storage.addControllerType("ControllerOne", ControllerOne.class, false);
+        storage.addControllerType("ControllerTwo", ControllerTwo.class, true);
     }
 
 

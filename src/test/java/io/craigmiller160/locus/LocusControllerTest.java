@@ -18,6 +18,7 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
+import io.craigmiller160.locus.othercontroller.ControllerTwo;
 import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.util.LocusStorage;
 import org.junit.Before;
@@ -58,6 +59,7 @@ public class LocusControllerTest {
     @Before
     public void before(){
         storage = TestUtils.setupStorage();
+        TestUtils.setupControllers(storage);
         factory = TestUtils.setupUIThreadExecutor(storage);
         setupLocusController();
     }
@@ -69,7 +71,7 @@ public class LocusControllerTest {
     public void testGetControllerNonSingleton(){
         storage.addControllerType("ControllerOne", ControllerOne.class, false);
 
-        Object controller = locusController.getController("ControllerOne");
+        Object controller = locusController.getController(TestUtils.CONTROLLER_ONE_NAME);
         assertNotNull("Controller is null", controller);
         assertEquals("Controller wrong type", ControllerOne.class, controller.getClass());
     }
@@ -80,11 +82,9 @@ public class LocusControllerTest {
      */
     @Test
     public void testGetControllerWrongName(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-
         boolean exceptionThrown = false;
         try{
-            Object controller = locusController.getController("ControlerOne"); //Deliberate misspelling
+            Object controller = locusController.getController("Comptroller"); //Deliberate misspelling
         }
         catch(LocusNoControllerException ex){
             exceptionThrown = true;
@@ -99,18 +99,16 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerSingleton(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, true);
-
-        Object one = locusController.getController("ControllerOne");
-        Object two = locusController.getController("ControllerOne");
+        Object one = locusController.getController(TestUtils.CONTROLLER_TWO_NAME);
+        Object two = locusController.getController(TestUtils.CONTROLLER_TWO_NAME);
 
         assertNotNull("First controller ref is null", one);
         assertNotNull("Second controller ref is null", two);
-        assertEquals("First controller ref is wrong type", ControllerOne.class, one.getClass());
-        assertEquals("Second controller ref is wrong type", ControllerOne.class, two.getClass());
+        assertEquals("First controller ref is wrong type", ControllerTwo.class, one.getClass());
+        assertEquals("Second controller ref is wrong type", ControllerTwo.class, two.getClass());
 
-        ControllerOne cOne = (ControllerOne) one;
-        ControllerOne cTwo = (ControllerOne) two;
+        ControllerTwo cOne = (ControllerTwo) one;
+        ControllerTwo cTwo = (ControllerTwo) two;
 
         cOne.setId("One ID");
 
@@ -122,9 +120,7 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerSpecificType(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-
-        ControllerOne cOne = locusController.getController("ControllerOne", ControllerOne.class);
+        ControllerOne cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, ControllerOne.class);
 
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller instance is wrong type", ControllerOne.class, cOne.getClass());
@@ -136,11 +132,9 @@ public class LocusControllerTest {
      */
     @Test
     public void testControllerInvalidType(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-
         boolean exceptionThrown = false;
         try{
-            Object cOne = locusController.getController("ControllerOne", String.class);
+            Object cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, String.class);
         }
         catch(LocusInvalidTypeException ex){
             exceptionThrown = true;
@@ -156,12 +150,10 @@ public class LocusControllerTest {
      */
     @Test
     public void testAddingAndRetrievingCallback(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-
         //Using BigDecimal for the callback because it has a specific value to be tested for
         BigDecimal callback = new BigDecimal(33.3);
 
-        Object cOne = locusController.getController("ControllerOne", callback);
+        Object cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, callback);
 
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
@@ -177,11 +169,9 @@ public class LocusControllerTest {
      */
     @Test
     public void testUsingControllerCallback(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-
         Object callback = new Object();
 
-        Object cOne = locusController.getController("ControllerOne", callback);
+        Object cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, callback);
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
 
@@ -202,13 +192,11 @@ public class LocusControllerTest {
      */
     @Test
     public void testUsingControllerCallbackGeneric(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-
         //I know, odd choice for a callback, first thing I could think of with a standard getter
         Thread callback = new Thread();
         long value = callback.getId();
 
-        Object cOne = locusController.getController("ControllerOne", callback);
+        Object cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, callback);
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
 
