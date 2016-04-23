@@ -1,3 +1,8 @@
-# Locus-Framework
+# **Locus Framework**
+## **Version 1.2**
 
-This is the readme.
+### MVC Abstraction Framework
+
+Locus is an MVC abstraction framework, inspired by a wide range of innovative abstraction designs around the MVC pattern, in addition to
+
+
