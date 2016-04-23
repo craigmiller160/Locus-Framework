@@ -18,11 +18,11 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -48,8 +48,10 @@ class LocusDebug {
     private static final String METHODS_HEADER = "Methods";
     private static final String NAME_HEADER = "Name";
 
-    private static final String SETTER_METHOD = "Setter";
-    private static final String GETTER_METHOD = "Getter";
+    private static final String SETTER_METHOD = "Setters";
+    private static final String GETTER_METHOD = "Getters";
+    private static final String ADDER_METHOD = "Adders";
+    private static final String REMOVER_METHOD = "Removers";
 
     private static final String LS = System.lineSeparator();
 
@@ -80,27 +82,38 @@ class LocusDebug {
         for(String prop : propertyNames){
             builder.append(String.format(" %-7s: ", PROPERTY_HEADER)).append(prop).append(LS);
 
-            boolean hasSetter = storage.getModelPropSetter(prop) != null;
-            boolean hasGetter = storage.getModelPropGetter(prop) != null;
-            String classType = hasSetter ? storage.getModelPropSetter(prop).getClass().getName() :
-                    storage.getModelPropGetter(prop).getClass().getName();
+            Collection<ObjectAndMethod> setters = storage.getSettersForModelProp(prop);
+            Collection<ObjectAndMethod> getters = storage.getGettersForModelProp(prop);
+            Collection<ObjectAndMethod> adders = storage.getAddersForModelProp(prop);
+            Collection<ObjectAndMethod> removers = storage.getRemoversForModelProp(prop);
 
-            builder.append(String.format("   %-7s: ", CLASS_HEADER)).append(classType).append(LS);
-            builder.append(String.format("   %-7s: ", METHODS_HEADER));
-            if(hasSetter){
-                builder.append(SETTER_METHOD);
-                builder.append(" set(").append(prop).append(")");
-                if(hasGetter){
-                    builder.append(", ");
+            if(setters != null && setters.size() > 0){
+                builder.append(String.format("   %-7s: ", SETTER_METHOD)).append(LS);
+                for(ObjectAndMethod oam : setters){
+                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
                 }
             }
 
-            if(hasGetter){
-                builder.append(GETTER_METHOD);
-                builder.append(" get(").append(prop).append(")");
+            if(getters != null && getters.size() > 0){
+                builder.append(String.format("   %-7s: ", GETTER_METHOD)).append(LS);
+                for(ObjectAndMethod oam : getters){
+                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
+                }
             }
 
-            builder.append(LS);
+            if(adders != null && adders.size() > 0){
+                builder.append(String.format("   %-7s: ", ADDER_METHOD)).append(LS);
+                for(ObjectAndMethod oam : adders){
+                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
+                }
+            }
+
+            if(removers != null && removers.size() > 0){
+                builder.append(String.format("   %-7s: ", REMOVER_METHOD)).append(LS);
+                for(ObjectAndMethod oam : removers){
+                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
+                }
+            }
         }
 
         return builder.toString();
@@ -113,21 +126,31 @@ class LocusDebug {
 
         Set<String> propertyNames = storage.getAllViewPropNames();
         for(String prop : propertyNames){
-            builder.append(String.format(" %-7s: ", PROPERTY_HEADER)).append(prop).append(LS);
+            Collection<ClassAndMethod> setters = storage.getSettersForViewProp(prop);
+            Collection<ClassAndMethod> adders = storage.getAddersForViewProp(prop);
+            Collection<ClassAndMethod> removers = storage.getRemoversForViewProp(prop);
 
-            builder.append(String.format("   %-7s: ", CLASSES_HEADER));
-            Collection<ClassAndMethod> cams = storage.getSettersForViewProp(prop);
-            Iterator<ClassAndMethod> camIt = cams.iterator();
-            while(camIt.hasNext()){
-                ClassAndMethod cam = camIt.next();
-                String classType = cam.getSourceType().getName();
-                builder.append(classType);
-                if(camIt.hasNext()){
-                    builder.append(LS);
+            if(setters != null && setters.size() > 0){
+                builder.append(String.format("   %-7s: ", SETTER_METHOD)).append(LS);
+                for(ClassAndMethod cam : setters){
+                    builder.append(String.format("     %s", cam.getMethod().toString())).append(LS);
+                }
+            }
+
+            if(adders != null && adders.size() > 0){
+                builder.append(String.format("   %-7s: ", ADDER_METHOD)).append(LS);
+                for(ClassAndMethod cam : adders){
+                    builder.append(String.format("     %s", cam.getMethod().toString())).append(LS);
+                }
+            }
+
+            if(removers != null && removers.size() > 0){
+                builder.append(String.format("   %-7s: ", REMOVER_METHOD)).append(LS);
+                for(ClassAndMethod cam : removers){
+                    builder.append(String.format("     %s", cam.getMethod().toString())).append(LS);
                 }
             }
         }
-
 
         return builder.toString();
     }
