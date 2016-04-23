@@ -28,6 +28,7 @@ import io.craigmiller160.utils.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -40,6 +41,8 @@ import static io.craigmiller160.locus.util.LocusConstants.DEFAULT_CONFIG_FILE;
  * manipulate system resources through its three
  * subclasses.
  *
+ * This class is completely thread-safe.
+ *
  * IMPORTANT: The Locus configuration file, by default, is
  * loaded using ClassLoader.getResourceAsStream(). This only
  * works on pure-Java implementations. Other Java-based
@@ -50,6 +53,7 @@ import static io.craigmiller160.locus.util.LocusConstants.DEFAULT_CONFIG_FILE;
  *
  * Created by craig on 3/12/16.
  */
+@ThreadSafe
 public class Locus {
 
     private static final Logger logger = LoggerFactory.getLogger(Locus.class);
@@ -222,10 +226,18 @@ public class Locus {
             logger.trace("Setting UIThreadExecutor type: {}", clazz.getName());
             storage.setUIThreadExecutorType(clazz);
 
+            //The locus.xsd schema ensures that package names and class names cannot be used together
+
             //Scan the provided packages and organize them in the storage
             List<String> packageNames = config.getPackageNames();
             for(String name : packageNames){
                 packageScanner.scan(name, storage, config.getScannerExclusions());
+            }
+
+            //Scan the provided classes and organize them in the storage
+            List<String> classNames = config.getClassNames();
+            for(String name : classNames){
+                classScanner.scan(name, storage, config.getScannerExclusions());
             }
 
             //Set the initialized flag to true
