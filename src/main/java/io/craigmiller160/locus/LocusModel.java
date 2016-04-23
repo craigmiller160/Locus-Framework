@@ -17,9 +17,11 @@
 package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.utils.reflect.FindAndInvoke;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ReflectiveException;
-import io.craigmiller160.utils.reflect.RemoteInvoke;
+
+import java.util.Collection;
 
 import static io.craigmiller160.locus.util.LocusConstants.GETTER;
 import static io.craigmiller160.locus.util.LocusConstants.SETTER;
@@ -84,7 +86,7 @@ class LocusModel {
      * @throws ReflectiveException if an error occurs.
      */
     public void setValue(String propName, Object... values) throws ReflectiveException{
-        RemoteInvoke.invokeMethod(getMethod(propName, SETTER), values);
+        FindAndInvoke.findOneAndInvoke(getMethods(propName, SETTER), values);
         locusView.setValue(propName, values);
     }
 
@@ -99,7 +101,7 @@ class LocusModel {
      * @throws ReflectiveException if an error occurs.
      */
     public void addValue(String propName, Object...values) throws ReflectiveException{
-        RemoteInvoke.invokeMethod(getMethod(propName, ADDER), values);
+        FindAndInvoke.findOneAndInvoke(getMethods(propName, ADDER), values);
         locusView.addValue(propName, values);
     }
 
@@ -114,7 +116,7 @@ class LocusModel {
      * @throws ReflectiveException if an error occurs.
      */
     public void removeValue(String propName, Object...values) throws ReflectiveException{
-        RemoteInvoke.invokeMethod(getMethod(propName, REMOVER), values);
+        FindAndInvoke.findOneAndInvoke(getMethods(propName, REMOVER), values);
         locusView.removeValue(propName, values);
     }
 
@@ -126,7 +128,7 @@ class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public Object getValue(String propName, Object... args) throws LocusException{
-        return RemoteInvoke.invokeMethod(getMethod(propName, GETTER), args);
+        return FindAndInvoke.findOneAndInvoke(getMethods(propName, GETTER), args);
     }
 
     /**
@@ -150,8 +152,8 @@ class LocusModel {
     }
 
     /**
-     * Get the appropriate method and its corresponding
-     * object instance from the storage, to be reflectively
+     * Get the appropriate methods and their corresponding
+     * object instances from the storage, to be reflectively
      * invoked by the caller.
      *
      * @param propName the name of the property to get the method for.
@@ -161,26 +163,26 @@ class LocusModel {
      * @throws ReflectiveException if unable to find a method matching
      *                   the specifications.
      */
-    private ObjectAndMethod getMethod(String propName, int methodType) throws ReflectiveException{
-        ObjectAndMethod oam = null;
+    private Collection<ObjectAndMethod> getMethods(String propName, int methodType) throws ReflectiveException{
+        Collection<ObjectAndMethod> oams = null;
         switch(methodType){
             case GETTER:
-                oam = storage.getModelPropGetter(propName);
+                oams = storage.getGettersForModelProp(propName);
                 break;
             case SETTER:
-                oam = storage.getModelPropSetter(propName);
+                oams = storage.getSettersForModelProp(propName);
                 break;
             case ADDER:
-                oam = storage.getModelPropAdder(propName);
+                oams = storage.getAddersForModelProp(propName);
                 break;
             case REMOVER:
-                oam = storage.getModelPropRemover(propName);
+                oams = storage.getRemoversForModelProp(propName);
                 break;
         }
 
-        if(oam == null){
+        if(oams == null || oams.size() == 0){
             throw new ReflectiveException("No model " + methodType + " found matching the property name \"" + propName + "\"");
         }
-        return oam;
+        return oams;
     }
 }
