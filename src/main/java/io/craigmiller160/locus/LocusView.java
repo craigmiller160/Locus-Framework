@@ -156,7 +156,7 @@ class LocusView {
                     if (ref != null) {
                         ObjectAndMethod oam = new ObjectAndMethod(ref, cam.getMethod());
                         try {
-                            RemoteInvoke.invokeMethod(oam, values);
+                            RemoteInvoke.validateAndInvokeMethod(oam, values);
                             success = true;
                         } catch (InvocationException ex) {
                             //InvocationExceptions are when the method was successfully invoked, but during its operation an exception occurred

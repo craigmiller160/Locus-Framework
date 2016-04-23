@@ -125,7 +125,7 @@ class LocusControllerCallback {
 
             //Attempt to invoke the method and get the result
             ObjectAndMethod oam = new ObjectAndMethod(callback, method);
-            result = RemoteInvoke.invokeMethod(oam, args);
+            result = RemoteInvoke.validateAndInvokeMethod(oam, args);
 
             return result;
         }
