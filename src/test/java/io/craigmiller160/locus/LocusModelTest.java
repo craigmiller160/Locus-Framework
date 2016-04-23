@@ -237,4 +237,21 @@ public class LocusModelTest {
         assertTrue("No exception was thrown when trying to get a value at an index that shouldn't exist", exception);
     }
 
+    /**
+     * Test how the new multiple invocation works with LocusModel.
+     * Since two truly identical methods shouldn't be allowed, test
+     * that nearly identical methods are invoked properly.
+     */
+    @Test
+    public void testMultipleMethods(){
+        int value = 12;
+        String expectedResult = "12";
+        locusModel.setValue("StringField", value);
+
+        String result = modelOne.getStringField();
+
+        assertNotNull("StringField value is null", result);
+        assertEquals("StringField has wrong value", expectedResult, result);
+    }
+
 }

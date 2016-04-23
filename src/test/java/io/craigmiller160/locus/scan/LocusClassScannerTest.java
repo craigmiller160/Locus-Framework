@@ -54,8 +54,8 @@ public class LocusClassScannerTest {
         int modelPropAdderCount = storage.getModelPropAdderCount();
         int modelPropRemoverCount = storage.getModelPropRemoverCount();
 
-        assertEquals("Wrong number of model prop setters", 12, modelPropSetterCount);
-        assertEquals("Wrong number of model prop getters", 12, modelPropGetterCount);
+        assertEquals("Wrong number of model prop setters", 13, modelPropSetterCount);
+        assertEquals("Wrong number of model prop getters", 13, modelPropGetterCount);
         assertEquals("Wrong number of model prop removers", 1, modelPropRemoverCount);
         assertEquals("Wrong number of model prop adders", 1, modelPropAdderCount);
     }

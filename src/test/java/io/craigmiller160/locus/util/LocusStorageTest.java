@@ -95,7 +95,7 @@ public class LocusStorageTest {
      */
     @Test
     public void testModelPropSetters(){
-        assertEquals("Wrong number of model prop setters", 12, storage.getModelPropSetterCount());
+        assertEquals("Wrong number of model prop setters", 13, storage.getModelPropSetterCount());
     }
 
     /**

@@ -56,6 +56,10 @@ public class ModelOne {
         this.stringField = stringField;
     }
 
+    public void setStringField(int stringField){
+        this.stringField = "" + stringField;
+    }
+
     public int getIntField() {
         return intField;
     }
