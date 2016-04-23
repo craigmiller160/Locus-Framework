@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus.util;
 
+import java.io.InputStream;
+
 /**
  * The ConfigurationReader handles accessing the xml
  * configuration file for the framework, and returning
@@ -30,11 +32,11 @@ public interface ConfigurationReader {
      * file name and return its values in a LocusConfiguration
      * object.
      *
-     * @param fileName the name of the XML file to read.
+     * @param configSource the source of the XML configuration.
      * @return the configuration for the framework.
      * @throws LocusParsingException if unable to find, read, or parse
      *          the content of the XML configuration file.
      */
-    LocusConfiguration readConfiguration(String fileName) throws LocusParsingException;
+    LocusConfiguration readConfiguration(InputStream configSource) throws LocusParsingException;
 
 }

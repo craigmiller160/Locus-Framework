@@ -28,6 +28,8 @@ import io.craigmiller160.utils.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static io.craigmiller160.locus.util.LocusConstants.DEFAULT_CONFIG_FILE;
@@ -37,6 +39,14 @@ import static io.craigmiller160.locus.util.LocusConstants.DEFAULT_CONFIG_FILE;
  * This class provides easy, static access to
  * manipulate system resources through its three
  * subclasses.
+ *
+ * IMPORTANT: The Locus configuration file, by default, is
+ * loaded using ClassLoader.getResourceAsStream(). This only
+ * works on pure-Java implementations. Other Java-based
+ * constructs, such as Android, may not work with this
+ * approach. Initialization methods that accept InputStreams
+ * instead of String paths should be used in these cases
+ * to initialize the framework.
  *
  * Created by craig on 3/12/16.
  */
@@ -119,6 +129,17 @@ public class Locus {
     }
 
     /**
+     * Initialize Locus with a the configuration
+     * provided in the InputStream. This method will only execute if it
+     * has not already been initialized.
+     *
+     * @param configSource the configuration.
+     */
+    public static void initialize(InputStream configSource){
+        initialize(configSource, false);
+    }
+
+    /**
      * Initialize Locus with a configuration file
      * specified by the provided String path. The path
      * should be a relative path from the root of the
@@ -130,10 +151,46 @@ public class Locus {
      */
     @SuppressWarnings("unchecked")
     public static void initialize(String configFilePath, boolean force){
+        logger.trace("Locus configuration file provided: {}", configFilePath);
+        InputStream iStream = null;
+        try{
+            iStream = Locus.class.getClassLoader().getResourceAsStream(configFilePath);
+            if(iStream == null){
+                throw new LocusException(String.format("No configuration file found as specified path: %s", configFilePath));
+            }
+
+            initialize(iStream, force);
+        }
+        finally{
+            if(iStream != null){
+                try{
+                    iStream.close();
+                }
+                catch(IOException ex){
+                    logger.error("Unable to close configuration reading input stream", ex);
+                }
+            }
+        }
+    }
+
+    /**
+     * Initialize Locus with the configuration
+     * provided in the InputStream. This method has the option to
+     * force a re-initialization.
+     *
+     * @param configSource the configuration
+     * @param force if it should be re-initialized if already initialized.
+     */
+    public static void initialize(InputStream configSource, boolean force){
         //Using this lock here to ensure that the initialization process can't be called by multiple threads simultaneously.
         synchronized (initializeLock){
             if(initialized && !force){
+                logger.trace("Attempt to initialize already-initialized Locus framework rejected. " +
+                        "To force reinitialization, using initialize(...) method with boolean force argument set to true.");
                 return;
+            }
+            else if(initialized && force){
+                logger.trace("Forcing re-initialization of the Locus framework");
             }
 
             logger.debug("Initializing Locus Framework");
@@ -142,8 +199,7 @@ public class Locus {
             storage.clear();
 
             //Read the configuration file
-            logger.trace("Reading Locus configuration file: {}", configFilePath);
-            LocusConfiguration config = configReader.readConfiguration(configFilePath);
+            LocusConfiguration config = configReader.readConfiguration(configSource);
 
             //Identify the UIThreadExecutor, if a value has been provided
             Class<? extends UIThreadExecutor> clazz = null;

@@ -65,20 +65,14 @@ public class DOMConfigurationReader implements ConfigurationReader{
     DOMConfigurationReader(){}
 
     @Override
-    public LocusConfiguration readConfiguration(String fileName) throws LocusParsingException{
-        logger.debug("Reading configuration file: {}", fileName);
+    public LocusConfiguration readConfiguration(InputStream configSource) throws LocusParsingException{
+        logger.debug("Reading Locus configuration");
         LocusConfiguration locusConfig = new LocusConfiguration();
-        InputStream iStream = null;
         try{
-            iStream = getClass().getClassLoader().getResourceAsStream(fileName);
-            if(iStream == null){
-                throw new LocusParsingException("Unable to find Locus configuration file on classpath. File Name: " + fileName);
-            }
-
             //Create DOM document & root element
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             docBuilderFactory.setNamespaceAware(true);
-            Document doc = docBuilderFactory.newDocumentBuilder().parse(iStream);
+            Document doc = docBuilderFactory.newDocumentBuilder().parse(configSource);
             Element rootElement = doc.getDocumentElement();
 
             //Get the "packages" element. This will be mutually exclusive with the "classes" element
@@ -115,16 +109,6 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
         catch(ParserConfigurationException | SAXException | IOException ex){
             throw new LocusParsingException("Unable tp parse Locus configuration file", ex);
-        }
-        finally{
-            if(iStream != null){
-                try{
-                    iStream.close();
-                }
-                catch(IOException ex){
-                    logger.error("Unable to close InputStream in ConfigurationReader", ex);
-                }
-            }
         }
 
         return locusConfig;

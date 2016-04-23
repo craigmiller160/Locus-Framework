@@ -18,6 +18,8 @@ package io.craigmiller160.locus.util;
 
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -32,14 +34,36 @@ import static org.junit.Assert.assertTrue;
  */
 public class DOMConfigurationReaderTest {
 
+    private LocusConfiguration getConfig(String configFile){
+        ConfigurationReader configReader = new DOMConfigurationReader();
+
+        InputStream iStream = null;
+        LocusConfiguration locusConfig = null;
+        try{
+            iStream = this.getClass().getClassLoader().getResourceAsStream(configFile);
+            locusConfig = configReader.readConfiguration(iStream);
+        }
+        finally{
+            if(iStream != null){
+                try{
+                    iStream.close();
+                }
+                catch(IOException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        return locusConfig;
+    }
+
     /**
      * Test reading a locus configuration file
      * with a "packages", and not a "classes", element.
      */
     @Test
     public void testReadPackageConfiguration(){
-        ConfigurationReader configReader = new DOMConfigurationReader();
-        LocusConfiguration locusConfig = configReader.readConfiguration("locus.xml");
+        LocusConfiguration locusConfig = getConfig("locus.xml");
 
         assertEquals("Wrong number of packages returned", 1, locusConfig.getPackageCount());
         assertEquals("No classes should've been returned", 0, locusConfig.getClassNameCount());
@@ -64,8 +88,7 @@ public class DOMConfigurationReaderTest {
      */
     @Test
     public void testReadClassConfiguration(){
-        ConfigurationReader configReader = new DOMConfigurationReader();
-        LocusConfiguration locusConfig = configReader.readConfiguration("locus2.xml");
+        LocusConfiguration locusConfig = getConfig("locus2.xml");
 
         assertEquals("No packages should've been returned", 0, locusConfig.getPackageCount());
         assertEquals("Wrong number of classes returned", 3, locusConfig.getClassNameCount());
