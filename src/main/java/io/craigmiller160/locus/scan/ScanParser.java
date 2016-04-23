@@ -21,6 +21,7 @@ import io.craigmiller160.locus.annotations.LController;
 import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.locus.util.ScannerExclusions;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.MethodUtils;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ObjectCreator;
 import io.craigmiller160.utils.reflect.ReflectiveException;
@@ -215,15 +216,14 @@ class ScanParser {
 
         Method m1 = rmh.getMethod();
         for(ReflectiveMethodHolder<?> rmh2 : otherOams){
-            Method m2= rmh2.getMethod();
-            if(m1.getName().equals(m2.getName())){
+            Method m2 = rmh2.getMethod();
+            if(MethodUtils.isDuplicateMethod(m1, m2)){
                 throw new ReflectiveException(String.format(
-                        "Identical methods for single property in single category not allowed.%n" +
-                        "   Category: %1$s | Property: %2$s%n" +
-                        "   Class: %3$s | Method: %4$s%n" +
-                        "   Class: %5$s | Method: %6$s",
-                        category, propName, rmh.getSourceType().getName(), m1.getName(),
-                        rmh2.getSourceType().getName(), m2.getName()));
+                        "Identical %1$s methods for a single property not allowed, even if they are in different classes.%n" +
+                        "  Property: %2$s%n" +
+                        "  Method: %3$s%n" +
+                        "  Method: %4$s",
+                        category, propName, m1.getName(), m2.getName()));
             }
         }
     }
