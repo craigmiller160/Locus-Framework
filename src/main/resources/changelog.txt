@@ -1,5 +1,9 @@
 Locus Framework Version Changelog
 
+Version 1.2
++ Changed model method scanning & storage. Now methods that have the same name but different params are considered unique, and multiple methods for the same property can be stored.
++ Modified how the configuration file is found. ConfigurationReader now accepts an InputStream, instead of a String. Locus initialization methods have been expanded to accept a stream instead of a String. This allows for better multi-platform (Java vs Android) flexibility.
+
 Version 1.1
 + Expanded scanning to be either package based or class based. New class based scanning requires full, qualified class names in configuration.
 + Package and class based scanning is mutually exclusive. Only one or the other can be specified in the Locus XML configuration.
