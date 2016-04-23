@@ -41,10 +41,10 @@ public class LocusStorage {
 
     private static LocusStorage instance;
 
-    private Map<String,ObjectAndMethod> modelPropSetters;
-    private Map<String,ObjectAndMethod> modelPropGetters;
-    private Map<String,ObjectAndMethod> modelPropAdders;
-    private Map<String,ObjectAndMethod> modelPropRemovers;
+    private MultiValueMap<String,ObjectAndMethod> modelPropSetters;
+    private MultiValueMap<String,ObjectAndMethod> modelPropGetters;
+    private MultiValueMap<String,ObjectAndMethod> modelPropAdders;
+    private MultiValueMap<String,ObjectAndMethod> modelPropRemovers;
 
     private MultiValueMap<String,ClassAndMethod> viewPropSetters;
     private MultiValueMap<String,ClassAndMethod> viewPropAdders;
@@ -71,10 +71,10 @@ public class LocusStorage {
     }
 
     LocusStorage(){
-        modelPropSetters = new HashMap<>();
-        modelPropGetters = new HashMap<>();
-        modelPropAdders = new HashMap<>();
-        modelPropRemovers = new HashMap<>();
+        modelPropSetters = new MultiValueMap<>();
+        modelPropGetters = new MultiValueMap<>();
+        modelPropAdders = new MultiValueMap<>();
+        modelPropRemovers = new MultiValueMap<>();
 
         viewPropSetters = new MultiValueMap<>();
         viewPropAdders = new MultiValueMap<>();
@@ -167,29 +167,37 @@ public class LocusStorage {
      */
 
     public synchronized void addModelPropSetter(String propName, ObjectAndMethod oam){
-        modelPropSetters.put(propName, oam);
+        modelPropSetters.putValue(propName, oam);
     }
 
-    public synchronized void removeModelPropSetter(String propName){
+    public synchronized void removeModelPropSetter(ObjectAndMethod oam){
+        modelPropSetters.removeValue(oam);
+    }
+
+    public synchronized void removeSettersForModelProp(String propName){
         modelPropSetters.remove(propName);
     }
 
-    public synchronized ObjectAndMethod getModelPropSetter(String propName){
-        //ObjectAndMethod is immutable and a safe reference
-        return modelPropSetters.get(propName);
+    public Collection<ObjectAndMethod> getSettersForModelProp(String propName){
+        List<ObjectAndMethod> result = new ArrayList<>();
+        synchronized (this){
+            result.addAll(modelPropSetters.get(propName));
+        }
+
+        return result;
     }
 
     public Collection<ObjectAndMethod> getAllModelPropSetters(){
         List<ObjectAndMethod> modelPropSetterValues = new ArrayList<>();
         synchronized (this){
-            modelPropSetterValues.addAll(modelPropSetters.values());
+            modelPropSetterValues.addAll(modelPropSetters.allValues());
         }
 
         return modelPropSetterValues;
     }
 
     public synchronized int getModelPropSetterCount(){
-        return modelPropSetters.size();
+        return modelPropSetters.fullSize();
     }
 
     /*
@@ -197,29 +205,37 @@ public class LocusStorage {
      */
 
     public synchronized void addModelPropGetter(String propName, ObjectAndMethod oam){
-        modelPropGetters.put(propName, oam);
+        modelPropGetters.putValue(propName, oam);
     }
 
-    public synchronized void removeModelPropGetter(String propName){
+    public synchronized void removeModelPropGetter(ObjectAndMethod oam){
+        modelPropGetters.removeValue(oam);
+    }
+
+    public synchronized void removeGettersForModelProp(String propName){
         modelPropGetters.remove(propName);
     }
 
-    public synchronized ObjectAndMethod getModelPropGetter(String propName){
-        //ObjectAndMethod is immutable and a safe reference
-        return modelPropGetters.get(propName);
+    public Collection<ObjectAndMethod> getGettersForModelProp(String propName){
+        Collection<ObjectAndMethod> result = new ArrayList<>();
+        synchronized (this){
+            result.addAll(modelPropGetters.get(propName));
+        }
+
+        return result;
     }
 
     public Collection<ObjectAndMethod> getAllModelPropGetters(){
         List<ObjectAndMethod> modelPropGetterValues = new ArrayList<>();
         synchronized (this){
-            modelPropGetterValues.addAll(modelPropGetters.values());
+            modelPropGetterValues.addAll(modelPropGetters.allValues());
         }
 
         return modelPropGetterValues;
     }
 
     public synchronized int getModelPropGetterCount(){
-        return modelPropGetters.size();
+        return modelPropGetters.fullSize();
     }
 
     /*
@@ -227,27 +243,36 @@ public class LocusStorage {
      */
 
     public synchronized void addModelPropAdder(String propName, ObjectAndMethod oam){
-        modelPropAdders.put(propName, oam);
+        modelPropAdders.putValue(propName, oam);
     }
 
-    public synchronized void removeModelPropAdder(String propName){
+    public synchronized void removeModelPropAdder(ObjectAndMethod oam){
+        modelPropAdders.removeValue(oam);
+    }
+
+    public synchronized void removeAddersForModelProp(String propName){
         modelPropAdders.remove(propName);
     }
 
-    public synchronized ObjectAndMethod getModelPropAdder(String propName){
-        return modelPropAdders.get(propName);
+    public Collection<ObjectAndMethod> getAddersForModelProp(String propName){
+        Collection<ObjectAndMethod> result = new ArrayList<>();
+        synchronized (this){
+            result.addAll(modelPropAdders.get(propName));
+        }
+
+        return result;
     }
 
     public Collection<ObjectAndMethod> getAllModelPropAdders(){
         List<ObjectAndMethod> modelPropAdderValues = new ArrayList<>();
         synchronized (this){
-            modelPropAdderValues.addAll(modelPropAdders.values());
+            modelPropAdderValues.addAll(modelPropAdders.allValues());
         }
         return modelPropAdderValues;
     }
 
     public synchronized int getModelPropAdderCount(){
-        return modelPropAdders.size();
+        return modelPropAdders.fullSize();
     }
 
     /*
@@ -255,27 +280,36 @@ public class LocusStorage {
      */
 
     public synchronized void addModelPropRemover(String propName, ObjectAndMethod oam){
-        modelPropRemovers.put(propName, oam);
+        modelPropRemovers.putValue(propName, oam);
     }
 
-    public synchronized void removeModelPropRemover(String propName){
+    public synchronized void removeModelPropRemover(ObjectAndMethod oam){
+        modelPropRemovers.removeValue(oam);
+    }
+
+    public synchronized void removeRemoversForModelProp(String propName){
         modelPropRemovers.remove(propName);
     }
 
-    public synchronized ObjectAndMethod getModelPropRemover(String propName){
-        return modelPropRemovers.get(propName);
+    public synchronized Collection<ObjectAndMethod> getRemoversForModelProp(String propName){
+        Collection<ObjectAndMethod> result = new ArrayList<>();
+        synchronized (this){
+            result.addAll(modelPropRemovers.get(propName));
+        }
+
+        return result;
     }
 
     public Collection<ObjectAndMethod> getAllModelPropRemovers(){
         List<ObjectAndMethod> modelPropRemoverValues = new ArrayList<>();
         synchronized (this){
-            modelPropRemoverValues.addAll(modelPropRemovers.values());
+            modelPropRemoverValues.addAll(modelPropRemovers.allValues());
         }
         return modelPropRemoverValues;
     }
 
     public synchronized int getModelPropRemoverCount(){
-        return modelPropRemovers.size();
+        return modelPropRemovers.fullSize();
     }
 
     /*
