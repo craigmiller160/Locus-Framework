@@ -18,6 +18,7 @@ package io.craigmiller160.locus.util;
 
 import io.craigmiller160.locus.othermodel.ModelTwo;
 import io.craigmiller160.locus.sample.ModelOne;
+import io.craigmiller160.locus.scan.ScannerExclusions;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

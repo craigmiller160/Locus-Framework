@@ -17,7 +17,6 @@
 package io.craigmiller160.locus.scan;
 
 import io.craigmiller160.locus.util.LocusStorage;
-import io.craigmiller160.locus.util.ScannerExclusions;
 
 /**
  * <p>Abstract implementation of the LocusScanner

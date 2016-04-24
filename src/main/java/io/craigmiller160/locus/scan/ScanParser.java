@@ -19,7 +19,6 @@ package io.craigmiller160.locus.scan;
 import io.craigmiller160.locus.LocusException;
 import io.craigmiller160.locus.annotations.LController;
 import io.craigmiller160.locus.util.LocusStorage;
-import io.craigmiller160.locus.util.ScannerExclusions;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
 import io.craigmiller160.utils.reflect.MethodUtils;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
@@ -86,14 +85,14 @@ class ScanParser {
                 logger.trace("Adding model property getter to storage. Property: {} | Getter: {}", propName, oam.toString());
                 storage.addModelPropGetter(propName, oam);
             }
-            else if(m.getName().startsWith("add")){
+            else if(m.getName().startsWith("add") && isClassAllowed(m.getDeclaringClass(), exclusions)){
                 String propName = m.getName().substring(3);
                 ObjectAndMethod oam = new ObjectAndMethod(model, m);
                 validateUniqueMethod(propName, MODEL_TYPE, oam, storage.getAllModelPropAdders());
                 logger.trace("Adding model property adder to storage. Property: {} | Adder: {}", propName, oam.toString());
                 storage.addModelPropAdder(propName, oam);
             }
-            else if(m.getName().startsWith("remove")){
+            else if(m.getName().startsWith("remove") && isClassAllowed(m.getDeclaringClass(), exclusions)){
                 String propName = m.getName().substring(6);
                 ObjectAndMethod oam = new ObjectAndMethod(model, m);
                 validateUniqueMethod(propName, MODEL_TYPE, oam, storage.getAllModelPropAdders());
@@ -144,13 +143,13 @@ class ScanParser {
                 logger.trace("Adding view property setter to storage. Property: {} | Setter: {}", propName, cam.toString());
                 storage.addViewPropSetter(propName, cam);
             }
-            else if(m.getName().startsWith("add")){
+            else if(m.getName().startsWith("add") && isClassAllowed(m.getDeclaringClass(), exclusions)){
                 String propName = m.getName().substring(3);
                 ClassAndMethod cam = new ClassAndMethod(viewType, m);
                 logger.trace("Adding view property adder to storage. Property: {} | Adder: {}", propName, cam.toString());
                 storage.addViewPropAdder(propName, cam);
             }
-            else if(m.getName().startsWith("remove")){
+            else if(m.getName().startsWith("remove") && isClassAllowed(m.getDeclaringClass(), exclusions)){
                 String propName = m.getName().substring(6);
                 ClassAndMethod cam = new ClassAndMethod(viewType, m);
                 logger.trace("Adding view property remover to storage. Property: {} | Remover: {}", propName, cam.toString());

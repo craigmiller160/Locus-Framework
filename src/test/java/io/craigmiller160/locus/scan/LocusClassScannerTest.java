@@ -20,7 +20,6 @@ import io.craigmiller160.locus.TestUtils;
 import io.craigmiller160.locus.annotations.LController;
 import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.util.LocusStorage;
-import io.craigmiller160.locus.util.ScannerExclusions;
 import org.junit.Before;
 import org.junit.Test;
 

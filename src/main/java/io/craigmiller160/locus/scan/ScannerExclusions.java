@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.craigmiller160.locus.util;
+package io.craigmiller160.locus.scan;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Set;

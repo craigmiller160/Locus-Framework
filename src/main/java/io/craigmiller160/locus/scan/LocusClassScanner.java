@@ -20,7 +20,6 @@ import io.craigmiller160.locus.annotations.LController;
 import io.craigmiller160.locus.annotations.LModel;
 import io.craigmiller160.locus.annotations.LView;
 import io.craigmiller160.locus.util.LocusStorage;
-import io.craigmiller160.locus.util.ScannerExclusions;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

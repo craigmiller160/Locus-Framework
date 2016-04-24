@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.locus.scan.ScannerExclusions;
+
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.List;

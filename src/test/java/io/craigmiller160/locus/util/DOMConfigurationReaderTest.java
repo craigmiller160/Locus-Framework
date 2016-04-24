@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.util;
 
+import io.craigmiller160.locus.scan.ScannerExclusions;
 import org.junit.Test;
 
 import java.io.IOException;
