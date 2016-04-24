@@ -36,6 +36,7 @@ public class LocusClassScannerTest {
 
     private static final String MODEL_ONE_PATH = "io.craigmiller160.locus.sample.ModelOne";
     private static final String VIEW_ONE_PATH = "io.craigmiller160.locus.sample.ViewOne";
+    private static final String VIEW_THREE_PATH = "io.craigmiller160.locus.sample.ViewThree";
     private static final String CONTROLLER_ONE_PATH = "io.craigmiller160.locus.sample.ControllerOne";
 
     private LocusStorage storage;
@@ -47,6 +48,27 @@ public class LocusClassScannerTest {
         storage = TestUtils.setupStorage();
         scanner = new LocusClassScanner();
     }
+
+    /**
+     * A test of the class scanner performance. This is
+     * generally commented out because it doesn't provide
+     * any valuable JUnit testing results, and instead
+     * is just used at times to test how long the process
+     * takes to run.
+     */
+//    @Test
+//    public void performanceTest(){
+//        long start = System.currentTimeMillis();
+//
+//        scanner.scan(MODEL_ONE_PATH, storage, exclusions);
+//        scanner.scan(VIEW_ONE_PATH, storage, exclusions);
+//        scanner.scan(VIEW_THREE_PATH, storage, exclusions);
+//        scanner.scan(CONTROLLER_ONE_PATH, storage, exclusions);
+//
+//        long end = System.currentTimeMillis();
+//
+//        System.out.println("Time: " + (end - start));
+//    }
 
     @Test
     public void testScanModelClass(){
