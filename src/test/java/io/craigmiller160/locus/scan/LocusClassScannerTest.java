@@ -20,6 +20,7 @@ import io.craigmiller160.locus.TestUtils;
 import io.craigmiller160.locus.annotations.LController;
 import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.util.LocusStorage;
+import io.craigmiller160.locus.util.ScannerExclusions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +40,7 @@ public class LocusClassScannerTest {
 
     private LocusStorage storage;
     private LocusClassScanner scanner;
+    private ScannerExclusions exclusions = new ScannerExclusions();
 
     @Before
     public void before(){
@@ -48,7 +50,7 @@ public class LocusClassScannerTest {
 
     @Test
     public void testScanModelClass(){
-        scanner.scan(MODEL_ONE_PATH, storage);
+        scanner.scan(MODEL_ONE_PATH, storage, exclusions);
         int modelPropSetterCount = storage.getModelPropSetterCount();
         int modelPropGetterCount = storage.getModelPropSetterCount();
         int modelPropAdderCount = storage.getModelPropAdderCount();
@@ -62,17 +64,19 @@ public class LocusClassScannerTest {
 
     @Test
     public void testScanViewClass(){
-        scanner.scan(VIEW_ONE_PATH, storage);
+        scanner.scan(VIEW_ONE_PATH, storage, exclusions);
         int viewPropSetterCount = storage.getViewPropSetterCount();
         int viewPropAdderCount = storage.getViewPropAdderCount();
         int viewPropRemoverCount = storage.getViewPropRemoverCount();
 
         assertEquals("Wrong number of view prop setters", 13, viewPropSetterCount);
+        assertEquals("Wrong number of view prop adders", 1, viewPropAdderCount);
+        assertEquals("Wrong number of view prop removers", 1, viewPropRemoverCount);
     }
 
     @Test
     public void testScanControllerClass(){
-        scanner.scan(CONTROLLER_ONE_PATH, storage);
+        scanner.scan(CONTROLLER_ONE_PATH, storage, exclusions);
         int controllerTypeCount = storage.getControllerCount();
         String name = ControllerOne.class.getAnnotation(LController.class).name();
 
