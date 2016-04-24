@@ -23,11 +23,10 @@ import io.craigmiller160.utils.reflect.ObjectAndMethod;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -229,13 +228,8 @@ public class LocusStorage {
      *
      * @return the controller names.
      */
-    public Set<String> getAllControllerNames(){
-        Set<String> allControllerNames = new HashSet<>();
-        synchronized (this){
-            allControllerNames.addAll(controllerTypes.keySet());
-        }
-
-        return allControllerNames;
+    public synchronized Set<String> getAllControllerNames(){
+        return Collections.unmodifiableSet(controllerTypes.keySet());
     }
 
     /*
@@ -276,13 +270,8 @@ public class LocusStorage {
      * @param propName the name of the property.
      * @return the setter methods for that property.
      */
-    public Collection<ObjectAndMethod> getSettersForModelProp(String propName){
-        List<ObjectAndMethod> result = new ArrayList<>();
-        synchronized (this){
-            result.addAll(modelPropSetters.get(propName));
-        }
-
-        return result;
+    public synchronized Collection<ObjectAndMethod> getSettersForModelProp(String propName){
+        return Collections.unmodifiableCollection(modelPropSetters.get(propName));
     }
 
     /**
@@ -290,13 +279,8 @@ public class LocusStorage {
      *
      * @return all model property setter methods.
      */
-    public Collection<ObjectAndMethod> getAllModelPropSetters(){
-        List<ObjectAndMethod> modelPropSetterValues = new ArrayList<>();
-        synchronized (this){
-            modelPropSetterValues.addAll(modelPropSetters.allValues());
-        }
-
-        return modelPropSetterValues;
+    public synchronized Collection<ObjectAndMethod> getAllModelPropSetters(){
+        return Collections.unmodifiableCollection(modelPropSetters.allValues());
     }
 
     /**
@@ -346,13 +330,8 @@ public class LocusStorage {
      * @param propName the name of the property.
      * @return all getter methods for the property.
      */
-    public Collection<ObjectAndMethod> getGettersForModelProp(String propName){
-        Collection<ObjectAndMethod> result = new ArrayList<>();
-        synchronized (this){
-            result.addAll(modelPropGetters.get(propName));
-        }
-
-        return result;
+    public synchronized Collection<ObjectAndMethod> getGettersForModelProp(String propName){
+        return Collections.unmodifiableCollection(modelPropGetters.get(propName));
     }
 
     /**
@@ -360,13 +339,8 @@ public class LocusStorage {
      *
      * @return all model getter methods.
      */
-    public Collection<ObjectAndMethod> getAllModelPropGetters(){
-        List<ObjectAndMethod> modelPropGetterValues = new ArrayList<>();
-        synchronized (this){
-            modelPropGetterValues.addAll(modelPropGetters.allValues());
-        }
-
-        return modelPropGetterValues;
+    public synchronized Collection<ObjectAndMethod> getAllModelPropGetters(){
+        return Collections.unmodifiableCollection(modelPropGetters.allValues());
     }
 
     /**
@@ -416,13 +390,8 @@ public class LocusStorage {
      * @param propName the name of the property.
      * @return the model adder methods for that property.
      */
-    public Collection<ObjectAndMethod> getAddersForModelProp(String propName){
-        Collection<ObjectAndMethod> result = new ArrayList<>();
-        synchronized (this){
-            result.addAll(modelPropAdders.get(propName));
-        }
-
-        return result;
+    public synchronized Collection<ObjectAndMethod> getAddersForModelProp(String propName){
+        return Collections.unmodifiableCollection(modelPropAdders.get(propName));
     }
 
     /**
@@ -430,12 +399,8 @@ public class LocusStorage {
      *
      * @return all model property adder methods.
      */
-    public Collection<ObjectAndMethod> getAllModelPropAdders(){
-        List<ObjectAndMethod> modelPropAdderValues = new ArrayList<>();
-        synchronized (this){
-            modelPropAdderValues.addAll(modelPropAdders.allValues());
-        }
-        return modelPropAdderValues;
+    public synchronized Collection<ObjectAndMethod> getAllModelPropAdders(){
+        return Collections.unmodifiableCollection(modelPropAdders.allValues());
     }
 
     /**
@@ -486,12 +451,7 @@ public class LocusStorage {
      * @return all remover methods for the property.
      */
     public synchronized Collection<ObjectAndMethod> getRemoversForModelProp(String propName){
-        Collection<ObjectAndMethod> result = new ArrayList<>();
-        synchronized (this){
-            result.addAll(modelPropRemovers.get(propName));
-        }
-
-        return result;
+        return Collections.unmodifiableCollection(modelPropRemovers.get(propName));
     }
 
     /**
@@ -499,12 +459,8 @@ public class LocusStorage {
      *
      * @return all model property remover methods.
      */
-    public Collection<ObjectAndMethod> getAllModelPropRemovers(){
-        List<ObjectAndMethod> modelPropRemoverValues = new ArrayList<>();
-        synchronized (this){
-            modelPropRemoverValues.addAll(modelPropRemovers.allValues());
-        }
-        return modelPropRemoverValues;
+    public synchronized Collection<ObjectAndMethod> getAllModelPropRemovers(){
+        return Collections.unmodifiableCollection(modelPropRemovers.allValues());
     }
 
     public synchronized int getModelPropRemoverCount(){
@@ -549,16 +505,8 @@ public class LocusStorage {
      * @param propName the name of the property.
      * @return all setter methods for the property.
      */
-    public Collection<ClassAndMethod> getSettersForViewProp(String propName){
-        Collection<ClassAndMethod> result = null;
-        synchronized (this){
-            Collection<ClassAndMethod> cams = viewPropSetters.get(propName);
-            if(cams != null){
-                result = new ArrayList<>(cams);
-            }
-        }
-
-        return result;
+    public synchronized Collection<ClassAndMethod> getSettersForViewProp(String propName){
+        return Collections.unmodifiableCollection(viewPropSetters.get(propName));
     }
 
     /**
@@ -566,16 +514,8 @@ public class LocusStorage {
      *
      * @return all view property setter methods.
      */
-    public Collection<ClassAndMethod> getAllViewPropSetters(){
-        Collection<ClassAndMethod> result = new ArrayList<>();
-        synchronized (this){
-            Collection<Collection<ClassAndMethod>> values = viewPropSetters.values();
-            for(Collection<ClassAndMethod> value : values){
-                result.addAll(value);
-            }
-        }
-
-        return result;
+    public synchronized Collection<ClassAndMethod> getAllViewPropSetters(){
+        return Collections.unmodifiableCollection(viewPropSetters.allValues());
     }
 
     /**
@@ -637,16 +577,8 @@ public class LocusStorage {
      * @param clazz the view class to get instances of.
      * @return a collection of WeakReferences to all instances of the view class.
      */
-    public Collection<WeakReference<?>> getViewInstancesForClass(Class<?> clazz){
-        Collection<WeakReference<?>> result = new ArrayList<>();
-        synchronized (this){
-            Collection<WeakReference<?>> value = viewInstances.get(clazz);
-            if(value != null){
-                result.addAll(value);
-            }
-        }
-
-        return result;
+    public synchronized Collection<WeakReference<?>> getViewInstancesForClass(Class<?> clazz){
+        return Collections.unmodifiableCollection(viewInstances.get(clazz));
     }
 
     /*
@@ -688,15 +620,7 @@ public class LocusStorage {
      * @return all view adder methods for the property.
      */
     public synchronized Collection<ClassAndMethod> getAddersForViewProp(String propName){
-        Collection<ClassAndMethod> result = null;
-        synchronized (this){
-            Collection<ClassAndMethod> cams = viewPropAdders.get(propName);
-            if(cams != null){
-                result = new ArrayList<>(cams);
-            }
-        }
-
-        return result;
+        return Collections.unmodifiableCollection(viewPropAdders.get(propName));
     }
 
     /**
@@ -704,16 +628,8 @@ public class LocusStorage {
      *
      * @return all view property adder methods.
      */
-    public Collection<ClassAndMethod> getAllViewPropAdders(){
-        Collection<ClassAndMethod> result = new ArrayList<>();
-        synchronized (this){
-            Collection<Collection<ClassAndMethod>> values = viewPropAdders.values();
-            for(Collection<ClassAndMethod> value : values){
-                result.addAll(value);
-            }
-        }
-
-        return result;
+    public synchronized Collection<ClassAndMethod> getAllViewPropAdders(){
+        return Collections.unmodifiableCollection(viewPropAdders.allValues());
     }
 
     /**
@@ -764,15 +680,15 @@ public class LocusStorage {
      * @return all view remover methods for the property.
      */
     public synchronized Collection<ClassAndMethod> getRemoversForViewProp(String propName){
-        Collection<ClassAndMethod> result = null;
-        synchronized (this){
-            Collection<ClassAndMethod> cams = viewPropRemovers.get(propName);
-            if(cams != null){
-                result = new ArrayList<>(cams);
-            }
-        }
+//        Collection<ClassAndMethod> result = null;
+//        synchronized (this){
+//            Collection<ClassAndMethod> cams = viewPropRemovers.get(propName);
+//            if(cams != null){
+//                result = new ArrayList<>(cams);
+//            }
+//        }
 
-        return result;
+        return Collections.unmodifiableCollection(viewPropRemovers.get(propName));
     }
 
     /**
@@ -780,16 +696,16 @@ public class LocusStorage {
      *
      * @return all view property remover methods.
      */
-    public Collection<ClassAndMethod> getAllViewPropRemovers(){
-        Collection<ClassAndMethod> result = new ArrayList<>();
-        synchronized (this){
-            Collection<Collection<ClassAndMethod>> values = viewPropRemovers.values();
-            for(Collection<ClassAndMethod> value : values){
-                result.addAll(value);
-            }
-        }
+    public synchronized Collection<ClassAndMethod> getAllViewPropRemovers(){
+//        Collection<ClassAndMethod> result = new ArrayList<>();
+//        synchronized (this){
+//            Collection<Collection<ClassAndMethod>> values = viewPropRemovers.values();
+//            for(Collection<ClassAndMethod> value : values){
+//                result.addAll(value);
+//            }
+//        }
 
-        return result;
+        return Collections.unmodifiableCollection(viewPropRemovers.allValues());
     }
 
     /**
@@ -856,13 +772,13 @@ public class LocusStorage {
      *
      * @return all controller class types.
      */
-    public Collection<Class<?>> getAllControllerTypes(){
-        Collection<Class<?>> result = new ArrayList<>();
-        synchronized (this){
-            result.addAll(controllerTypes.values());
-        }
+    public synchronized Collection<Class<?>> getAllControllerTypes(){
+//        Collection<Class<?>> result = new ArrayList<>();
+//        synchronized (this){
+//            result.addAll(controllerTypes.values());
+//        }
 
-        return result;
+        return Collections.unmodifiableCollection(controllerTypes.values());
     }
 
     /**
