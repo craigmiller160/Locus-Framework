@@ -72,6 +72,11 @@ public class Locus {
     private static volatile boolean initialized = false;
 
     /**
+     * A long timestamp for when the initialization process starts.
+     */
+    private static volatile long startTime = -1;
+
+    /**
      * A special object to provide a lock for synchronizing
      * the initialization process, so it can't be called
      * by more than one thread at a time.
@@ -163,7 +168,13 @@ public class Locus {
                 return;
             }
 
+            //If the start time hasn't been set yet, set it to the current timestamp
+            if(startTime <= 0){
+                startTime = System.currentTimeMillis();
+            }
+
             logger.trace("Locus configuration file provided: {}", configFilePath);
+            //Load the locus configuration file into an InputStream
             InputStream iStream = null;
             try{
                 iStream = Locus.class.getClassLoader().getResourceAsStream(configFilePath);
@@ -224,6 +235,11 @@ public class Locus {
                 return;
             }
 
+            //If the start time hasn't been set yet, set it to the current timestamp
+            if(startTime <= 0){
+                startTime = System.currentTimeMillis();
+            }
+
             logger.debug("Initializing Locus Framework");
 
             //Read the configuration file
@@ -257,6 +273,11 @@ public class Locus {
         synchronized (initializeLock){
             if(!isInitializationAllowed(force)){
                 return;
+            }
+
+            //If the start time hasn't been set yet, set it to the current timestamp
+            if(startTime <= 0){
+                startTime = System.currentTimeMillis();
             }
 
             //Clear any pre-existing values
@@ -300,7 +321,10 @@ public class Locus {
             //Set the initialized flag to true
             initialized = true;
 
-            logger.info("Locus Framework initialized");
+            long endTime = System.currentTimeMillis();
+
+            logger.info("Locus Framework initialized. Initialization time: {}ms", (endTime - startTime));
+            startTime = -1;
         }
     }
 
