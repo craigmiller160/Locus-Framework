@@ -16,13 +16,19 @@
 
 package io.craigmiller160.locus.util;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * A class containing global constant values for
  * the Locus framework.
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.0
  */
+@ThreadSafe
 public class LocusConstants {
 
     /**

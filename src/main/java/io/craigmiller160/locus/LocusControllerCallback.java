@@ -21,6 +21,7 @@ import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 import io.craigmiller160.utils.reflect.RemoteInvoke;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,21 +32,36 @@ import java.util.concurrent.Callable;
  * It wraps around an instance of a view, which it
  * is then able to reflective invoke getters on.</p>
  *
+ * <p>All operations interacting with the view callback class will be done via the
+ * UIThreadExecutor implementation registered with this framework.
+ * This ensures that all interactions are always done on the correct
+ * UI Thread. If no implementation is registered, then the default
+ * NoUIThreadExecutor will be used.</p>
+ *
+ * <p><b>THREAD SAFETY:</b> This class is mostly thread-safe. It has
+ * no mutable state, and all interactions with the view callback
+ * object is done on the appropriate UI thread. However, the
+ * safety of the interactions with the view class are only as good
+ * as the provided UIThreadExecutor. If a bad one is provided, or
+ * if one is not provided, then the thread safety of the interactions
+ * with the callback object cannot be guaranteed.</p>
+ *
  * @author craigmiller
  * @version 1.1
  */
+@ThreadSafe
 class LocusControllerCallback {
 
     /**
      * The Callback object.
      */
-    private Object callback;
+    private final Object callback;
 
     /**
      * The UIThreadExecutor for wrapping operations on
      * the appropriate UI Thread.
      */
-    private UIThreadExecutor uiThreadExecutor;
+    private final UIThreadExecutor uiThreadExecutor;
 
     /**
      * Create a new instance of LocusControllerCallback.

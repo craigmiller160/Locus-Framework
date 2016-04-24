@@ -16,15 +16,21 @@
 
 package io.craigmiller160.locus;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * <p>An extension of the LocusException for if a
  * controller requested is not available, either
  * because it doesn't exist or because the developer
  * didn't configure it properly.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.0
  */
+@ThreadSafe
 public class LocusNoControllerException extends LocusException{
 
     public LocusNoControllerException() {

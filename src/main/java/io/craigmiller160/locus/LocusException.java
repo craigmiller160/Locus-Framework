@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * <p>A special exception superclass for wrapping all exceptions
  * thrown by this framework. It is a RuntimeException because
@@ -23,9 +25,13 @@ package io.craigmiller160.locus;
  * by the application, and signal issues that the developer
  * should deal with.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.0
  */
+@ThreadSafe
 public class LocusException extends RuntimeException {
 
     public LocusException() {

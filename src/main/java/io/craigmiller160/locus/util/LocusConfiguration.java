@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.util;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +30,14 @@ import java.util.List;
  * once and then accessed regularly throughout the lifecycle of
  * the application.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class is NOT thread safe, it
+ * provides no protection for its mutable state, and should
+ * be handled accordingly.</p>
+ *
  * @author craigmiller
  * @version 1.2
  */
+@NotThreadSafe
 public class LocusConfiguration {
 
     /**

@@ -25,13 +25,19 @@ import io.craigmiller160.utils.reflect.ReflectiveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * <p>An implementation of LocusScanner to scan individual
  * classes denoted by their full, qualified path name.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable state
+ * and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.1
  */
+@ThreadSafe
 public class LocusClassScanner extends AbstractLocusScanner {
 
     /**

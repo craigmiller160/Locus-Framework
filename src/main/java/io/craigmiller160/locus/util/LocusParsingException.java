@@ -18,13 +18,19 @@ package io.craigmiller160.locus.util;
 
 import io.craigmiller160.locus.LocusException;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * <p>A special exception for if an error occurs while trying to
  * parse the configuration file.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.0
  */
+@ThreadSafe
 public class LocusParsingException extends LocusException {
 
     public LocusParsingException() {

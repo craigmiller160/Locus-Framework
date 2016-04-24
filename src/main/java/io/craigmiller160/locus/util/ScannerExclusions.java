@@ -16,6 +16,7 @@
 
 package io.craigmiller160.locus.util;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -37,16 +38,21 @@ import java.util.TreeSet;
  * its an optional ability to override the exclusions and allow
  * certain classes through anyway.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class is NOT thread-safe. It
+ * offers no protection for its mutable state, and should be
+ * handled accordingly.</p>
+ *
  * @author craigmiller
  * @version 1.0
  */
+@NotThreadSafe
 public class ScannerExclusions {
 
     /**
      * The default package prefixes to exclude. Basically the
      * entire standard java SDK.
      */
-    private Set<String> defaultExclusions = new TreeSet<String>(){{
+    private final Set<String> defaultExclusions = new TreeSet<String>(){{
         add("java.");
         add("javax.");
         add("org.ietf");

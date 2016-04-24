@@ -29,6 +29,7 @@ import io.craigmiller160.utils.reflect.ReflectiveMethodHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Set;
@@ -40,9 +41,13 @@ import static io.craigmiller160.locus.util.LocusConstants.MODEL_TYPE;
  * of scanning individual classes and adding
  * appropriate references to the LocusStorage.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.1
  */
+@ThreadSafe
 class ScanParser {
 
     /**

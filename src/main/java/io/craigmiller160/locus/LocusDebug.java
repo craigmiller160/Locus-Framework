@@ -22,6 +22,7 @@ import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.Set;
 
@@ -35,9 +36,14 @@ import java.util.Set;
  * and will output all the information directly to the
  * console.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class is completely thread-safe.
+ * Its only mutable state is the LocusStorage field, and that class
+ * is properly synchronized and thread safe.</p>
+ *
  * @author craigmiller
  * @version 1.2
  */
+@ThreadSafe
 class LocusDebug {
 
     /**

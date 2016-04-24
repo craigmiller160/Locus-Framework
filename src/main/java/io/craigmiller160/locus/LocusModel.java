@@ -21,6 +21,7 @@ import io.craigmiller160.utils.reflect.FindAndInvoke;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 
 import static io.craigmiller160.locus.util.LocusConstants.ADDER;
@@ -34,12 +35,18 @@ import static io.craigmiller160.locus.util.LocusConstants.SETTER;
  * registered with it. Using reflection, it sets & retrieves
  * property values in those model classes.</p>
  *
- * <p>A wide range of convenience methods are provided here for
- * working with the full range of Java data types.</p>
+ * <p><b>THREAD SAFETY:</b> This class is mostly thread-safe.
+ * Its only mutable static is the LocusStorage field, and that class
+ * is safely synchronized. However, interactions with the model
+ * classes that will be reflectively called by this class have
+ * no guarantee of thread safety. Those classes will need to use
+ * proper synchronization to be safe to access in a multi-threaded
+ * environment.</p>
  *
  * @author craigmiller
  * @version 1.2
  */
+@ThreadSafe
 class LocusModel {
 
     /**

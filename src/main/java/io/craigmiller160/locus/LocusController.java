@@ -23,14 +23,21 @@ import io.craigmiller160.utils.reflect.ObjectCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * <p>One of the core components of the Locus Framework.
  * This class is the component that abstractly links
  * the controllers to the views.</p>
  *
+ * <p><b>THREAD SAFETY: This class is completely thread-safe.
+ * Its only mutable state is the LocusStorage field, and that is properly
+ * synchronized.</b></p>
+ *
  * @author craigmiller
  * @version 1.2
  */
+@ThreadSafe
 class LocusController {
 
     /**
@@ -47,13 +54,14 @@ class LocusController {
     /**
      * The UIThreadExecutorFactory, used primarily for testing.
      */
-    private UIThreadExecutorFactory factory;
+    private final UIThreadExecutorFactory factory;
 
     /**
      * The default constructor for this class.
      */
     LocusController(){
         this.storage = LocusStorage.getInstance();
+        this.factory = null;
     }
 
     /**

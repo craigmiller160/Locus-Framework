@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -35,9 +36,13 @@ import java.io.InputStream;
  * DOM parsing tools to read the XML configuration file and store
  * its values in the Configuration object.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable state, and is therefore
+ * completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.2
  */
+@ThreadSafe
 public class DOMConfigurationReader implements ConfigurationReader{
 
     private static final Logger logger = LoggerFactory.getLogger(DOMConfigurationReader.class);

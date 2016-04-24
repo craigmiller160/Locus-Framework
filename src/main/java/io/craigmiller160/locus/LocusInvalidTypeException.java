@@ -16,6 +16,8 @@
 
 package io.craigmiller160.locus;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * <p>An extension of LocusException for if object types
  * don't match up. This is primarily for the convenience
@@ -24,9 +26,13 @@ package io.craigmiller160.locus;
  * type found doesn't match the type expected, this exception
  * is thrown.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.0
  */
+@ThreadSafe
 public class LocusInvalidTypeException extends LocusException {
 
     public LocusInvalidTypeException() {

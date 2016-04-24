@@ -18,6 +18,7 @@ package io.craigmiller160.locus.util;
 
 import io.craigmiller160.utils.collection.MultiValueMap;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 
@@ -33,9 +34,14 @@ import java.util.Collection;
  * <p>This design has the potential for a performance hit, but only
  * if individual view classes are being instantiated a LOT of times.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class is NOT thread-safe. It
+ * offers no protection for its mutable state, and should be
+ * handled accordingly.</p>
+ *
  * @author craigmiller
  * @version 1.0
  */
+@NotThreadSafe
 public class ViewObjectTracker extends MultiValueMap<Class<?>,WeakReference<?>> {
 
     @Override

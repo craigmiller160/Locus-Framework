@@ -31,19 +31,34 @@ import org.reflections.util.FilterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Set;
 
 /**
  * <p>A LocusScanner implementation designed for scanning
  * packages for annotated classes.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable state
+ * and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.1
  */
+@ThreadSafe
 public class LocusPackageScanner extends AbstractLocusScanner{
 
+    /**
+     * The logger for this class.
+     */
     private static final Logger logger = LoggerFactory.getLogger(LocusPackageScanner.class);
 
+    /**
+     * Create a new LocusPackageScanner. This constructor should
+     * only be directly called for testing, and otherwise this
+     * class should be created by the LocusScannerFactory.
+     *
+     * @see io.craigmiller160.locus.scan.LocusScannerFactory
+     */
     LocusPackageScanner(){}
 
     @Override

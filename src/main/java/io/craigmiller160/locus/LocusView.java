@@ -27,16 +27,34 @@ import io.craigmiller160.utils.reflect.RemoteInvoke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * <p>The Locus component that manages access to the view classes.</p>
+ * <p>The Locus component that manages access to the view classes. It
+ * has the ability to update values in a view class, as well as register
+ * view instances with the storage.</p>
+ *
+ * <p>All operations modifying view classes will be done via the
+ * UIThreadExecutor implementation registered with this framework.
+ * This ensures that all changes are always done on the correct
+ * UI Thread. If no implementation is registered, then the default
+ * NoUIThreadExecutor will be used.</p>
+ *
+ * <p><b>THREAD SAFETY:</b> This class is mostly thread-safe.
+ * Its only mutable static is the LocusStorage field, and that class
+ * is safely synchronized. Interactions with view classes, however,
+ * depend on the quality of the provided UIThreadExecutor implementation.
+ * If a bad one is provided, or
+ * if one is not provided, then the thread safety of the interactions
+ * with the callback object cannot be guaranteed.</p>
  *
  * @author craigmiller
  * @version 1.2
  */
+@ThreadSafe
 class LocusView {
 
     /**

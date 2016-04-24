@@ -54,7 +54,7 @@ import static io.craigmiller160.locus.util.LocusConstants.DEFAULT_CONFIG_FILE;
  * to initialize the framework.</p>
  *
  * @author craigmiller
- * @version 1.2
+ * @version 1.3
  */
 @ThreadSafe
 public class Locus {

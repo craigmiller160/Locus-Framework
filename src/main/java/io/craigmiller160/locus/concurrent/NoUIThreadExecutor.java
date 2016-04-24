@@ -19,6 +19,7 @@ package io.craigmiller160.locus.concurrent;
 
 import io.craigmiller160.utils.reflect.ExceptionHandler;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.Callable;
 
 /**
@@ -26,9 +27,13 @@ import java.util.concurrent.Callable;
  * This is a non-concurrent implementation, it executes the provided
  * tasks on the same thread they came from.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.1
  */
+@ThreadSafe
 public class NoUIThreadExecutor implements UIThreadExecutor {
 
     @Override

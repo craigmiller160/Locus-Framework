@@ -16,13 +16,19 @@
 
 package io.craigmiller160.locus.scan;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * <p>A factory class that produces instances
  * of LocusScanner implementations.</p>
  *
+ * <p><b>THREAD SAFETY:</b> This class has no mutable
+ * state and is therefore completely thread-safe.</p>
+ *
  * @author craigmiller
  * @version 1.1
  */
+@ThreadSafe
 public class LocusScannerFactory {
 
     private LocusScannerFactory() {}
