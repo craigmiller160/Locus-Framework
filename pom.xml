@@ -26,7 +26,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <cm160.utils.version>1.1</cm160.utils.version>
+        <cm160.utils.version>1.1.1</cm160.utils.version>
         <java.version>1.7</java.version>
         <junit.version>4.12</junit.version>
         <log4j.version>2.5</log4j.version>
