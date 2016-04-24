@@ -7,6 +7,10 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 
 #### Changelog
 
+**Version 1.3**
++ Improved locking on Locus initialization process to ensure that it cannot be run more than once at a time.
++ Added ability to use Java configuration to build LocusConfiguration and pass it to Locus initialization method.
+
 **Version 1.2**
 + Changed model method scanning & storage. Now methods that have the same name but different params are considered unique, and multiple methods for the same property can be stored.
 + Modified how the configuration file is found. ConfigurationReader now accepts an InputStream, instead of a String. Locus initialization methods have been expanded to accept a stream instead of a String. This allows for better multi-platform (Java vs Android) flexibility.

@@ -158,25 +158,54 @@ public class Locus {
      */
     @SuppressWarnings("unchecked")
     public static void initialize(String configFilePath, boolean force){
-        logger.trace("Locus configuration file provided: {}", configFilePath);
-        InputStream iStream = null;
-        try{
-            iStream = Locus.class.getClassLoader().getResourceAsStream(configFilePath);
-            if(iStream == null){
-                throw new LocusException(String.format("No configuration file found as specified path: %s", configFilePath));
+        synchronized (initializeLock){
+            if(!isInitializationAllowed(force)){
+                return;
             }
 
-            initialize(iStream, force);
-        }
-        finally{
-            if(iStream != null){
-                try{
-                    iStream.close();
+            logger.trace("Locus configuration file provided: {}", configFilePath);
+            InputStream iStream = null;
+            try{
+                iStream = Locus.class.getClassLoader().getResourceAsStream(configFilePath);
+                if(iStream == null){
+                    throw new LocusException(String.format("No configuration file found as specified path: %s", configFilePath));
                 }
-                catch(IOException ex){
-                    logger.error("Unable to close configuration reading input stream", ex);
+
+                initialize(iStream, force);
+            }
+            finally{
+                if(iStream != null){
+                    try{
+                        iStream.close();
+                    }
+                    catch(IOException ex){
+                        logger.error("Unable to close configuration reading input stream", ex);
+                    }
                 }
             }
+        }
+    }
+
+    /**
+     * Test if initialization is allowed. Initialization
+     * is only allowed if A) no initialization has been done
+     * yet, or B) the force parameter is true.
+     *
+     * @param force if re-initialization should be forced.
+     * @return true if initialization is allowed.
+     */
+    private static boolean isInitializationAllowed(boolean force){
+        synchronized (initializeLock){
+            //If already initialized,
+            if(initialized && !force){
+                logger.trace("Attempt to initialize already-initialized Locus framework rejected. " +
+                        "To force reinitialization, using initialize(...) method with boolean force argument set to true.");
+                return false;
+            }
+            else if(initialized && force){
+                logger.trace("Forcing re-initialization of the Locus framework");
+            }
+            return true;
         }
     }
 
@@ -191,22 +220,47 @@ public class Locus {
     public static void initialize(InputStream configSource, boolean force){
         //Using this lock here to ensure that the initialization process can't be called by multiple threads simultaneously.
         synchronized (initializeLock){
-            if(initialized && !force){
-                logger.trace("Attempt to initialize already-initialized Locus framework rejected. " +
-                        "To force reinitialization, using initialize(...) method with boolean force argument set to true.");
+            if(!isInitializationAllowed(force)){
                 return;
-            }
-            else if(initialized && force){
-                logger.trace("Forcing re-initialization of the Locus framework");
             }
 
             logger.debug("Initializing Locus Framework");
 
-            //Clear any pre-existing values
-            storage.clear();
-
             //Read the configuration file
             LocusConfiguration config = configReader.readConfiguration(configSource);
+
+            initialize(config, force);
+        }
+    }
+
+    /**
+     * Initialize Locus using Java-based initialization,
+     * where the LocusConfiguration class is built manually
+     * with Java code and passed to this method.
+     *
+     * @param config the LocusConfiguration.
+     */
+    public static void initialize(LocusConfiguration config){
+        initialize(config, false);
+    }
+
+    /**
+     * Initialize Locus using Java-based initialization,
+     * where the LocusConfiguration class is built manually
+     * with Java code and passed to this method. This method has the option to
+     * force a re-initialization.
+     *
+     * @param config the LocusConfiguration.
+     * @param force if re-initialization should be forced.
+     */
+    public static void initialize(LocusConfiguration config, boolean force){
+        synchronized (initializeLock){
+            if(!isInitializationAllowed(force)){
+                return;
+            }
+
+            //Clear any pre-existing values
+            storage.clear();
 
             //Identify the UIThreadExecutor, if a value has been provided
             Class<? extends UIThreadExecutor> clazz = null;
