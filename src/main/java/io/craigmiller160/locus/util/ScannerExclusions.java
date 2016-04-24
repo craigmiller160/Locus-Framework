@@ -20,23 +20,32 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * A special class to store exclusion
- * prefixes for the Scanner. It also
- * has a method to determine if a
- * class falls into one of those
- * exclusions.
+ * <p>A special class to store exclusion and inclusion
+ * prefixes to test when scanning classes for methods.
+ * Both are prefixes that the fully-qualified class
+ * names are tested against to see if they should be
+ * scanned into storage.</p>
  *
- * Created by craigmiller on 3/19/16.
+ * <p>Exclusions are prefixes to NOT scan into the
+ * storage. By default, all standard Java SDK classes
+ * are in the exclusions. This prevents methods inherited
+ * from SDK classes from getting caught up by the scanner,
+ * especially with the likelihood they would cause exceptions
+ * due to the restrictions on identical methods.</p>
+ *
+ * <p>Inclusions are prefixes that SHOULD be scanned. Essentially
+ * its an optional ability to override the exclusions and allow
+ * certain classes through anyway.</p>
+ *
+ * @author craigmiller
+ * @version 1.0
  */
 public class ScannerExclusions {
 
-    /*
-     * List of default exclusions
-     * List of all exclusions
-     * List of inclusions
-     * Utility method to test if a class is excluded
+    /**
+     * The default package prefixes to exclude. Basically the
+     * entire standard java SDK.
      */
-
     private Set<String> defaultExclusions = new TreeSet<String>(){{
         add("java.");
         add("javax.");
@@ -47,29 +56,73 @@ public class ScannerExclusions {
         add("com.sun");
     }};
 
+    /**
+     * The exclusion prefixes.
+     */
     private Set<String> exclusions = new TreeSet<>();
+
+    /**
+     * The inclusion prefixes.
+     */
     private Set<String> inclusions = new TreeSet<>();
 
+    /**
+     * Create a new ScannerExclusions with the default
+     * exclusion values.
+     */
     public ScannerExclusions(){
         exclusions.addAll(defaultExclusions);
     }
 
+    /**
+     * Add a new prefix to be excluded.
+     *
+     * @param exclusion the prefix to be excluded.
+     */
     public void addExclusion(String exclusion){
         exclusions.add(exclusion);
     }
 
+    /**
+     * Add a new prefix to be included.
+     *
+     * @param inclusion the prefix to be included.
+     */
     public void addInclusion(String inclusion){
         inclusions.add(inclusion);
     }
 
+    /**
+     * Get all exclusion prefixes.
+     *
+     * @return all exclusion prefixes.
+     */
     public Set<String> getAllExclusions(){
         return exclusions;
     }
 
+    /**
+     * Get all inclusion prefixes.
+     *
+     * @return all inclusion prefixes.
+     */
     public Set<String> getAllInclusions(){
         return inclusions;
     }
 
+    /**
+     * Test if the provided class is allowed. There
+     * are two tests performed. First, the fully
+     * qualified class name is compared to the
+     * exclusion prefixes. If it matches any of them,
+     * then the second test is performed, and it is
+     * compared to the inclusion prefixes. If a class
+     * matches an exclusion, and doesn't match any inclusion,
+     * it is NOT allowed. Otherwise, it is allowed.
+     *
+     * @param clazz the class to test.
+     * @return true if the class is allowed.
+     */
     public boolean isClassAllowed(Class<?> clazz){
         boolean allowed = true;
         String name = clazz.getName();
@@ -82,6 +135,13 @@ public class ScannerExclusions {
         return allowed;
     }
 
+    /**
+     * Test if the provided class name matches any
+     * of the inclusion prefixes.
+     *
+     * @param name the class name.
+     * @return true if it matches any of the inclusion prefixes.
+     */
     private boolean isIncluded(String name){
         boolean included = false;
         for(String include : inclusions){

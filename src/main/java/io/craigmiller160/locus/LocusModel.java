@@ -29,15 +29,16 @@ import static io.craigmiller160.locus.util.LocusConstants.REMOVER;
 import static io.craigmiller160.locus.util.LocusConstants.SETTER;
 
 /**
- * One of the core components of the Locus Framework.
+ * <p>One of the core components of the Locus Framework.
  * This class handles manipulating data in the models
  * registered with it. Using reflection, it sets & retrieves
- * property values in those model classes.
+ * property values in those model classes.</p>
  *
- * A wide range of convenience methods are provided here for
- * working with the full range of Java data types.
+ * <p>A wide range of convenience methods are provided here for
+ * working with the full range of Java data types.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.2
  */
 class LocusModel {
 

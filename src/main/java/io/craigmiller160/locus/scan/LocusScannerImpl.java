@@ -42,14 +42,15 @@ import java.util.Set;
 import static io.craigmiller160.locus.util.LocusConstants.MODEL_TYPE;
 
 /**
- * The current default implementation of the
- * LocusScanner API.
+ * <p>The current default implementation of the
+ * LocusScanner API.</p>
  *
- * DEPRECATED: As of 4/20/16, this class has been
+ * <p><b>DEPRECATED:</b> As of 4/20/16, this class has been
  * deprecated. Its logic is divided between ScanParser
- * and the new LocusPackageScanner.
+ * and the new LocusPackageScanner.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.0
  */
 @Deprecated
 public class LocusScannerImpl implements LocusScanner {

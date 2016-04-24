@@ -20,18 +20,49 @@ package io.craigmiller160.locus.util;
  * A class containing global constant values for
  * the Locus framework.
  *
- * Created by craigmiller on 4/20/16.
+ * @author craigmiller
+ * @version 1.0
  */
 public class LocusConstants {
 
+    /**
+     * The code indicating a getter method.
+     */
     public static final int GETTER = 101;
+
+    /**
+     * The code indicating a setter method.
+     */
     public static final int SETTER = 102;
+
+    /**
+     * The code indicating an adder method.
+     */
     public static final int ADDER = 103;
+
+    /**
+     * The code indicating a remover method.
+     */
     public static final int REMOVER = 104;
+
+    /**
+     * The default path to the Locus configuration file.
+     */
     public static final String DEFAULT_CONFIG_FILE = "locus.xml";
 
+    /**
+     * The name of a model type.
+     */
     public static final String MODEL_TYPE = "Model";
+
+    /**
+     * The name of a view type.
+     */
     public static final String VIEW_TYPE = "View";
+
+    /**
+     * The name of a controller type.
+     */
     public static final String CONTROLLER_TYPE = "Controller";
 
 }

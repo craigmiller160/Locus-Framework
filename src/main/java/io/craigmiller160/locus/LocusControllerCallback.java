@@ -27,22 +27,46 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * A special callback class for the LocusController.
+ * <p>A special callback class for the LocusController.
  * It wraps around an instance of a view, which it
- * is then able to reflective invoke getters on.
+ * is then able to reflective invoke getters on.</p>
  *
- * Created by craig on 4/6/16.
+ * @author craigmiller
+ * @version 1.1
  */
 class LocusControllerCallback {
 
+    /**
+     * The Callback object.
+     */
     private Object callback;
+
+    /**
+     * The UIThreadExecutor for wrapping operations on
+     * the appropriate UI Thread.
+     */
     private UIThreadExecutor uiThreadExecutor;
 
+    /**
+     * Create a new instance of LocusControllerCallback.
+     *
+     * @param callback the callback object.
+     * @param uiThreadExecutor the UIThreadExecutor.
+     */
     LocusControllerCallback(Object callback, UIThreadExecutor uiThreadExecutor){
         this.callback = callback;
         this.uiThreadExecutor = uiThreadExecutor;
     }
 
+    /**
+     * Get a value from the callback object, by reflectively
+     * invoking a getter method with the optionally provided arguments.
+     *
+     * @param propName the property name.
+     * @param args the optional arguments.
+     * @return the return value of the method.
+     * @throws LocusException if an error occurs.
+     */
     public Object getValue(String propName, Object...args) throws LocusException{
         return uiThreadExecutor.executeOnUIThreadWithResult(new GetValueTask(callback, propName, args));
     }
@@ -57,6 +81,19 @@ class LocusControllerCallback {
         return callback;
     }
 
+    /**
+     * Get a value from the callback object, by reflectively invoking
+     * a getter method with the optionally provided arguments. The
+     * value will be returned in the specified class type, unless the
+     * types do not match, in which case an exception will be thrown.
+     *
+     * @param propName the name of the property.
+     * @param resultType the type of the result.
+     * @param args the optional argument.
+     * @param <T> the type of the result.
+     * @return the return value.
+     * @throws LocusException if an error occurs.
+     */
     public <T> T getValue(String propName, Class<?> resultType, Object...args) throws LocusException{
         Object result = getValue(propName, args);
         if(result == null){
@@ -73,11 +110,11 @@ class LocusControllerCallback {
     }
 
     /**
-     * The get value operation for this class, wrapped in
+     * <p>The get value operation for this class, wrapped in
      * an implementation of the Callable interface. This
      * allows for the operation to be executed synchronously
      * on the UI Thread, using a provided implementation of
-     * UIThreadExecutor.
+     * UIThreadExecutor.</p>
      */
     private static class GetValueTask implements Callable<Object>{
 

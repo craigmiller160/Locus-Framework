@@ -22,10 +22,11 @@ import io.craigmiller160.locus.util.ScannerExclusions;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 
 /**
- * The interface defining the API for scanning elements
- * in the Locus framework.
+ * <p>The interface defining the API for scanning elements
+ * in the Locus framework.</p>
  *
- * Created by craig on 3/16/16.
+ * @author craigmiller
+ * @version 1.0
  */
 public interface LocusScanner {
 

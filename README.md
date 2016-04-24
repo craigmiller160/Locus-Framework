@@ -16,6 +16,7 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 + Package and class based scanning is mutually exclusive. Only one or the other can be specified in the Locus XML configuration.
 + Expanded reflective method calls to include add/remove for collection based operations.
 + Spun off reflection logic into independent CM160-Utils project, and included that project as a dependency.
++ Added UIThreadExecutor logic, which provided a plugin mechanism for client code to ensure that all access to views only occurs on the appropriate UI Thread.
 + Code refactoring and improvements.
 
 **Version 1.0**

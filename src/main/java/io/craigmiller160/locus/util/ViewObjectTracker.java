@@ -22,18 +22,19 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 
 /**
- * A special implementation of MultiValueMap designed for
+ * <p>A special implementation of MultiValueMap designed for
  * tracking views that have been instantiated. It uses the
  * Class type as the key, and a WeakReference to the instantiated
  * view as the value. Every time the collection of WeakReferences
  * is retrieved, it is reviewed for null values, which are then
  * removed. This prevents too much memory from being taken up by
- * useless WeakReferences.
+ * useless WeakReferences.</p>
  *
- * This design has the potential for a performance hit, but only
- * if individual view classes are being instantiated a LOT of times.
+ * <p>This design has the potential for a performance hit, but only
+ * if individual view classes are being instantiated a LOT of times.</p>
  *
- * Created by craig on 3/14/16.
+ * @author craigmiller
+ * @version 1.0
  */
 public class ViewObjectTracker extends MultiValueMap<Class<?>,WeakReference<?>> {
 

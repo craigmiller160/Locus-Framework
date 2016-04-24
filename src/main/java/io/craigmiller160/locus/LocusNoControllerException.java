@@ -17,12 +17,13 @@
 package io.craigmiller160.locus;
 
 /**
- * An extension of the LocusException for if a
+ * <p>An extension of the LocusException for if a
  * controller requested is not available, either
  * because it doesn't exist or because the developer
- * didn't configure it properly.
+ * didn't configure it properly.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.0
  */
 public class LocusNoControllerException extends LocusException{
 

@@ -26,15 +26,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An implementation of LocusScanner to scan individual
- * classes denoted by their full, qualified path name.
+ * <p>An implementation of LocusScanner to scan individual
+ * classes denoted by their full, qualified path name.</p>
  *
- * Created by craig on 4/20/16.
+ * @author craigmiller
+ * @version 1.1
  */
 public class LocusClassScanner extends AbstractLocusScanner {
 
+    /**
+     * The logger for this class.
+     */
     private static final Logger logger = LoggerFactory.getLogger(LocusPackageScanner.class);
 
+    /**
+     * LocusClassScanner instances should be constructed from the
+     * LocusScannerFactory class. This constructor is package-private
+     * only to help facilitate testing.
+     */
     LocusClassScanner(){}
 
     @Override
@@ -47,6 +56,7 @@ public class LocusClassScanner extends AbstractLocusScanner {
         Class<?> clazz = findClass(className);
         logger.debug("Scanning class {}", className);
 
+        //Based on the annotation, use the appropriate parsing method
         if(clazz.getAnnotation(LModel.class) != null){
             parseModelClass(clazz, storage, exclusions);
         }

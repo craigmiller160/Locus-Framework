@@ -19,10 +19,11 @@ package io.craigmiller160.locus.util;
 import io.craigmiller160.locus.LocusException;
 
 /**
- * A special exception for if an error occurs while trying to
- * parse the configuration file.
+ * <p>A special exception for if an error occurs while trying to
+ * parse the configuration file.</p>
  *
- * Created by craig on 3/15/16.
+ * @author craigmiller
+ * @version 1.0
  */
 public class LocusParsingException extends LocusException {
 

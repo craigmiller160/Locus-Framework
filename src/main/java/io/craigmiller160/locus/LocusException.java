@@ -17,13 +17,14 @@
 package io.craigmiller160.locus;
 
 /**
- * A special exception superclass for wrapping all exceptions
+ * <p>A special exception superclass for wrapping all exceptions
  * thrown by this framework. It is a RuntimeException because
  * exceptions thrown by this framework should not be handled
  * by the application, and signal issues that the developer
- * should deal with.
+ * should deal with.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.0
  */
 public class LocusException extends RuntimeException {
 

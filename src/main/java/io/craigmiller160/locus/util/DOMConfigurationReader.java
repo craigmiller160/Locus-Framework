@@ -31,11 +31,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * An implementation of ConfigurationReader that uses Java's
+ * <p>An implementation of ConfigurationReader that uses Java's
  * DOM parsing tools to read the XML configuration file and store
- * its values in the Configuration object.
+ * its values in the Configuration object.</p>
  *
- * Created by craig on 3/15/16.
+ * @author craigmiller
+ * @version 1.2
  */
 public class DOMConfigurationReader implements ConfigurationReader{
 
@@ -62,6 +63,10 @@ public class DOMConfigurationReader implements ConfigurationReader{
     private static final String PREFIX_ATTR = "prefix";
     private static final String CLASS_ATTR = "class";
 
+    /**
+     * The DOMConfigurationReader should be created by the ConfigurationReaderFactory
+     * class. This package-private constructor exists for testing purposes.
+     */
     DOMConfigurationReader(){}
 
     @Override
@@ -114,6 +119,13 @@ public class DOMConfigurationReader implements ConfigurationReader{
         return locusConfig;
     }
 
+    /**
+     * Parse the XML element containing information on the provided
+     * UIThreadExecutor.
+     *
+     * @param uiThreadElement the XML element to parse.
+     * @param locusConfiguration the LocusConfiguration.
+     */
     private void parseUIThreadElement(Element uiThreadElement, LocusConfiguration locusConfiguration){
         NamedNodeMap attrs = uiThreadElement.getAttributes();
         Node clazz = attrs.getNamedItem(CLASS_ATTR);
@@ -123,18 +135,38 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
     }
 
+    /**
+     * Parse the XML element containing the names of the classes
+     * to scan.
+     *
+     * @param classesElement the XML element to parse.
+     * @param locusConfig the LocusConfiguration.
+     */
     private void parseClassesElement(Element classesElement, LocusConfiguration locusConfig){
         //Get the "class" nodes, and parse them
         NodeList classNodes = classesElement.getElementsByTagNameNS(NAMESPACE, CLASS_NODE);
         parseClassNodes(classNodes, locusConfig);
     }
 
+    /**
+     * Parse the XML element containing the names of the packages
+     * to scan.
+     *
+     * @param packagesElement the XML element to parse.
+     * @param locusConfig the LocusConfiguration.
+     */
     private void parsePackagesElement(Element packagesElement, LocusConfiguration locusConfig){
         //Get the "package" nodes, and parse them
         NodeList packageNodes = packagesElement.getElementsByTagNameNS(NAMESPACE, PACKAGE_NODE);
         parsePackageNodes(packageNodes, locusConfig);
     }
 
+    /**
+     * Parse the XML element containing the scanning filters.
+     *
+     * @param scanningFiltersElement the XML element to parse.
+     * @param locusConfig the LocusConfiguration.
+     */
     private void parseScanningFiltersElement(Element scanningFiltersElement, LocusConfiguration locusConfig){
         //Get the "exclusions" element, if it exists, and parse all individual exclusions
         NodeList exclusionsElementList = scanningFiltersElement.getElementsByTagNameNS(NAMESPACE, EXCLUSIONS_NODE);
@@ -153,6 +185,12 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
     }
 
+    /**
+     * Parse the XML elements containing the scanner inclusions.
+     *
+     * @param inclusionNodes the XML elements to parse.
+     * @param locusConfig the LocusConfiguration.
+     */
     private void parseInclusionNodes(NodeList inclusionNodes, LocusConfiguration locusConfig){
         for(int i = 0; i < inclusionNodes.getLength(); i++){
             //For each "inclusion" element, get its prefix attribute and add it to configuration
@@ -169,6 +207,12 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
     }
 
+    /**
+     * Parse the XML elements containing the scanner exclusions.
+     *
+     * @param exclusionNodes the XML elements to parse.
+     * @param locusConfig the LocusConfiguration.
+     */
     private void parseExclusionNodes(NodeList exclusionNodes, LocusConfiguration locusConfig){
         for(int i = 0; i < exclusionNodes.getLength(); i++){
             //For each "exclusion" element, get its prefix attribute and add it to configuration
@@ -185,6 +229,13 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
     }
 
+    /**
+     * Parse the XML elements that each contain an individual class
+     * to scan.
+     *
+     * @param classNodes the XML elements to parse.
+     * @param locusConfig the LocusConfiguration.
+     */
     private void parseClassNodes(NodeList classNodes, LocusConfiguration locusConfig){
         for(int i = 0; i < classNodes.getLength(); i++){
             //For each "class" element, get its class attribute and add it to the configuration
@@ -201,6 +252,13 @@ public class DOMConfigurationReader implements ConfigurationReader{
         }
     }
 
+    /**
+     * Parse the XML elements each containing the name of an
+     * individual package to scan.
+     *
+     * @param packageNodes the XML elements to parse.
+     * @param locusConfig the LocusConfiguration.
+     */
     private void parsePackageNodes(NodeList packageNodes, LocusConfiguration locusConfig){
         for(int i = 0; i < packageNodes.getLength(); i++){
             //For each "package" element, get its name attribute and add it to the configuration

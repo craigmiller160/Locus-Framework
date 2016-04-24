@@ -20,30 +20,64 @@ import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.locus.util.ScannerExclusions;
 
 /**
- * Abstract implementation of the LocusScanner
+ * <p>Abstract implementation of the LocusScanner
  * interface, providing helper methods for parsing.
  * The parsing methods use a separate, common class
  * for doing the actual paring operations, thus
- * increasing the flexibility of this class.
+ * increasing the flexibility of this class.</p>
  *
- * Created by craig on 4/20/16.
+ * @author craigmiller
+ * @version 1.1
  */
 public abstract class AbstractLocusScanner implements LocusScanner {
 
+    /**
+     * The ScanParser, encapsulating the logic used by all subclasses
+     * to parse scanned classes and add them properly to the storage.
+     */
     private ScanParser parser;
 
+    /**
+     * The constructor for LocusScanner implementations.
+     */
     protected AbstractLocusScanner(){
         this.parser = new ScanParser();
     }
 
+    /**
+     * Parse a model class for any methods that should be added to the
+     * LocusStorage. The ScanParser is used to perform the operations
+     * herein.
+     *
+     * @param modelType the class type of the model class.
+     * @param storage the LocusStorage.
+     * @param exclusions the ScannerExclusions.
+     */
     protected void parseModelClass(Class<?> modelType, LocusStorage storage, ScannerExclusions exclusions){
         parser.parseModelClass(modelType, storage, exclusions);
     }
 
+    /**
+     * Parse a controller class so that it can be added to the
+     * LocusStorage. The ScanParser is used to perform the operations
+     * herein.
+     *
+     * @param controllerType the class type of the controller class.
+     * @param storage the LocusStorage.
+     */
     protected void parseControllerClass(Class<?> controllerType, LocusStorage storage){
         parser.parseControllerClass(controllerType, storage);
     }
 
+    /**
+     * Parse a view class for any methods that should be added to the
+     * LocusStorage. The ScanParser is used to perform the operations
+     * herein.
+     *
+     * @param viewType the class type of the view class.
+     * @param storage the LocusStorage.
+     * @param exclusions the ScannerExclusions.
+     */
     protected void parseViewClass(Class<?> viewType, LocusStorage storage, ScannerExclusions exclusions){
         parser.parseViewClass(viewType, storage, exclusions);
     }

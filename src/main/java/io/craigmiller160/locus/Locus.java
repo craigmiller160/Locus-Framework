@@ -36,22 +36,25 @@ import java.util.List;
 import static io.craigmiller160.locus.util.LocusConstants.DEFAULT_CONFIG_FILE;
 
 /**
- * The central class of the Locus Framework.
+ * <p>The central class of the Locus Framework.
  * This class provides easy, static access to
  * manipulate system resources through its three
- * subclasses.
+ * subclasses.</p>
  *
- * This class is completely thread-safe.
+ * <p>This class is completely thread-safe. Its only mutable
+ * state is a single boolean field that is properly synchronized,
+ * and LocusStorage which has good internal synchronization.</p>
  *
- * IMPORTANT: The Locus configuration file, by default, is
+ * <p><b>IMPORTANT:</b> The Locus configuration file, by default, is
  * loaded using ClassLoader.getResourceAsStream(). This only
  * works on pure-Java implementations. Other Java-based
  * constructs, such as Android, may not work with this
  * approach. Initialization methods that accept InputStreams
  * instead of String paths should be used in these cases
- * to initialize the framework.
+ * to initialize the framework.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.2
  */
 @ThreadSafe
 public class Locus {

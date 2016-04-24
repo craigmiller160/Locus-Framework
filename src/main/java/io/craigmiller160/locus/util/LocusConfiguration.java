@@ -20,16 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class store the configuration values for the
+ * <p>This class store the configuration values for the
  * Locus Framework. It is constructed on application
  * startup by the ConfigurationReader and should be
- * preserved throughout the lifecycle of the application.
+ * preserved throughout the lifecycle of the application.</p>
  *
- * None of these settings are dynamic. They are meant to be set
+ * <p>None of these settings are dynamic. They are meant to be set
  * once and then accessed regularly throughout the lifecycle of
- * the application.
+ * the application.</p>
  *
- * Created by craig on 3/15/16.
+ * @author craigmiller
+ * @version 1.2
  */
 public class LocusConfiguration {
 

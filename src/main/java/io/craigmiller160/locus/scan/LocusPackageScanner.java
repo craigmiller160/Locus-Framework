@@ -34,10 +34,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 
 /**
- * A LocusScanner implementation designed for scanning
- * packages for annotated classes.
+ * <p>A LocusScanner implementation designed for scanning
+ * packages for annotated classes.</p>
  *
- * Created by craig on 4/20/16.
+ * @author craigmiller
+ * @version 1.1
  */
 public class LocusPackageScanner extends AbstractLocusScanner{
 
@@ -64,6 +65,14 @@ public class LocusPackageScanner extends AbstractLocusScanner{
         parseViewClasses(reflections, storage, scannerExclusions);
     }
 
+    /**
+     * Iterate through any model classes found via the package scanning,
+     * and parse them.
+     *
+     * @param reflections the Reflections object to use to find the model classes.
+     * @param storage the LocusStorage.
+     * @param exclusions the ScannerExclusions.
+     */
     private void parseModelClasses(Reflections reflections, LocusStorage storage, ScannerExclusions exclusions){
         Set<Class<?>> models = reflections.getTypesAnnotatedWith(LModel.class);
         for(Class<?> modelType : models){
@@ -71,6 +80,13 @@ public class LocusPackageScanner extends AbstractLocusScanner{
         }
     }
 
+    /**
+     * Iterate through any controller classes found via the package scanning,
+     * and parse them.
+     *
+     * @param reflections the Reflections object to use to find the model classes.
+     * @param storage the LocusStorage.
+     */
     private void parseControllerClasses(Reflections reflections, LocusStorage storage){
         Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(LController.class);
         for(Class<?> controllerType : controllers) {
@@ -78,6 +94,14 @@ public class LocusPackageScanner extends AbstractLocusScanner{
         }
     }
 
+    /**
+     * Iterate through any view classes found via the package scanning,
+     * and parse them.
+     *
+     * @param reflections the Reflections object to use to find the model classes.
+     * @param storage the LocusStorage.
+     * @param exclusions the ScannerExclusions.
+     */
     private void parseViewClasses(Reflections reflections, LocusStorage storage, ScannerExclusions exclusions){
         Set<Class<?>> views = reflections.getTypesAnnotatedWith(LView.class);
         for(Class<?> viewType : views){

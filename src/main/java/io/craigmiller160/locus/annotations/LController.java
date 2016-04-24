@@ -22,10 +22,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A special annotation used to mark that this
- * class is a Controller in this framework.
+ * <p>A special annotation used to mark that this
+ * class is a Controller in this framework.</p>
  *
- * Unlike the LModel or LView annotations, LController
+ * <p>Unlike the LModel or LView annotations, LController
  * requires a single parameter, a String representing
  * its name. This allows it to be called from the convenience
  * methods in the Locus class. It also has an optional parameter
@@ -33,16 +33,32 @@ import java.lang.annotation.Target;
  * one instance of this controller will ever be created.
  * By default, this is false, and a new instance will be
  * created every time a controller is retrieved from the
- * Locus class.
+ * Locus class.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface LController {
 
+    /**
+     * The name of the controller. This attribute is required,
+     * because the name is how the controller will ultimately
+     * be retrieved from the storage.
+     *
+     * @return the name of the controller.
+     */
     String name();
 
+    /**
+     * If the controller is a singleton or not. Being a
+     * singleton means that only one instance of the
+     * controller will ever be created, and every time
+     * it is retrieved that one instance will be shared.
+     *
+     * @return if the controller is a singleton.
+     */
     boolean singleton() default false;
 
 }

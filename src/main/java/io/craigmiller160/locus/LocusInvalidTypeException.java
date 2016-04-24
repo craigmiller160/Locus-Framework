@@ -17,14 +17,15 @@
 package io.craigmiller160.locus;
 
 /**
- * An extension of LocusException for if object types
+ * <p>An extension of LocusException for if object types
  * don't match up. This is primarily for the convenience
  * methods offered by this framework, with its wide variety
  * of types. Internal casting is frequently done, and if the
  * type found doesn't match the type expected, this exception
- * is thrown.
+ * is thrown.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.0
  */
 public class LocusInvalidTypeException extends LocusException {
 

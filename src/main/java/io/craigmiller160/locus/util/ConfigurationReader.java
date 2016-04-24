@@ -19,17 +19,18 @@ package io.craigmiller160.locus.util;
 import java.io.InputStream;
 
 /**
- * The ConfigurationReader handles accessing the xml
+ * <p>The ConfigurationReader handles accessing the xml
  * configuration file for the framework, and returning
- * the configuration values to the application.
+ * the configuration values to the application.</p>
  *
- * Created by craig on 3/15/16.
+ * @author craigmiller
+ * @version 1.2
  */
 public interface ConfigurationReader {
 
     /**
-     * Read the XML configuration file pointed to by the provided
-     * file name and return its values in a LocusConfiguration
+     * Read the XML configuration file provided via the
+     * InputStream and return its values in a LocusConfiguration
      * object.
      *
      * @param configSource the source of the XML configuration.

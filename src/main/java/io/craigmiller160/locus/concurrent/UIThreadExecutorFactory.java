@@ -20,12 +20,13 @@ import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.utils.reflect.ObjectCreator;
 
 /**
- * A factory to provide UIThreadExecutor instances.
+ * <p>A factory to provide UIThreadExecutor instances.
  * It pulls the class type of the UIThreadExecutor
  * from the LocusStorage, and instantiates an
- * instance of it via its factory methods.
+ * instance of it via its factory methods.</p>
  *
- * Created by craig on 4/11/16.
+ * @author craigmiller
+ * @version 1.1
  */
 public class UIThreadExecutorFactory {
 

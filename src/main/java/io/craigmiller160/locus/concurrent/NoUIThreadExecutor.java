@@ -22,11 +22,12 @@ import io.craigmiller160.utils.reflect.ExceptionHandler;
 import java.util.concurrent.Callable;
 
 /**
- * The default implementation of the UIThreadExecutor interface.
+ * <p>The default implementation of the UIThreadExecutor interface.
  * This is a non-concurrent implementation, it executes the provided
- * tasks on the same thread they came from.
+ * tasks on the same thread they came from.</p>
  *
- * Created by craigmiller on 4/11/16.
+ * @author craigmiller
+ * @version 1.1
  */
 public class NoUIThreadExecutor implements UIThreadExecutor {
 

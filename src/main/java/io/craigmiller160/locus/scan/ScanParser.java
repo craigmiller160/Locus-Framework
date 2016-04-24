@@ -36,11 +36,12 @@ import java.util.Set;
 import static io.craigmiller160.locus.util.LocusConstants.MODEL_TYPE;
 
 /**
- * A common class to encapsulate the logic
+ * <p>A common class to encapsulate the logic
  * of scanning individual classes and adding
- * appropriate references to the LocusStorage.
+ * appropriate references to the LocusStorage.</p>
  *
- * Created by craig on 4/20/16.
+ * @author craigmiller
+ * @version 1.1
  */
 class ScanParser {
 

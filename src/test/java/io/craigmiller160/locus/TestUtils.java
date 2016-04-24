@@ -133,8 +133,8 @@ public class TestUtils {
             }
         }
 
-        storage.addViewInstance(viewOne.getClass(), viewOne);
-        storage.addViewInstance(viewThree.getClass(), viewThree);
+        storage.addViewInstance(viewOne);
+        storage.addViewInstance(viewThree);
 
         Map<Class<?>,Object> views = new HashMap<>();
         views.put(viewOne.getClass(), viewOne);

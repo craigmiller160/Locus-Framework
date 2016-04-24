@@ -26,16 +26,33 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * A special class that simply serves to output a log
- * of all Locus configuration data at the TRACE level,
- * so it can be viewed by folks debugging the application.
+ * <p>A special class that simply serves to output a log
+ * of all Locus configuration data. There are two main ways
+ * this information is outputted. logLocusConfiguration()
+ * used the logger, and the information will be outputted
+ * to any logging targets configured. outputLocusConfigurationToConsole()
+ * is specifically designed for more temporary debugging,
+ * and will output all the information directly to the
+ * console.</p>
  *
- * Created by craigmiller on 4/6/16.
+ * @author craigmiller
+ * @version 1.2
  */
 class LocusDebug {
 
+    /**
+     * The LocusStorage.
+     */
     private LocusStorage storage;
+
+    /**
+     * The Logger for this class.
+     */
     private static final Logger logger = LoggerFactory.getLogger(LocusDebug.class);
+
+    /*
+     * Repetitive values are all constants for consistency.
+     */
 
     private static final String CONFIG_OUTPUT_TITLE = "LOCUS PROPERTY CONFIGURATION";
     private static final String MODEL_OUTPUT_TITLE = "MODEL PROPERTIES";
@@ -53,17 +70,30 @@ class LocusDebug {
     private static final String ADDER_METHOD = "Adders";
     private static final String REMOVER_METHOD = "Removers";
 
+    //The platform-independent line separator
     private static final String LS = System.lineSeparator();
 
+    /**
+     * Create a new instance of LocusDebug.
+     */
     LocusDebug(){
         this.storage = LocusStorage.getInstance();
     }
 
-    //Testing constructor only
+    /**
+     * Create a new instance of LocusDebug, used
+     * for testing purposes only.
+     *
+     * @param storage the LocusStorage.
+     */
     LocusDebug(LocusStorage storage){
         this.storage = storage;
     }
 
+    /**
+     * Output all Locus configuration values using the logger
+     * configured for the application.
+     */
     public void logLocusConfiguration(){
         logger.info("Logging all Locus configuration details. Set logging to lowest level to view details for debugging.");
 
@@ -73,11 +103,17 @@ class LocusDebug {
         logger.trace(getControllerOutput());
     }
 
+    /**
+     * Get the output String for all model property configuration values.
+     *
+     * @return the model property configuration.
+     */
     private String getModelPropertyOutput(){
         StringBuilder builder = new StringBuilder();
 
         builder.append(MODEL_OUTPUT_TITLE).append(LS);
 
+        //Get all property names
         Set<String> propertyNames = storage.getAllModelPropertyNames();
         for(String prop : propertyNames){
             builder.append(String.format(" %-7s: ", PROPERTY_HEADER)).append(prop).append(LS);
@@ -87,6 +123,7 @@ class LocusDebug {
             Collection<ObjectAndMethod> adders = storage.getAddersForModelProp(prop);
             Collection<ObjectAndMethod> removers = storage.getRemoversForModelProp(prop);
 
+            //If there are setters, add their info to the output
             if(setters != null && setters.size() > 0){
                 builder.append(String.format("   %-7s: ", SETTER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : setters){
@@ -94,6 +131,7 @@ class LocusDebug {
                 }
             }
 
+            //If there are getters, add their info to the output
             if(getters != null && getters.size() > 0){
                 builder.append(String.format("   %-7s: ", GETTER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : getters){
@@ -101,6 +139,7 @@ class LocusDebug {
                 }
             }
 
+            //If there are adders,add their info to the output
             if(adders != null && adders.size() > 0){
                 builder.append(String.format("   %-7s: ", ADDER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : adders){
@@ -108,6 +147,7 @@ class LocusDebug {
                 }
             }
 
+            //If there are removers, add their info to the output
             if(removers != null && removers.size() > 0){
                 builder.append(String.format("   %-7s: ", REMOVER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : removers){
@@ -119,17 +159,26 @@ class LocusDebug {
         return builder.toString();
     }
 
+    //TODO this will need to be updated to have information about view instances
+
+    /**
+     * Get the output String for all view property configuration values.
+     *
+     * @return the view property configuration.
+     */
     private String getViewPropertyOutput(){
         StringBuilder builder = new StringBuilder();
 
         builder.append(VIEW_OUTPUT_TITLE).append(LS);
 
+        //Get all view property names
         Set<String> propertyNames = storage.getAllViewPropNames();
         for(String prop : propertyNames){
             Collection<ClassAndMethod> setters = storage.getSettersForViewProp(prop);
             Collection<ClassAndMethod> adders = storage.getAddersForViewProp(prop);
             Collection<ClassAndMethod> removers = storage.getRemoversForViewProp(prop);
 
+            //If there are setters, add them to output
             if(setters != null && setters.size() > 0){
                 builder.append(String.format("   %-7s: ", SETTER_METHOD)).append(LS);
                 for(ClassAndMethod cam : setters){
@@ -137,6 +186,7 @@ class LocusDebug {
                 }
             }
 
+            //If there are adders, add them to output
             if(adders != null && adders.size() > 0){
                 builder.append(String.format("   %-7s: ", ADDER_METHOD)).append(LS);
                 for(ClassAndMethod cam : adders){
@@ -144,6 +194,7 @@ class LocusDebug {
                 }
             }
 
+            //If there are removers, add them to output
             if(removers != null && removers.size() > 0){
                 builder.append(String.format("   %-7s: ", REMOVER_METHOD)).append(LS);
                 for(ClassAndMethod cam : removers){
@@ -155,6 +206,13 @@ class LocusDebug {
         return builder.toString();
     }
 
+    //TODO information on controller callbacks needs to be added to this output
+
+    /**
+     * Get the output String for all controller configuration values.
+     *
+     * @return the controller configuration.
+     */
     private String getControllerOutput(){
         StringBuilder builder = new StringBuilder();
 
@@ -170,6 +228,9 @@ class LocusDebug {
         return builder.toString();
     }
 
+    /**
+     * Output all Locus configuration values to the console.
+     */
     public void outputLocusConfigurationToConsole(){
         System.out.println(CONFIG_OUTPUT_TITLE);
         System.out.println(getModelPropertyOutput());

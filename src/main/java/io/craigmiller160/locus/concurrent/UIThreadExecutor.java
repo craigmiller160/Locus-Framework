@@ -19,38 +19,39 @@ package io.craigmiller160.locus.concurrent;
 import java.util.concurrent.Callable;
 
 /**
- * A special interface for using this framework
+ * <p>A special interface for using this framework
  * in multi-threaded environments. If an implementation
  * is provided in the framework configuration,
  * any locus actions to set or get values from a view
  * class will pass through these methods. This allows
  * client code to ensure that they are being executed
- * properly, no matter what UI toolkit is being used.
+ * properly, no matter what UI toolkit is being used.</p>
  *
- * How effective the thread safety of implementations
+ * <p>How effective the thread safety of implementations
  * are is up to the client code that provides it.
  * Generally, to implement this properly, assume that
  * calls could either come from the UI Thread or from
  * a background thread, and structure the implementation
- * accordingly.
+ * accordingly.</p>
  *
- * SUGGESTIONS FOR IMPLEMENTATION:
+ * <p><b>SUGGESTIONS FOR IMPLEMENTATION:</b></p>
  *
- * 1) Test to see if already on the UI thread before
- * implementing special logic.
+ * <p><b>1)</b> Test to see if already on the UI thread before
+ * implementing special logic.</p>
  *
- * 2) All Exceptions must be RuntimeExceptions.
+ * <p><b>2)</b> All Exceptions must be RuntimeExceptions.
  * There is a provided class, ExceptionHandler, that
  * is perfect for parsing and re-throwing Exceptions
- * properly for this.
+ * properly for this.</p>
  *
- * 3) Keep the implementation stateless, ie no instance
+ * <p><b>3)</b> Keep the implementation stateless, ie no instance
  * fields, to maximize its thread safety. This is especially
  * important because this class will be instantiated
- * only once by the framework, and that single instnace
- * will be used for all cases.
+ * only once by the framework, and that single instance
+ * will be used for all cases.</p>
  *
- * Created by craig on 4/9/16.
+ * @author craigmiller
+ * @version 1.1
  */
 public interface UIThreadExecutor {
 

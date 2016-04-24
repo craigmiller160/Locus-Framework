@@ -17,10 +17,11 @@
 package io.craigmiller160.locus.scan;
 
 /**
- * A factory class that produces instances
- * of LocusScanner implementations.
+ * <p>A factory class that produces instances
+ * of LocusScanner implementations.</p>
  *
- * Created by craig on 3/16/16.
+ * @author craigmiller
+ * @version 1.1
  */
 public class LocusScannerFactory {
 

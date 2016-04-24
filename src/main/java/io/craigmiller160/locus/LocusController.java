@@ -24,14 +24,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * One of the core components of the Locus Framework.
+ * <p>One of the core components of the Locus Framework.
  * This class is the component that abstractly links
- * the controllers to the views.
+ * the controllers to the views.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.2
  */
 class LocusController {
 
+    /**
+     * The logger for this class.
+     */
     private static final Logger logger = LoggerFactory.getLogger(LocusController.class);
 
     /**
@@ -40,14 +44,16 @@ class LocusController {
      */
     private final LocusStorage storage;
 
-    private final UIThreadExecutor uiThreadExecutor;
+    /**
+     * The UIThreadExecutorFactory, used primarily for testing.
+     */
+    private UIThreadExecutorFactory factory;
 
     /**
      * The default constructor for this class.
      */
     LocusController(){
         this.storage = LocusStorage.getInstance();
-        this.uiThreadExecutor = UIThreadExecutorFactory.newInstance().getUIThreadExecutor();
     }
 
     /**
@@ -63,18 +69,36 @@ class LocusController {
      */
     LocusController(LocusStorage storage, UIThreadExecutorFactory factory){
         this.storage = storage;
-        this.uiThreadExecutor = factory.getUIThreadExecutor();
+        this.factory = factory;
     }
 
+    /**
+     * Get the LocusControllerCallback wrapper to perform
+     * operations on the callback object.
+     *
+     * @param controller the controller to get the callback for.
+     * @return the LocusControllerCallback.
+     * @throws LocusException if there's no callback for that controller, or if another error occurs.
+     */
     public LocusControllerCallback callback(Object controller) throws LocusException{
         Object callback = storage.getControllerCallback(controller);
         if(callback == null){
             throw new LocusException(String.format("No callback Object assigned to controller"));
         }
 
+        UIThreadExecutor uiThreadExecutor = factory != null ? factory.getUIThreadExecutor() : UIThreadExecutorFactory.newInstance().getUIThreadExecutor();
+
         return new LocusControllerCallback(callback, uiThreadExecutor);
     }
 
+    /**
+     * Get the controller matching the provided name. The controller will
+     * be instantiated if it needs to.
+     *
+     * @param controllerName the name of the controller.
+     * @return the controller.
+     * @throws LocusException if there is no controller by that name, unable to instantiate the controller, or another error occurs.
+     */
     public Object getController(String controllerName) throws LocusException{
         Object controller = null;
 
@@ -105,6 +129,18 @@ class LocusController {
         return controller;
     }
 
+    /**
+     * Get the controller matching the provided name, and ensure that the
+     * return value is of the specified class type, so no casting is needed.
+     * If the controller needs to be, it will be instantiated. If it doesn't
+     * match the provided class type, an exception will be thrown.
+     *
+     * @param controllerName the name of the controller.
+     * @param controllerType the class type it should be returned as.
+     * @param <T> the type of class of the controller.
+     * @return the controller.
+     * @throws LocusException if no controller exists with that name or type, unable to instantiate, or another error occurs.
+     */
     public <T> T getController(String controllerName, Class<T> controllerType) throws LocusException{
         Object controller = getController(controllerName);
 
@@ -116,13 +152,40 @@ class LocusController {
         return (T) controller;
     }
 
+    /**
+     * Get the controller matching the provided name. A callback object
+     * is provided along with it, and that object will be linked
+     * to the controller object returned, so that it can access the
+     * callback if needed. The controller will be instantiated if it needs to.
+     *
+     * @param controllerName the name of the controller.
+     * @param callback the callback module to link it to.
+     * @return the controller matching the provided name.
+     * @throws LocusException if an error occurs.
+     */
     public Object getController(String controllerName, Object callback) throws LocusException{
         Object controller = getController(controllerName);
         storage.addControllerCallback(controller, callback);
         return controller;
     }
 
-    public <T> T getController(String controllerName, Class<T> controllerType, Object callback){
+    /**
+     * Get the controller matching the provided name, and ensure that the
+     * return value is of the specified class type, so no casting is needed. A callback object
+     * is provided along with it, and that object will be linked
+     * to the controller object returned, so that it can access the
+     * callback if needed.
+     * If the controller needs to be, it will be instantiated. If it doesn't
+     * match the provided class type, an exception will be thrown.
+     *
+     * @param controllerName the name of the controller.
+     * @param controllerType the class type the controller should be returned as.
+     * @param callback the callback object.
+     * @param <T> the type of class of the controller.
+     * @return the controller.
+     * @throws LocusException if no controller exists with that name or type, unable to instantiate, or another error occurs.
+     */
+    public <T> T getController(String controllerName, Class<T> controllerType, Object callback) throws LocusException{
         T controller = getController(controllerName, controllerType);
         storage.addControllerCallback(controller, callback);
         return controller;

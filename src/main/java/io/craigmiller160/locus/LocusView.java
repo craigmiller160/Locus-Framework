@@ -32,9 +32,10 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * The Locus component that manages access to the view classes.
+ * <p>The Locus component that manages access to the view classes.</p>
  *
- * Created by craig on 3/12/16.
+ * @author craigmiller
+ * @version 1.2
  */
 class LocusView {
 
@@ -86,7 +87,7 @@ class LocusView {
      * @param view the view to register.
      */
     public void registerView(Object view){
-        storage.addViewInstance(view.getClass(), view);
+        storage.addViewInstance(view);
     }
 
     /**
