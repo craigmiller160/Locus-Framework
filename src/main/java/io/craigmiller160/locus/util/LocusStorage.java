@@ -18,6 +18,7 @@ package io.craigmiller160.locus.util;
 
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.utils.collection.MultiValueMap;
+import io.craigmiller160.utils.collection.SuperWeakHashMap;
 import io.craigmiller160.utils.reflect.ClassAndMethod;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 
@@ -91,7 +92,7 @@ public class LocusStorage {
     private Map<String,Boolean> controllerSingletons;
     private Map<String,Class<?>> controllerTypes;
     private Map<String,Object> controllerSingletonInstances;
-    private Map<Object,Object> controllerCallbacks;
+    private SuperWeakHashMap<Object,Object> controllerCallbacks;
 
     /**
      * The UIThreadExecutor class type.
@@ -135,7 +136,7 @@ public class LocusStorage {
         controllerTypes = new HashMap<>();
         controllerSingletonInstances = new HashMap<>();
 
-        controllerCallbacks = new HashMap<>();
+        controllerCallbacks = new SuperWeakHashMap<>();
     }
 
     /**
