@@ -455,4 +455,205 @@ public class LocusStorageTest {
         assertEquals("AllModelPropRemovers collection has wrong size", 0, oams.size());
     }
 
+    /**
+     * Test adding a view property setter.
+     */
+    @Test
+    public void testAddViewPropSetter(){
+        storage.addViewPropSetter(STRING_FIELD, cam_setStringField_String);
+
+        int viewPropSetterCount = storage.getViewPropSetterCount();
+        assertEquals(String.format("Wrong number of view property setters"), 1, viewPropSetterCount);
+
+        Collection<ClassAndMethod> cams = storage.getSettersForViewProp(STRING_FIELD);
+        assertNotNull(String.format("No setters for view property %s", STRING_FIELD), cams);
+        assertEquals(String.format("Wrong number of setters for view property %s", STRING_FIELD), 1, cams.size());
+
+        cams = storage.getAllViewPropSetters();
+        assertNotNull("AllViewPropSetters collection is null", cams);
+        assertEquals("AllViewPropSetters collection has wrong size", 1, cams.size());
+    }
+
+    /**
+     * Test removing a view property setter.
+     */
+    @Test
+    public void testRemoveViewPropSetter(){
+        storage.addViewPropSetter(STRING_FIELD, cam_setStringField_String);
+
+        //Get a count of view prop setters before proceeding
+        int viewPropSetterCount = storage.getViewPropSetterCount();
+        assertEquals(String.format("Wrong number of view property setters pre-remove"), 1, viewPropSetterCount);
+
+        storage.removeViewPropSetter(cam_setStringField_String);
+
+        viewPropSetterCount = storage.getViewPropSetterCount();
+        assertEquals(String.format("Wrong number of view property setters"), 0, viewPropSetterCount);
+
+        Collection<ClassAndMethod> cams = storage.getSettersForViewProp(STRING_FIELD);
+        assertNull(String.format("There should be no setters for view property %s", STRING_FIELD), cams);
+
+        cams = storage.getAllViewPropSetters();
+        assertNotNull("AllViewPropSetters collection is null", cams);
+        assertEquals("AllViewPropSetters collection has wrong size", 0, cams.size());
+    }
+
+    /**
+     * Test removing all setters for a view property.
+     */
+    @Test
+    public void testRemoveSettersForViewProp(){
+        storage.addViewPropSetter(STRING_FIELD, cam_setStringField_String);
+
+        //Get a count of view prop setters before proceeding
+        int viewPropSetterCount = storage.getViewPropSetterCount();
+        assertEquals(String.format("Wrong number of view property setters pre-remove"), 1, viewPropSetterCount);
+
+        storage.removeSettersForViewProp(STRING_FIELD);
+
+        viewPropSetterCount = storage.getViewPropSetterCount();
+        assertEquals(String.format("Wrong number of view property setters"), 0, viewPropSetterCount);
+
+        Collection<ClassAndMethod> cams = storage.getSettersForViewProp(STRING_FIELD);
+        assertNull(String.format("There should be no setters for view property %s", STRING_FIELD), cams);
+
+        cams = storage.getAllViewPropSetters();
+        assertNotNull("AllViewPropSetters collection is null", cams);
+        assertEquals("AllViewPropSetters collection has wrong size", 0, cams.size());
+    }
+
+    /**
+     * Test adding a view prop adder.
+     */
+    @Test
+    public void testAddViewPropAdder(){
+        storage.addViewPropAdder(STRING, cam_addString_String);
+
+        int viewPropAdderCount = storage.getViewPropAdderCount();
+        assertEquals(String.format("Wrong number of view property adders"), 1, viewPropAdderCount);
+
+        Collection<ClassAndMethod> cams = storage.getAddersForViewProp(STRING);
+        assertNotNull(String.format("No adders for view property %s", STRING), cams);
+        assertEquals(String.format("Wrong number of adders for view property %s", STRING), 1, cams.size());
+
+        cams = storage.getAllViewPropAdders();
+        assertNotNull("AllViewPropAdders collection is null", cams);
+        assertEquals("AllViewPropAdders collection has wrong size", 1, cams.size());
+    }
+
+    /**
+     * Test removing a view property adder.
+     */
+    @Test
+    public void testRemoveViewPropAdder(){
+        storage.addViewPropAdder(STRING, cam_addString_String);
+
+        //Get a count of view prop adders before proceeding
+        int viewPropAdderCount = storage.getViewPropAdderCount();
+        assertEquals(String.format("Wrong number of view property adders pre-remove"), 1, viewPropAdderCount);
+
+        storage.removeViewPropAdder(cam_addString_String);
+
+        viewPropAdderCount = storage.getViewPropAdderCount();
+        assertEquals(String.format("Wrong number of view property adders"), 0, viewPropAdderCount);
+
+        Collection<ClassAndMethod> cams = storage.getAddersForViewProp(STRING);
+        assertNull(String.format("There should be no adders for view property %s", STRING), cams);
+
+        cams = storage.getAllViewPropAdders();
+        assertNotNull("AllViewPropAdders collection is null", cams);
+        assertEquals("AllViewPropAdders collection has wrong size", 0, cams.size());
+    }
+
+    /**
+     * Test removing all view adders for a property.
+     */
+    @Test
+    public void testRemoveViewAddersForProp(){
+        storage.addViewPropAdder(STRING, cam_addString_String);
+
+        //Get a count of view prop adders before proceeding
+        int viewPropAdderCount = storage.getViewPropAdderCount();
+        assertEquals(String.format("Wrong number of view property adders pre-remove"), 1, viewPropAdderCount);
+
+        storage.removeAddersForViewProp(STRING);
+
+        viewPropAdderCount = storage.getViewPropAdderCount();
+        assertEquals(String.format("Wrong number of view property adders"), 0, viewPropAdderCount);
+
+        Collection<ClassAndMethod> cams = storage.getAddersForViewProp(STRING);
+        assertNull(String.format("There should be no adders for view property %s", STRING), cams);
+
+        cams = storage.getAllViewPropAdders();
+        assertNotNull("AllViewPropAdders collection is null", cams);
+        assertEquals("AllViewPropAdders collection has wrong size", 0, cams.size());
+    }
+
+    /**
+     * Test adding a view prop remover.
+     */
+    @Test
+    public void testAddViewPropRemover(){
+        storage.addViewPropRemover(STRING, cam_removeString_String);
+
+        int viewPropRemoverCount = storage.getViewPropRemoverCount();
+        assertEquals(String.format("Wrong number of view property removers"), 1, viewPropRemoverCount);
+
+        Collection<ClassAndMethod> cams = storage.getRemoversForViewProp(STRING);
+        assertNotNull(String.format("No removers for view property %s", STRING), cams);
+        assertEquals(String.format("Wrong number of removers for view property %s", STRING), 1, cams.size());
+
+        cams = storage.getAllViewPropRemovers();
+        assertNotNull("AllViewPropRemovers collection is null", cams);
+        assertEquals("AllViewPropRemovers collection has wrong size", 1, cams.size());
+    }
+
+    /**
+     * Test removing a view prop remover.
+     */
+    @Test
+    public void testRemoveViewPropRemover(){
+        storage.addViewPropRemover(STRING, cam_removeString_String);
+
+        //Get a count of view prop adders before proceeding
+        int viewPropRemoverCount = storage.getViewPropRemoverCount();
+        assertEquals(String.format("Wrong number of view property removers pre-remove"), 1, viewPropRemoverCount);
+
+        storage.removeViewPropRemover(cam_removeString_String);
+
+        viewPropRemoverCount = storage.getViewPropRemoverCount();
+        assertEquals(String.format("Wrong number of view property removers"), 0, viewPropRemoverCount);
+
+        Collection<ClassAndMethod> cams = storage.getRemoversForViewProp(STRING);
+        assertNull(String.format("There should be no removers for view property %s", STRING), cams);
+
+        cams = storage.getAllViewPropRemovers();
+        assertNotNull("AllViewPropRemovers collection is null", cams);
+        assertEquals("AllViewPropRemovers collection has wrong size", 0, cams.size());
+    }
+
+    /**
+     * Test removing all removers for view property.
+     */
+    @Test
+    public void testRemoveViewRemoversForProp(){
+        storage.addViewPropRemover(STRING, cam_removeString_String);
+
+        //Get a count of view prop adders before proceeding
+        int viewPropRemoverCount = storage.getViewPropRemoverCount();
+        assertEquals(String.format("Wrong number of view property removers pre-remove"), 1, viewPropRemoverCount);
+
+        storage.removeRemoversForViewProp(STRING);
+
+        viewPropRemoverCount = storage.getViewPropRemoverCount();
+        assertEquals(String.format("Wrong number of view property removers"), 0, viewPropRemoverCount);
+
+        Collection<ClassAndMethod> cams = storage.getRemoversForViewProp(STRING);
+        assertNull(String.format("There should be no removers for view property %s", STRING), cams);
+
+        cams = storage.getAllViewPropRemovers();
+        assertNotNull("AllViewPropRemovers collection is null", cams);
+        assertEquals("AllViewPropRemovers collection has wrong size", 0, cams.size());
+    }
+
 }

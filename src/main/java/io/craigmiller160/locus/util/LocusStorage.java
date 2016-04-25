@@ -527,7 +527,7 @@ public class LocusStorage {
      *
      * @param propName the name of the property.
      */
-    public synchronized void removeAllSettersForViewProp(String propName){
+    public synchronized void removeSettersForViewProp(String propName){
         viewPropSetters.remove(propName);
     }
 
@@ -653,7 +653,7 @@ public class LocusStorage {
      *
      * @param propName the name of the property.
      */
-    public synchronized void removeAllAddersForViewProp(String propName){
+    public synchronized void removeAddersForViewProp(String propName){
         viewPropAdders.remove(propName);
     }
 
@@ -721,7 +721,7 @@ public class LocusStorage {
      *
      * @param propName the property name.
      */
-    public synchronized void removeAllRemoversForViewProp(String propName){
+    public synchronized void removeRemoversForViewProp(String propName){
         viewPropRemovers.remove(propName);
     }
 
