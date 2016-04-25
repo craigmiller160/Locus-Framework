@@ -11,6 +11,7 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 + Improved locking on Locus initialization process to ensure that it cannot be run more than once at a time.
 + Added ability to use Java configuration to build LocusConfiguration and pass it to Locus initialization method.
 + Fixed bug where scanner exclusions weren't being checked when scanning for adder/remover methods.
++ Modified how controller callbacks are stored. Used the new SuperWeakHashMap class from CM160Utils 1.2 to ensure that no references are being unnecessarily preserved.
 + Minor performance tweaks for initialization process.
 
 **Version 1.2**
