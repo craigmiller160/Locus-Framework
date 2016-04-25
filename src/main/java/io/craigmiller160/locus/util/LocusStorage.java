@@ -64,8 +64,6 @@ import java.util.Set;
 @ThreadSafe
 public class LocusStorage {
 
-    //TODO need a JUnit test case for every single method in this class, after all the times I've changed them
-
     /**
      * The singleton instance of this class.
      */

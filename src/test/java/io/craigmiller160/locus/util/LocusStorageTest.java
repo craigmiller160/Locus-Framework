@@ -17,14 +17,22 @@
 package io.craigmiller160.locus.util;
 
 import io.craigmiller160.locus.TestUtils;
-import io.craigmiller160.locus.concurrent.NoUIThreadExecutor;
+import io.craigmiller160.locus.concurrent.UIThreadExecutor;
+import io.craigmiller160.locus.sample.ModelOne;
+import io.craigmiller160.locus.sample.SampleUIThreadExecutor;
+import io.craigmiller160.locus.sample.ViewOne;
+import io.craigmiller160.utils.reflect.ClassAndMethod;
+import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * A JUnit test class for the LocusStorage class.
@@ -35,15 +43,89 @@ public class LocusStorageTest {
 
     private LocusStorage storage;
 
+    private static final String STRING_FIELD = "StringField";
+    private static final String INT_FIELD = "IntField";
+    private static final String STRING = "String";
+
+    private ObjectAndMethod oam_setStringField_String;
+    private ObjectAndMethod oam_setStringField_Int;
+    private ObjectAndMethod oam_setIntField_Int;
+    private ObjectAndMethod oam_getStringField;
+    private ObjectAndMethod oam_getIntField;
+    private ObjectAndMethod oam_addString_String;
+    private ObjectAndMethod oam_removeString_String;
+
+    private ClassAndMethod cam_setStringField_String;
+    private ClassAndMethod cam_setIntField_Int;
+    private ClassAndMethod cam_getStringField;
+    private ClassAndMethod cam_getIntField;
+    private ClassAndMethod cam_addString_String;
+    private ClassAndMethod cam_removeString_String;
+
+    /**
+     * Setup the ObjectAndMethod fields.
+     *
+     * @throws Exception if unable to set up the fields.
+     */
+    private void setupModelFields() throws Exception{
+        ModelOne modelOne = new ModelOne();
+        Method m1Setter1 = modelOne.getClass().getMethod("setStringField", String.class);
+        oam_setStringField_String = new ObjectAndMethod(modelOne, m1Setter1);
+
+        Method m1Setter2 = modelOne.getClass().getMethod("setStringField", int.class);
+        oam_setStringField_Int = new ObjectAndMethod(modelOne, m1Setter2);
+
+        Method m1Setter3 = modelOne.getClass().getMethod("setIntField", int.class);
+        oam_setIntField_Int = new ObjectAndMethod(modelOne, m1Setter3);
+
+        Method m1Getter1 = modelOne.getClass().getMethod("getStringField");
+        oam_getStringField = new ObjectAndMethod(modelOne, m1Getter1);
+
+        Method m1Getter2 = modelOne.getClass().getMethod("getIntField");
+        oam_getIntField = new ObjectAndMethod(modelOne, m1Getter2);
+
+        Method m1Adder1 = modelOne.getClass().getMethod("addString", String.class);
+        oam_addString_String = new ObjectAndMethod(modelOne, m1Adder1);
+
+        Method m1Remover1 = modelOne.getClass().getMethod("removeString", String.class);
+        oam_removeString_String = new ObjectAndMethod(modelOne, m1Remover1);
+    }
+
+    /**
+     * Setup the view fields.
+     *
+     * @throws Exception if unable to setup fields.
+     */
+    private void setupViewFields() throws Exception{
+        Class<?> clazz = ViewOne.class;
+
+        Method v1setter1 = clazz.getMethod("setStringField", String.class);
+        cam_setStringField_String = new ClassAndMethod(clazz, v1setter1);
+
+        Method v1setter3 = clazz.getMethod("setIntField", int.class);
+        cam_setIntField_Int = new ClassAndMethod(clazz, v1setter3);
+
+        Method v1getter1 = clazz.getMethod("getStringField");
+        cam_getStringField = new ClassAndMethod(clazz, v1getter1);
+
+        Method v1getter2 = clazz.getMethod("getIntField");
+        cam_getIntField = new ClassAndMethod(clazz, v1getter2);
+
+        Method v1adder1 = clazz.getMethod("addString", String.class);
+        cam_addString_String = new ClassAndMethod(clazz, v1adder1);
+
+        Method v1remover1 = clazz.getMethod("removeString", String.class);
+        cam_removeString_String = new ClassAndMethod(clazz, v1remover1);
+    }
+
     /**
      * Setup before each test.
      */
     @Before
-    public void preTest(){
+    public void preTest() throws Exception{
         storage = TestUtils.setupStorage();
-        TestUtils.setupModels(storage);
-        TestUtils.setupViews(storage);
-        TestUtils.setupControllers(storage);
+        setupModelFields();
+        setupViewFields();
     }
 
     /**
@@ -54,6 +136,7 @@ public class LocusStorageTest {
      */
     @Test
     public void testGetAllModelPropsNames(){
+        TestUtils.setupModels(storage);
         Set<String> propNames = storage.getAllModelPropertyNames();
 
         assertNotNull("Model PropNames Set is null", propNames);
@@ -67,6 +150,7 @@ public class LocusStorageTest {
      */
     @Test
     public void testGetAllViewPropNames(){
+        TestUtils.setupViews(storage);
         Set<String> propNames = storage.getAllViewPropNames();
 
         assertNotNull("View PropNames Set is null", propNames);
@@ -78,6 +162,7 @@ public class LocusStorageTest {
      */
     @Test
     public void testGetAllControllerNames(){
+        TestUtils.setupControllers(storage);
         Set<String> controllerNames = storage.getAllControllerNames();
 
         assertNotNull("ControllerNames Set is null", controllerNames);
@@ -85,77 +170,289 @@ public class LocusStorageTest {
     }
 
     /**
-     * Test that all model prop setters were added
-     * correctly.
+     * Test setting and getting the UIThreadExecutor.
      */
     @Test
-    public void testModelPropSetters(){
-        assertEquals("Wrong number of model prop setters", 13, storage.getModelPropSetterCount());
+    public void testSetUiThreadExecutor(){
+        storage.setUIThreadExecutorType(SampleUIThreadExecutor.class);
+
+        Class<? extends UIThreadExecutor> clazz = storage.getUIThreadExecutorType();
+        assertNotNull("UIThreadExecutor class type is null", clazz);
+        assertEquals("UIThreadExecutor class type is wrong type", SampleUIThreadExecutor.class, clazz);
     }
 
     /**
-     * Test that all model prop getters were added correctly.
+     * Test adding a model prop setter
      */
     @Test
-    public void testModelPropGetters(){
-        assertEquals("Wrong number of model prop getters", 13, storage.getModelPropGetterCount());
+    public void testAddModelPropSetter(){
+        storage.addModelPropSetter(STRING_FIELD, oam_setStringField_String);
+
+        int modelPropSetterCount = storage.getModelPropSetterCount();
+        assertEquals(String.format("Wrong number of model property setters"), 1, modelPropSetterCount);
+
+        Collection<ObjectAndMethod> oams = storage.getSettersForModelProp(STRING_FIELD);
+        assertNotNull(String.format("No setters for model property %s", STRING_FIELD), oams);
+        assertEquals(String.format("Wrong number of setters for model property %s", STRING_FIELD), 1, oams.size());
+
+        oams = storage.getAllModelPropSetters();
+        assertNotNull("AllModelPropSetters collection is null", oams);
+        assertEquals("AllModelPropSetters collection has wrong size", 1, oams.size());
     }
 
     /**
-     * Test that all model prop adders were added correctly.
+     * Test removing a model prop setter.
      */
     @Test
-    public void testModelPropAdders(){
-        assertEquals("Wrong number of model prop adders", 1, storage.getModelPropAdderCount());
+    public void testRemoveModelPropSetter(){
+        storage.addModelPropSetter(STRING_FIELD, oam_setStringField_String);
+        storage.addModelPropSetter(STRING_FIELD, oam_setStringField_Int);
+
+        //Test the overall size before proceeding
+        int modelPropSetterCount = storage.getModelPropSetterCount();
+        assertEquals(String.format("Wrong number of model property setters pre-remove"), 2, modelPropSetterCount);
+
+        storage.removeModelPropSetter(oam_setStringField_Int);
+
+        modelPropSetterCount = storage.getModelPropSetterCount();
+        assertEquals(String.format("Wrong number of model property setters"), 1, modelPropSetterCount);
+
+        Collection<ObjectAndMethod> oams = storage.getSettersForModelProp(STRING_FIELD);
+        assertNotNull(String.format("No setters for model property %s", STRING_FIELD), oams);
+        assertEquals(String.format("Wrong number of setters for model property %s", STRING_FIELD), 1, oams.size());
+
+        oams = storage.getAllModelPropSetters();
+        assertNotNull("AllModelPropSetters collection is null", oams);
+        assertEquals("AllModelPropSetters collection has wrong size", 1, oams.size());
     }
 
     /**
-     * Test that all model prop removers were added correctly.
+     * Test removing all setter methods for a model property.
      */
     @Test
-    public void testModelPropRemovers(){
-        assertEquals("Wrong number of model prop removers", 1, storage.getModelPropRemoverCount());
+    public void testRemoveAllSettersForModelProp(){
+        storage.addModelPropSetter(STRING_FIELD, oam_setStringField_String);
+        storage.addModelPropSetter(STRING_FIELD, oam_setStringField_Int);
+
+        //Test the overall size before proceeding
+        int modelPropSetterCount = storage.getModelPropSetterCount();
+        assertEquals(String.format("Wrong number of model property setters pre-remove"), 2, modelPropSetterCount);
+
+        storage.removeSettersForModelProp(STRING_FIELD);
+
+        modelPropSetterCount = storage.getModelPropSetterCount();
+        assertEquals(String.format("Wrong number of model property setters"), 0, modelPropSetterCount);
+
+        Collection<ObjectAndMethod> oams = storage.getSettersForModelProp(STRING_FIELD);
+        assertNull(String.format("Setters should not exist for model property %s", STRING_FIELD), oams);
+
+        oams = storage.getAllModelPropSetters();
+        assertNotNull("AllModelPropSetters collection is null", oams);
+        assertEquals("AllModelPropSetters collection has wrong size", 0, oams.size());
     }
 
     /**
-     * Test that all controllers were added correctly.
+     * Test adding a new model prop getter method.
      */
     @Test
-    public void testControllers() {
-        assertEquals("Wrong number of controllers", 2, storage.getControllerCount());
+    public void testAddModelPropGetter(){
+        storage.addModelPropGetter(STRING_FIELD, oam_getStringField);
+
+        int modelPropGetterCount = storage.getModelPropGetterCount();
+        assertEquals(String.format("Wrong number of model property getters"), 1, modelPropGetterCount);
+
+        Collection<ObjectAndMethod> oams = storage.getGettersForModelProp(STRING_FIELD);
+        assertNotNull(String.format("No getters for model property %s", STRING_FIELD), oams);
+        assertEquals(String.format("Wrong number of getters for model property %s", STRING_FIELD), 1, oams.size());
+
+        oams = storage.getAllModelPropGetters();
+        assertNotNull("AllModelPropGetters collection is null", oams);
+        assertEquals("AllModelPropGetters collection has wrong size", 1, oams.size());
     }
 
     /**
-     * Test that the UIThreadExecutor has been set.
+     * Test removing a model prop getter method.
      */
     @Test
-    public void testUIThreadExecutor(){
-        assertNotNull("UIThreadExecutor is null", storage.getUIThreadExecutorType());
-        assertEquals("UIThreadExecutor is the wrong type", NoUIThreadExecutor.class, storage.getUIThreadExecutorType());
+    public void testRemoveModelPropGetter(){
+        storage.addModelPropGetter(STRING_FIELD, oam_getStringField);
+        storage.addModelPropGetter(STRING_FIELD, oam_getIntField);
+
+        //Get a count of model prop getters before proceeding
+        int modelPropGetterCount = storage.getModelPropGetterCount();
+        assertEquals(String.format("Wrong number of model property getters pre-remove"), 2, modelPropGetterCount);
+
+        storage.removeModelPropGetter(oam_getIntField);
+
+        modelPropGetterCount = storage.getModelPropGetterCount();
+        assertEquals(String.format("Wrong number of model property getters"), 1, modelPropGetterCount);
+
+        Collection<ObjectAndMethod> oams = storage.getGettersForModelProp(STRING_FIELD);
+        assertNotNull(String.format("No getters for model property %s", STRING_FIELD), oams);
+        assertEquals(String.format("Wrong number of getters for model property %s", STRING_FIELD), 1, oams.size());
+
+        oams = storage.getAllModelPropGetters();
+        assertNotNull("AllModelPropGetters collection is null", oams);
+        assertEquals("AllModelPropGetters collection has wrong size", 1, oams.size());
     }
 
     /**
-     * Test that all view prop setters were added correctly.
+     * Test removing all getters for a model property.
      */
     @Test
-    public void testViewPropSetters(){
-        assertEquals("Wrong number of view prop setters", 15, storage.getViewPropSetterCount());
+    public void testRemoveGettersForModelProp(){
+        storage.addModelPropGetter(STRING_FIELD, oam_getStringField);
+        storage.addModelPropGetter(STRING_FIELD, oam_getIntField);
+
+        //Get a count of model prop getters before proceeding
+        int modelPropGetterCount = storage.getModelPropGetterCount();
+        assertEquals(String.format("Wrong number of model property getters pre-remove"), 2, modelPropGetterCount);
+
+        storage.removeGettersForModelProp(STRING_FIELD);
+
+        modelPropGetterCount = storage.getModelPropGetterCount();
+        assertEquals(String.format("Wrong number of model property getters"), 0, modelPropGetterCount);
+
+        Collection<ObjectAndMethod> oams = storage.getGettersForModelProp(STRING_FIELD);
+        assertNull(String.format("There should be no getters for model property %s", STRING_FIELD), oams);
+
+        oams = storage.getAllModelPropGetters();
+        assertNotNull("AllModelPropGetters collection is null", oams);
+        assertEquals("AllModelPropGetters collection has wrong size", 0, oams.size());
     }
 
     /**
-     * Test that all view prop adders were added correctly.
+     * Test adding a model prop adder method.
      */
     @Test
-    public void testViewPropAdders(){
-        assertEquals("Wrong number of view prop adders", 1, storage.getViewPropAdderCount());
+    public void testAddModelPropAdder(){
+        storage.addModelPropAdder(STRING, oam_addString_String);
+
+        int modelPropAdderCount = storage.getModelPropAdderCount();
+        assertEquals(String.format("Wrong number of model property adders"), 1, modelPropAdderCount);
+
+        Collection<ObjectAndMethod> oams = storage.getAddersForModelProp(STRING);
+        assertNotNull(String.format("No adders for model property %s", STRING), oams);
+        assertEquals(String.format("Wrong number of adders for model property %s", STRING), 1, oams.size());
+
+        oams = storage.getAllModelPropAdders();
+        assertNotNull("AllModelPropAdders collection is null", oams);
+        assertEquals("AllModelPropAdders collection has wrong size", 1, oams.size());
     }
 
     /**
-     * Test that all view prop removers were added correctly.
+     * Test removeModelPropAdder.
      */
     @Test
-    public void testViewPropRemovers(){
-        assertEquals("Wrong number of view prop removers", 1, storage.getViewPropRemoverCount());
+    public void testRemoveModelPropAdder(){
+        storage.addModelPropAdder(STRING, oam_addString_String);
+
+        //Get a count of model prop getters before proceeding
+        int modelPropAdderCount = storage.getModelPropAdderCount();
+        assertEquals(String.format("Wrong number of model property adders pre-remove"), 1, modelPropAdderCount);
+
+        storage.removeModelPropAdder(oam_addString_String);
+
+        modelPropAdderCount = storage.getModelPropAdderCount();
+        assertEquals(String.format("Wrong number of model property adders"), 0, modelPropAdderCount);
+
+        Collection<ObjectAndMethod> oams = storage.getAddersForModelProp(STRING);
+        assertNull(String.format("There should be no adders for model property %s", STRING), oams);
+
+        oams = storage.getAllModelPropAdders();
+        assertNotNull("AllModelPropAdders collection is null", oams);
+        assertEquals("AllModelPropAdders collection has wrong size", 0, oams.size());
+    }
+
+    /**
+     * Test removing all adders for a model property.
+     */
+    @Test
+    public void testRemoveAddersForModelProp(){
+        storage.addModelPropAdder(STRING, oam_addString_String);
+
+        //Get a count of model prop adders before proceeding
+        int modelPropAdderCount = storage.getModelPropAdderCount();
+        assertEquals(String.format("Wrong number of model property adders pre-remove"), 1, modelPropAdderCount);
+
+        storage.removeAddersForModelProp(STRING);
+
+        modelPropAdderCount = storage.getModelPropAdderCount();
+        assertEquals(String.format("Wrong number of model property adders"), 0, modelPropAdderCount);
+
+        Collection<ObjectAndMethod> oams = storage.getAddersForModelProp(STRING);
+        assertNull(String.format("There should be no adders for model property %s", STRING), oams);
+
+        oams = storage.getAllModelPropAdders();
+        assertNotNull("AllModelPropAdders collection is null", oams);
+        assertEquals("AllModelPropAdders collection has wrong size", 0, oams.size());
+    }
+
+    /**
+     * Test adding a new model prop remover method.
+     */
+    @Test
+    public void testAddModelPropRemover(){
+        storage.addModelPropRemover(STRING, oam_removeString_String);
+
+        int modelPropRemoverCount = storage.getModelPropRemoverCount();
+        assertEquals(String.format("Wrong number of model property removers"), 1, modelPropRemoverCount);
+
+        Collection<ObjectAndMethod> oams = storage.getRemoversForModelProp(STRING);
+        assertNotNull(String.format("No removers for model property %s", STRING), oams);
+        assertEquals(String.format("Wrong number of removers for model property %s", STRING), 1, oams.size());
+
+        oams = storage.getAllModelPropRemovers();
+        assertNotNull("AllModelPropRemovers collection is null", oams);
+        assertEquals("AllModelPropRemovers collection has wrong size", 1, oams.size());
+    }
+
+    /**
+     * Test removing a model prop remover method.
+     */
+    @Test
+    public void testRemoveModelPropRemover(){
+        storage.addModelPropRemover(STRING, oam_removeString_String);
+
+        //Get a count of model prop removers before proceeding
+        int modelPropRemoverCount = storage.getModelPropRemoverCount();
+        assertEquals(String.format("Wrong number of model property removers pre-remove"), 1, modelPropRemoverCount);
+
+        storage.removeModelPropRemover(oam_removeString_String);
+
+        modelPropRemoverCount = storage.getModelPropRemoverCount();
+        assertEquals(String.format("Wrong number of model property removers"), 0, modelPropRemoverCount);
+
+        Collection<ObjectAndMethod> oams = storage.getRemoversForModelProp(STRING);
+        assertNull(String.format("There should be no removers for model property %s", STRING), oams);
+
+        oams = storage.getAllModelPropRemovers();
+        assertNotNull("AllModelPropRemovers collection is null", oams);
+        assertEquals("AllModelPropRemovers collection has wrong size", 0, oams.size());
+    }
+
+    /**
+     * Test removing all removers for a model property.
+     */
+    @Test
+    public void testRemoveRemoversForModelProp(){
+        storage.addModelPropRemover(STRING, oam_removeString_String);
+
+        //Get a count of model prop removers before proceeding
+        int modelPropRemoverCount = storage.getModelPropRemoverCount();
+        assertEquals(String.format("Wrong number of model property removers pre-remove"), 1, modelPropRemoverCount);
+
+        storage.removeRemoversForModelProp(STRING);
+
+        modelPropRemoverCount = storage.getModelPropRemoverCount();
+        assertEquals(String.format("Wrong number of model property removers"), 0, modelPropRemoverCount);
+
+        Collection<ObjectAndMethod> oams = storage.getRemoversForModelProp(STRING);
+        assertNull(String.format("There should be no removers for model property %s", STRING), oams);
+
+        oams = storage.getAllModelPropRemovers();
+        assertNotNull("AllModelPropRemovers collection is null", oams);
+        assertEquals("AllModelPropRemovers collection has wrong size", 0, oams.size());
     }
 
 }
