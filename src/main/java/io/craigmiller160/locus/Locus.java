@@ -175,24 +175,15 @@ public class Locus {
 
             logger.trace("Locus configuration file provided: {}", configFilePath);
             //Load the locus configuration file into an InputStream
-            InputStream iStream = null;
-            try{
-                iStream = Locus.class.getClassLoader().getResourceAsStream(configFilePath);
+            try(InputStream iStream = Locus.class.getClassLoader().getResourceAsStream(configFilePath)){
                 if(iStream == null){
                     throw new LocusException(String.format("No configuration file found as specified path: %s", configFilePath));
                 }
 
                 initialize(iStream, force);
             }
-            finally{
-                if(iStream != null){
-                    try{
-                        iStream.close();
-                    }
-                    catch(IOException ex){
-                        logger.error("Unable to close configuration reading input stream", ex);
-                    }
-                }
+            catch(IOException ex){
+                logger.error("Error while reading configuration from the InputStream", ex);
             }
         }
     }

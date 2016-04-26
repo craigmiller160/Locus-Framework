@@ -35,24 +35,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class DOMConfigurationReaderTest {
 
-    private LocusConfiguration getConfig(String configFile){
+    private LocusConfiguration getConfig(String configFile) throws Exception{
         ConfigurationReader configReader = new DOMConfigurationReader();
 
-        InputStream iStream = null;
         LocusConfiguration locusConfig = null;
-        try{
-            iStream = this.getClass().getClassLoader().getResourceAsStream(configFile);
+        try(InputStream iStream = this.getClass().getClassLoader().getResourceAsStream(configFile)){
             locusConfig = configReader.readConfiguration(iStream);
         }
-        finally{
-            if(iStream != null){
-                try{
-                    iStream.close();
-                }
-                catch(IOException ex){
-                    ex.printStackTrace();
-                }
-            }
+        catch(IOException ex){
+            throw ex;
         }
 
         return locusConfig;
@@ -63,7 +54,7 @@ public class DOMConfigurationReaderTest {
      * with a "packages", and not a "classes", element.
      */
     @Test
-    public void testReadPackageConfiguration(){
+    public void testReadPackageConfiguration() throws Exception{
         LocusConfiguration locusConfig = getConfig("locus.xml");
 
         assertEquals("Wrong number of packages returned", 1, locusConfig.getPackageCount());
@@ -88,7 +79,7 @@ public class DOMConfigurationReaderTest {
      * a "classes", and not a "packages", element.
      */
     @Test
-    public void testReadClassConfiguration(){
+    public void testReadClassConfiguration() throws Exception{
         LocusConfiguration locusConfig = getConfig("locus2.xml");
 
         assertEquals("No packages should've been returned", 0, locusConfig.getPackageCount());
