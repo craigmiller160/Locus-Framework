@@ -98,7 +98,7 @@ public class LocusClassScannerTest {
     @Test
     public void testScanControllerClass(){
         scanner.scan(CONTROLLER_ONE_PATH, storage, exclusions);
-        int controllerTypeCount = storage.getControllerCount();
+        int controllerTypeCount = storage.getControllerTypeCount();
         String name = ControllerOne.class.getAnnotation(LController.class).name();
 
         assertEquals("Wrong number of controller types", 1, controllerTypeCount);

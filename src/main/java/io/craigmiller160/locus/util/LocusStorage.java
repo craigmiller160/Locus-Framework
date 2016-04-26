@@ -608,7 +608,7 @@ public class LocusStorage {
      *
      * @param clazz the view class to remove instances of.
      */
-    public synchronized void removeAllViewInstancesForClass(Class<?> clazz){
+    public synchronized void removeViewInstancesForClass(Class<?> clazz){
         viewInstances.remove(clazz);
     }
 
@@ -624,6 +624,15 @@ public class LocusStorage {
             return Collections.unmodifiableCollection(refs);
         }
         return null;
+    }
+
+    /**
+     * Get a count of all view instances.
+     *
+     * @return a count of view instances.
+     */
+    public synchronized int getViewInstanceCount(){
+        return viewInstances.fullSize();
     }
 
     /*
@@ -817,7 +826,7 @@ public class LocusStorage {
      *
      * @return all controller class types.
      */
-    public synchronized Collection<Class<?>> getAllControllerTypes(){
+    public synchronized Collection<Class<?>> getControllerTypes(){
         return Collections.unmodifiableCollection(controllerTypes.values());
     }
 
@@ -826,7 +835,7 @@ public class LocusStorage {
      *
      * @return a count of all controller class types.
      */
-    public synchronized int getControllerCount(){
+    public synchronized int getControllerTypeCount(){
         return controllerTypes.size();
     }
 
@@ -866,11 +875,19 @@ public class LocusStorage {
         return controllerSingletonInstances.get(name);
     }
 
+    /**
+     * Get a count of all controller singleton instances that have
+     * already been instantiated.
+     *
+     * @return a count of all controller singleton instances.
+     */
+    public synchronized int getControllerSingletonInstanceCount(){
+        return controllerSingletonInstances.size();
+    }
+
     /*
      * Controller Callback Methods
      */
-
-    //TODO since these are views that are the callbacks, they should be WeakRefs!!!!
 
     /**
      * Add a new controller callback object reference, tied to the instance

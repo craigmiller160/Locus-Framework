@@ -75,7 +75,7 @@ public class LocusScannerImpl implements LocusScanner {
         logger.debug("Total view property setters registered: {}", storage.getViewPropSetterCount());
         logger.debug("Total model property setters registered: {}", storage.getModelPropSetterCount());
         logger.debug("Total model property getters registered: {}", storage.getModelPropGetterCount());
-        logger.debug("Total controllers registered: {}", storage.getControllerCount());
+        logger.debug("Total controllers registered: {}", storage.getControllerTypeCount());
     }
 
     @Override

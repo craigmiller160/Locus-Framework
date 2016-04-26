@@ -26,6 +26,7 @@ import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Set;
@@ -46,6 +47,9 @@ public class LocusStorageTest {
     private static final String STRING_FIELD = "StringField";
     private static final String INT_FIELD = "IntField";
     private static final String STRING = "String";
+
+    private ModelOne modelOne;
+    private ViewOne viewOne;
 
     private ObjectAndMethod oam_setStringField_String;
     private ObjectAndMethod oam_setStringField_Int;
@@ -68,7 +72,7 @@ public class LocusStorageTest {
      * @throws Exception if unable to set up the fields.
      */
     private void setupModelFields() throws Exception{
-        ModelOne modelOne = new ModelOne();
+        modelOne = new ModelOne();
         Method m1Setter1 = modelOne.getClass().getMethod("setStringField", String.class);
         oam_setStringField_String = new ObjectAndMethod(modelOne, m1Setter1);
 
@@ -98,6 +102,7 @@ public class LocusStorageTest {
      */
     private void setupViewFields() throws Exception{
         Class<?> clazz = ViewOne.class;
+        viewOne = new ViewOne();
 
         Method v1setter1 = clazz.getMethod("setStringField", String.class);
         cam_setStringField_String = new ClassAndMethod(clazz, v1setter1);
@@ -654,6 +659,57 @@ public class LocusStorageTest {
         cams = storage.getAllViewPropRemovers();
         assertNotNull("AllViewPropRemovers collection is null", cams);
         assertEquals("AllViewPropRemovers collection has wrong size", 0, cams.size());
+    }
+
+    /**
+     * Test adding a view instance
+     */
+    @Test
+    public void testAddViewInstance(){
+        storage.addViewInstance(viewOne);
+
+        assertEquals("Wrong number of view instances", 1, storage.getViewInstanceCount());
+
+        Collection<WeakReference<?>> views = storage.getViewInstancesForClass(ViewOne.class);
+        assertNotNull("View instances collection is null", views);
+        assertEquals("Wrong number of view instances in collection", 1, views.size());
+        assertEquals("Wrong view instance retrieved", viewOne, views.iterator().next().get());
+    }
+
+    /**
+     * Test removing a view instance.
+     */
+    @Test
+    public void testRemoveViewInstance(){
+        storage.addViewInstance(viewOne);
+
+        //Test the initial size to ensure that the adding worked
+        assertEquals("Wrong number of view instances pre-remove", 1, storage.getViewInstanceCount());
+
+        storage.removeViewInstance(viewOne);
+
+        assertEquals("Wrong number of view instances", 0, storage.getViewInstanceCount());
+
+        Collection<WeakReference<?>> views = storage.getViewInstancesForClass(ViewOne.class);
+        assertNull("View instances collection should be null", views);
+    }
+
+    /**
+     * Test removing all view instances for a class.
+     */
+    @Test
+    public void testRemoveViewInstancesForClass(){
+        storage.addViewInstance(viewOne);
+
+        //Test the initial size to ensure that the adding worked
+        assertEquals("Wrong number of view instances pre-remove", 1, storage.getViewInstanceCount());
+
+        storage.removeViewInstancesForClass(viewOne.getClass());
+
+        assertEquals("Wrong number of view instances", 0, storage.getViewInstanceCount());
+
+        Collection<WeakReference<?>> views = storage.getViewInstancesForClass(ViewOne.class);
+        assertNull("View instances collection should be null", views);
     }
 
 }

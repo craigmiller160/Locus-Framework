@@ -48,14 +48,16 @@ public class ViewObjectTracker extends MultiValueMap<Class<?>,WeakReference<?>> 
     public Collection<WeakReference<?>> get(Object key){
         Collection<WeakReference<?>> values = super.get(key);
         Collection<WeakReference<?>> toRemove = getNewCollection();
-        for(WeakReference<?> weakRef : values){
-            if(weakRef.get() == null){
-                toRemove.add(weakRef);
+        if(values != null){
+            for(WeakReference<?> weakRef : values){
+                if(weakRef.get() == null){
+                    toRemove.add(weakRef);
+                }
             }
-        }
 
-        for(WeakReference<?> weakRef : toRemove){
-            values.remove(weakRef);
+            for(WeakReference<?> weakRef : toRemove){
+                values.remove(weakRef);
+            }
         }
 
         return values;
