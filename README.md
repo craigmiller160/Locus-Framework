@@ -7,6 +7,9 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 
 #### Changelog
 
+**Version 1.3.1
++ Fixed NPE in LocusView caused by trying to get an instance of the UIThreadExecutor before initialization was finished.
+
 **Version 1.3**
 + Improved locking on Locus initialization process to ensure that it cannot be run more than once at a time.
 + Added ability to use Java configuration to build LocusConfiguration and pass it to Locus initialization method.

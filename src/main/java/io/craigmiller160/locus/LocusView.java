@@ -68,11 +68,11 @@ class LocusView {
     private final LocusStorage storage;
 
     /**
-     * The UIThreadExecutor, which ensures that all
+     * The UIThreadExecutorFactory, which provides the UIThreadExecutor, which ensures that all
      * operations are safely executed on the appropriate
      * UI Thread.
      */
-    private UIThreadExecutor uiThreadExecutor;
+    private final UIThreadExecutorFactory uiThreadExecutorFactory;
 
     /**
      * This is the main constructor for this class.
@@ -81,7 +81,7 @@ class LocusView {
      */
     LocusView(){
         this.storage = LocusStorage.getInstance();
-        this.uiThreadExecutor = UIThreadExecutorFactory.newInstance().getUIThreadExecutor();
+        this.uiThreadExecutorFactory = UIThreadExecutorFactory.newInstance();
     }
 
     /**
@@ -95,7 +95,7 @@ class LocusView {
      */
     LocusView(LocusStorage storage, UIThreadExecutorFactory factory){
         this.storage = storage;
-        this.uiThreadExecutor = factory.getUIThreadExecutor();
+        this.uiThreadExecutorFactory = factory;
     }
 
     /**
@@ -128,7 +128,7 @@ class LocusView {
      * @throws ReflectiveException if an error occurs.
      */
     public void setValue(String propName, Object... values) throws ReflectiveException{
-        uiThreadExecutor.executeOnUIThread(new SetValueTask(storage, propName, values));
+        uiThreadExecutorFactory.getUIThreadExecutor().executeOnUIThread(new SetValueTask(storage, propName, values));
     }
 
     /**
@@ -140,7 +140,7 @@ class LocusView {
      * @throws ReflectiveException if an error occurs.
      */
     public void addValue(String propName, Object... values) throws ReflectiveException{
-        uiThreadExecutor.executeOnUIThread(new AddValueTask(storage, propName, values));
+        uiThreadExecutorFactory.getUIThreadExecutor().executeOnUIThread(new AddValueTask(storage, propName, values));
     }
 
     /**
@@ -152,7 +152,7 @@ class LocusView {
      * @throws ReflectiveException if an error occurs.
      */
     public void removeValue(String propName, Object... values) throws ReflectiveException{
-        uiThreadExecutor.executeOnUIThread(new RemoveValueTask(storage, propName, values));
+        uiThreadExecutorFactory.getUIThreadExecutor().executeOnUIThread(new RemoveValueTask(storage, propName, values));
     }
 
     /**

@@ -36,6 +36,16 @@ public class UIThreadExecutorFactory {
     private final LocusStorage storage;
 
     /**
+     * A special lock object for the UIThreadExecutor.
+     */
+    private static final Object uiThreadExecutorLock = new Object();
+
+    /**
+     * The UIThreadExecutor instance.
+     */
+    private UIThreadExecutor uiThreadExecutor;
+
+    /**
      * Create a UIThreadExecutorFactory. This constructor
      * is used for creating a new instance via the factory
      * method newInstance().
@@ -71,8 +81,16 @@ public class UIThreadExecutorFactory {
      * @return the UIThreadExector implementation.
      */
     public UIThreadExecutor getUIThreadExecutor(){
-        Class<? extends UIThreadExecutor> clazz = storage.getUIThreadExecutorType();
-        return ObjectCreator.instantiateClass(clazz);
+        if(uiThreadExecutor == null){
+            synchronized (uiThreadExecutorLock){
+                if(uiThreadExecutor == null){
+                    Class<? extends UIThreadExecutor> clazz = storage.getUIThreadExecutorType();
+                    uiThreadExecutor = ObjectCreator.instantiateClass(clazz);
+                }
+            }
+        }
+
+        return uiThreadExecutor;
     }
 
 }
