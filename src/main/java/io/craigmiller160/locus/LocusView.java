@@ -55,7 +55,7 @@ import java.util.Collection;
  * @version 1.2
  */
 @ThreadSafe
-class LocusView {
+public class LocusView {
 
     /**
      * The logger for this class.

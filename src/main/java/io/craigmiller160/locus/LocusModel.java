@@ -47,7 +47,7 @@ import static io.craigmiller160.locus.util.LocusConstants.SETTER;
  * @version 1.2
  */
 @ThreadSafe
-class LocusModel {
+public class LocusModel {
 
     /**
      * The LocusStorage instance containing the classes managed

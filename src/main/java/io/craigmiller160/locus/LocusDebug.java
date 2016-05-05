@@ -44,7 +44,7 @@ import java.util.Set;
  * @version 1.2
  */
 @ThreadSafe
-class LocusDebug {
+public class LocusDebug {
 
     /**
      * The LocusStorage.

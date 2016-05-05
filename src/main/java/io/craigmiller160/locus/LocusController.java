@@ -38,7 +38,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @version 1.2
  */
 @ThreadSafe
-class LocusController {
+public class LocusController {
 
     /**
      * The logger for this class.

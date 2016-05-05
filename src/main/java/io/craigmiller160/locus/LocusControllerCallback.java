@@ -50,7 +50,7 @@ import java.util.concurrent.Callable;
  * @version 1.1
  */
 @ThreadSafe
-class LocusControllerCallback {
+public class LocusControllerCallback {
 
     /**
      * The Callback object.

@@ -7,6 +7,9 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 
 #### Changelog
 
+**Version 1.3.3**
++ Reversed some of the overly-aggressive access level restrictions with the Locus component classes, because the restrictions caused them to not be accessible at all outside of the framework.
+
 **Version 1.3.2**
 + Added isInitialized() method to Locus class so client code can determine if the framework is initialized.
 
