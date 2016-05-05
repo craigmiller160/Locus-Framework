@@ -212,6 +212,17 @@ public class Locus {
     }
 
     /**
+     * Test if the Locus Framework has been initialized.
+     *
+     * @return true if the framework has been initialized.
+     */
+    public static boolean isInitialized(){
+        synchronized (initializeLock){
+            return initialized;
+        }
+    }
+
+    /**
      * Initialize Locus with the configuration
      * provided in the InputStream. This method has the option to
      * force a re-initialization.

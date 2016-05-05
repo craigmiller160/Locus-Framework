@@ -7,6 +7,9 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 
 #### Changelog
 
+**Version 1.3.2**
++ Added isInitialized() method to Locus class so client code can determine if the framework is initialized.
+
 **Version 1.3.1
 + Fixed NPE in LocusView caused by trying to get an instance of the UIThreadExecutor before initialization was finished.
 
