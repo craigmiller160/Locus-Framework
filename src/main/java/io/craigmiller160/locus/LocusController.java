@@ -180,7 +180,7 @@ public class LocusController {
      * @return the controller matching the provided name.
      * @throws LocusException if an error occurs.
      */
-    public Object getController(String controllerName, Object callback) throws LocusException{
+    public Object getControllerWithCallback(String controllerName, Object callback) throws LocusException{
         Object controller = getController(controllerName);
         storage.addControllerCallback(controller, callback);
         return controller;
@@ -202,7 +202,7 @@ public class LocusController {
      * @return the controller.
      * @throws LocusException if no controller exists with that name or type, unable to instantiate, or another error occurs.
      */
-    public <T> T getController(String controllerName, Class<T> controllerType, Object callback) throws LocusException{
+    public <T> T getControllerWithCallback(String controllerName, Class<T> controllerType, Object callback) throws LocusException{
         T controller = getController(controllerName, controllerType);
         storage.addControllerCallback(controller, callback);
         return controller;

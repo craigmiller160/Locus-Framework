@@ -151,7 +151,7 @@ public class LocusControllerTest {
         //Using BigDecimal for the callback because it has a specific value to be tested for
         BigDecimal callback = new BigDecimal(33.3);
 
-        Object cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, callback);
+        Object cOne = locusController.getControllerWithCallback(TestUtils.CONTROLLER_ONE_NAME, callback);
 
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
@@ -169,7 +169,7 @@ public class LocusControllerTest {
     public void testUsingControllerCallback(){
         Object callback = new Object();
 
-        Object cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, callback);
+        Object cOne = locusController.getControllerWithCallback(TestUtils.CONTROLLER_ONE_NAME, callback);
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
 
@@ -194,7 +194,7 @@ public class LocusControllerTest {
         Thread callback = new Thread();
         long value = callback.getId();
 
-        Object cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, callback);
+        Object cOne = locusController.getControllerWithCallback(TestUtils.CONTROLLER_ONE_NAME, callback);
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
 
