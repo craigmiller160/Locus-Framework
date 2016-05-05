@@ -137,6 +137,15 @@ public class LocusController {
         return controller;
     }
 
+    /*
+     * TODO how to add constructor args:
+     *
+     * 1) Varargs argument for the constructor args, provided in the order they exist in the constructor
+     * 2) ObjectCreator gets a new method for instantiating with args
+     * 3) Args get rejected if controller is a singleton, and has already been instantiated. Exception gets thrown in this case
+     * 4) If no args, nothing changes. If args, the arg-instantiation is used.
+     */
+
     /**
      * Get the controller matching the provided name, and ensure that the
      * return value is of the specified class type, so no casting is needed.
