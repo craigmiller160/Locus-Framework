@@ -30,10 +30,7 @@ import static io.craigmiller160.locus.util.LocusConstants.REMOVER;
 import static io.craigmiller160.locus.util.LocusConstants.SETTER;
 
 /**
- * <p>One of the core components of the Locus Framework.
- * This class handles manipulating data in the models
- * registered with it. Using reflection, it sets & retrieves
- * property values in those model classes.</p>
+ * <p>One of the core components of the Locus Framework. It uses reflection to set and retrieve values to and from model properties.</p>
  *
  * <p><b>THREAD SAFETY:</b> This class is mostly thread-safe.
  * Its only mutable static is the LocusStorage field, and that class
@@ -133,6 +130,7 @@ public class LocusModel {
      *
      * @param propName the name of the property to get.
      * @param args any arguments to be passed to the method.
+     * @return the value retrieved from the model class.
      * @throws LocusException if an error occurs.
      */
     public Object getValue(String propName, Object... args) throws LocusException{
@@ -146,6 +144,8 @@ public class LocusModel {
      * @param propName the name of the property to get.
      * @param valueType the class type that the value should be returned as.
      * @param args any arguments to be passed to the method.
+     * @param <T> the type of the value to return.
+     * @return the value retrieved from the model class.
      * @throws LocusException if an error occurs.
      */
     public <T> T getValue(String propName, Class<T> valueType, Object...args) throws LocusException{
