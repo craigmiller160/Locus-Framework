@@ -18,6 +18,7 @@ package io.craigmiller160.locus.util;
 
 import io.craigmiller160.locus.TestUtils;
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
+import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.sample.ModelOne;
 import io.craigmiller160.locus.sample.SampleUIThreadExecutor;
 import io.craigmiller160.locus.sample.ViewOne;
@@ -28,12 +29,14 @@ import org.junit.Test;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A JUnit test class for the LocusStorage class.
@@ -47,6 +50,8 @@ public class LocusStorageTest {
     private static final String STRING_FIELD = "StringField";
     private static final String INT_FIELD = "IntField";
     private static final String STRING = "String";
+
+    private static final String CONTROLLER_ONE_NAME = "ControllerOne";
 
     private ModelOne modelOne;
     private ViewOne viewOne;
@@ -710,6 +715,111 @@ public class LocusStorageTest {
 
         Collection<WeakReference<?>> views = storage.getViewInstancesForClass(ViewOne.class);
         assertNull("View instances collection should be null", views);
+    }
+
+    /**
+     * Test adding a controller class type
+     */
+    @Test
+    public void testAddControllerType(){
+        boolean isSingleton = true;
+        storage.addControllerType(CONTROLLER_ONE_NAME, ControllerOne.class, isSingleton);
+
+        assertEquals("Wrong number of controller types", 1, storage.getControllerTypeCount());
+        assertTrue("Controller should be singleton", storage.isControllerSingleton(CONTROLLER_ONE_NAME));
+        Class<?> clazz = storage.getControllerType(CONTROLLER_ONE_NAME);
+        assertNotNull(String.format("%s class type is null", CONTROLLER_ONE_NAME), clazz);
+        assertEquals(String.format("%s clazz type is incorrect", CONTROLLER_ONE_NAME), ControllerOne.class, clazz);
+    }
+
+    /**
+     * Test removing a controller type.
+     */
+    @Test
+    public void testRemoveControllerType(){
+        boolean isSingleton = true;
+        storage.addControllerType(CONTROLLER_ONE_NAME, ControllerOne.class, isSingleton);
+
+        //Test the initial size to ensure the add worked
+        assertEquals("Wrong number of controller types pre-remove", 1, storage.getControllerTypeCount());
+
+        storage.removeControllerType(CONTROLLER_ONE_NAME);
+
+        assertEquals("Wrong number of controller types", 0, storage.getControllerTypeCount());
+    }
+
+    /**
+     * Test adding a controller singleton instance.
+     */
+    @Test
+    public void testAddControllerSingletonInstance(){
+        ControllerOne controllerOne = new ControllerOne();
+        storage.addControllerSingletonInstance(CONTROLLER_ONE_NAME, controllerOne);
+
+        assertEquals("Wrong number of controller singleton instances", 1, storage.getControllerSingletonInstanceCount());
+        Object instance = storage.getControllerSingletonInstance(CONTROLLER_ONE_NAME);
+        assertNotNull(String.format("%s singleton instance is null", CONTROLLER_ONE_NAME), instance);
+        assertEquals(String.format("%s singleton instance is not valid", CONTROLLER_ONE_NAME), controllerOne, instance);
+    }
+
+    /**
+     * Test removing a controller singleton instance.
+     */
+    @Test
+    public void testRemoveControllerSingletonInstance(){
+        ControllerOne controllerOne = new ControllerOne();
+        storage.addControllerSingletonInstance(CONTROLLER_ONE_NAME, controllerOne);
+
+        //Test the count before the removal, to ensure the add worked
+        assertEquals("Wrong number of controller singleton instances pre-remove", 1, storage.getControllerSingletonInstanceCount());
+
+        storage.removeControllerSingletonIntance(CONTROLLER_ONE_NAME);
+
+        assertEquals("Wrong number of controller singleton instances", 0, storage.getControllerSingletonInstanceCount());
+    }
+
+    /**
+     * Test adding a controller callback, and ensuring that it
+     * is cleared when all strong references are gone.
+     */
+    @Test
+    public void testAddControllerCallback(){
+        BigDecimal callback = new BigDecimal(33.3);
+        ControllerOne controllerOne = new ControllerOne();
+
+        storage.addControllerCallback(controllerOne, callback);
+
+        Object result = storage.getControllerCallback(controllerOne);
+        assertNotNull("Controller callback is null", result);
+        assertEquals("Controller callback is wrong object", callback, result);
+
+        //Clear strong references to test the WeakReference behavior.
+        callback = null;
+        result = null;
+        Runtime.getRuntime().gc();
+
+        result = storage.getControllerCallback(controllerOne);
+        assertNull("Controller callback should be cleared as no strong references exist anymore", result);
+    }
+
+    /**
+     * Test removing a controller callback.
+     */
+    @Test
+    public void testRemoveControllerCallback(){
+        BigDecimal callback = new BigDecimal(33.3);
+        ControllerOne controllerOne = new ControllerOne();
+
+        storage.addControllerCallback(controllerOne, callback);
+
+        //Test that it exists in the first place before removing it
+        Object result = storage.getControllerCallback(controllerOne);
+        assertNotNull("Controller callback is null", result);
+
+        storage.removeControllerCallback(controllerOne);
+
+        result = storage.getControllerCallback(controllerOne);
+        assertNull("Controller callback was not removed", result);
     }
 
 }

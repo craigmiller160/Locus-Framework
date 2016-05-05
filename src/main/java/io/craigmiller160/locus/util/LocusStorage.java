@@ -858,7 +858,7 @@ public class LocusStorage {
      *
      * @param name the name of the controller.
      */
-    public synchronized void remoteControllerSingletonIntance(String name){
+    public synchronized void removeControllerSingletonIntance(String name){
         controllerSingletonInstances.remove(name);
     }
 
