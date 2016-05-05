@@ -7,6 +7,9 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 
 #### Changelog
 
+**Version 1.4**
++ Changed LocusController.getController(...) with a callback object argument to LocusController.getControllerWithCallback(...).
+
 **Version 1.3.3**
 + Reversed some of the overly-aggressive access level restrictions with the Locus component classes, because the restrictions caused them to not be accessible at all outside of the framework.
 + Fixed JavaDoc creation errors
