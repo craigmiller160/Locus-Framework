@@ -71,11 +71,7 @@ public class LocusPackageScannerTest {
         assertEquals("Wrong number of model prop adders", 1, storage.getModelPropAdderCount());
         assertEquals("Wrong number of model prop removers", 1, storage.getModelPropRemoverCount());
 
-        Set<String> controllerNames = storage.getAllControllerNames();
         assertEquals("Wrong number of controller types", 1, controllerTypes.size());
-
-        String name = controllerNames.iterator().next();
-        assertFalse("Controller singleton value should be false", storage.isControllerSingleton(name));
 
         Set<String> viewProps = storage.getAllViewPropNames();
 

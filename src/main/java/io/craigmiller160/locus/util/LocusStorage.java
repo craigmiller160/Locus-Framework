@@ -89,9 +89,7 @@ public class LocusStorage {
     /*
      * The collections of values for working with controllers.
      */
-    private Map<String,Boolean> controllerSingletons;
     private Map<String,Class<?>> controllerTypes;
-    private Map<String,Object> controllerSingletonInstances;
     private SuperWeakHashMap<Object,Object> controllerCallbacks;
 
     /**
@@ -132,9 +130,7 @@ public class LocusStorage {
         viewPropRemovers = new MultiValueMap<>();
         viewInstances = new ViewObjectTracker();
 
-        controllerSingletons = new HashMap<>();
         controllerTypes = new HashMap<>();
-        controllerSingletonInstances = new HashMap<>();
 
         controllerCallbacks = new SuperWeakHashMap<>();
     }
@@ -157,9 +153,7 @@ public class LocusStorage {
         viewPropRemovers.clear();
         viewInstances.clear();
 
-        controllerSingletons.clear();
         controllerTypes.clear();
-        controllerSingletonInstances.clear();
         controllerCallbacks.clear();
 
         uiThreadExecutorType = null;
@@ -781,11 +775,9 @@ public class LocusStorage {
      *
      * @param name the name of the controller.
      * @param clazz the class type of the controller.
-     * @param singleton if the controller is a singleton.
      */
-    public synchronized void addControllerType(String name, Class<?> clazz, boolean singleton){
+    public synchronized void addControllerType(String name, Class<?> clazz){
         controllerTypes.put(name, clazz);
-        controllerSingletons.put(name, singleton);
     }
 
     /**
@@ -797,8 +789,6 @@ public class LocusStorage {
      */
     public synchronized void removeControllerType(String name){
         controllerTypes.remove(name);
-        controllerSingletons.remove(name);
-        controllerSingletonInstances.remove(name);
     }
 
     /**
@@ -809,16 +799,6 @@ public class LocusStorage {
      */
     public synchronized Class<?> getControllerType(String name){
         return controllerTypes.get(name);
-    }
-
-    /**
-     * Get if the controller with the specified name is a singleton.
-     *
-     * @param name the name of the controller.
-     * @return true if the controller is a singleton.
-     */
-    public synchronized boolean isControllerSingleton(String name){
-        return controllerSingletons.get(name);
     }
 
     /**
@@ -837,52 +817,6 @@ public class LocusStorage {
      */
     public synchronized int getControllerTypeCount(){
         return controllerTypes.size();
-    }
-
-    /*
-     * Controller Singleton Instance methods
-     */
-
-    /**
-     * Add a new controller singleton instance.
-     *
-     * @param name the name of the controller.
-     * @param controller the instance of the controller.
-     */
-    public synchronized void addControllerSingletonInstance(String name, Object controller){
-        controllerSingletonInstances.put(name, controller);
-    }
-
-    /**
-     * Remove a controller singleton instance with the provided name.
-     *
-     * @param name the name of the controller.
-     */
-    public synchronized void removeControllerSingletonIntance(String name){
-        controllerSingletonInstances.remove(name);
-    }
-
-    /**
-     * Get the controller singleton instance with the specified
-     * name, or null if no controller instance with that name
-     * exists.
-     *
-     * @param name the name of the controller.
-     * @return the singleton instance of the controller.
-     */
-    public synchronized Object getControllerSingletonInstance(String name){
-        //The Object retrieved may not be thread-safe, but a copy should NOT be returned because the whole point of this is a shared reference
-        return controllerSingletonInstances.get(name);
-    }
-
-    /**
-     * Get a count of all controller singleton instances that have
-     * already been instantiated.
-     *
-     * @return a count of all controller singleton instances.
-     */
-    public synchronized int getControllerSingletonInstanceCount(){
-        return controllerSingletonInstances.size();
     }
 
     /*

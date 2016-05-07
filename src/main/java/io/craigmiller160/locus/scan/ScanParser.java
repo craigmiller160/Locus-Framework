@@ -117,10 +117,9 @@ class ScanParser {
         }
 
         String name = con.name();
-        boolean singleton = con.singleton();
         validateUniqueController(name, controllerType, storage);
         logger.trace("Adding controller type to storage. Name: {} | Class: {}", name, controllerType);
-        storage.addControllerType(name, controllerType, singleton);
+        storage.addControllerType(name, controllerType);
     }
 
     /**

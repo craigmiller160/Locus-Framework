@@ -91,27 +91,6 @@ public class LocusControllerTest {
     }
 
     /**
-     * Test getting a singleton controller.
-     */
-    @Test
-    public void testControllerSingleton(){
-        Object one = locusController.getController(TestUtils.CONTROLLER_TWO_NAME);
-        Object two = locusController.getController(TestUtils.CONTROLLER_TWO_NAME);
-
-        assertNotNull("First controller ref is null", one);
-        assertNotNull("Second controller ref is null", two);
-        assertEquals("First controller ref is wrong type", ControllerTwo.class, one.getClass());
-        assertEquals("Second controller ref is wrong type", ControllerTwo.class, two.getClass());
-
-        ControllerTwo cOne = (ControllerTwo) one;
-        ControllerTwo cTwo = (ControllerTwo) two;
-
-        cOne.setId("One ID");
-
-        assertEquals("Controller refs don't have identical ID fields", cOne.getId(), cTwo.getId());
-    }
-
-    /**
      * Test getting a controller with a specific type.
      */
     @Test

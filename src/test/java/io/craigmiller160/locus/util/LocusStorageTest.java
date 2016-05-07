@@ -722,11 +722,9 @@ public class LocusStorageTest {
      */
     @Test
     public void testAddControllerType(){
-        boolean isSingleton = true;
-        storage.addControllerType(CONTROLLER_ONE_NAME, ControllerOne.class, isSingleton);
+        storage.addControllerType(CONTROLLER_ONE_NAME, ControllerOne.class);
 
         assertEquals("Wrong number of controller types", 1, storage.getControllerTypeCount());
-        assertTrue("Controller should be singleton", storage.isControllerSingleton(CONTROLLER_ONE_NAME));
         Class<?> clazz = storage.getControllerType(CONTROLLER_ONE_NAME);
         assertNotNull(String.format("%s class type is null", CONTROLLER_ONE_NAME), clazz);
         assertEquals(String.format("%s clazz type is incorrect", CONTROLLER_ONE_NAME), ControllerOne.class, clazz);
@@ -738,7 +736,7 @@ public class LocusStorageTest {
     @Test
     public void testRemoveControllerType(){
         boolean isSingleton = true;
-        storage.addControllerType(CONTROLLER_ONE_NAME, ControllerOne.class, isSingleton);
+        storage.addControllerType(CONTROLLER_ONE_NAME, ControllerOne.class);
 
         //Test the initial size to ensure the add worked
         assertEquals("Wrong number of controller types pre-remove", 1, storage.getControllerTypeCount());
@@ -746,36 +744,6 @@ public class LocusStorageTest {
         storage.removeControllerType(CONTROLLER_ONE_NAME);
 
         assertEquals("Wrong number of controller types", 0, storage.getControllerTypeCount());
-    }
-
-    /**
-     * Test adding a controller singleton instance.
-     */
-    @Test
-    public void testAddControllerSingletonInstance(){
-        ControllerOne controllerOne = new ControllerOne();
-        storage.addControllerSingletonInstance(CONTROLLER_ONE_NAME, controllerOne);
-
-        assertEquals("Wrong number of controller singleton instances", 1, storage.getControllerSingletonInstanceCount());
-        Object instance = storage.getControllerSingletonInstance(CONTROLLER_ONE_NAME);
-        assertNotNull(String.format("%s singleton instance is null", CONTROLLER_ONE_NAME), instance);
-        assertEquals(String.format("%s singleton instance is not valid", CONTROLLER_ONE_NAME), controllerOne, instance);
-    }
-
-    /**
-     * Test removing a controller singleton instance.
-     */
-    @Test
-    public void testRemoveControllerSingletonInstance(){
-        ControllerOne controllerOne = new ControllerOne();
-        storage.addControllerSingletonInstance(CONTROLLER_ONE_NAME, controllerOne);
-
-        //Test the count before the removal, to ensure the add worked
-        assertEquals("Wrong number of controller singleton instances pre-remove", 1, storage.getControllerSingletonInstanceCount());
-
-        storage.removeControllerSingletonIntance(CONTROLLER_ONE_NAME);
-
-        assertEquals("Wrong number of controller singleton instances", 0, storage.getControllerSingletonInstanceCount());
     }
 
     /**

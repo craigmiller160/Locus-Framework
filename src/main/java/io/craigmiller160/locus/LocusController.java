@@ -121,27 +121,10 @@ public class LocusController {
             throw new LocusNoControllerException(String.format("No controller exists with the name \"%s\"", controllerName));
         }
 
-        boolean singleton = storage.isControllerSingleton(controllerName);
+        logger.trace("Retrieving controller. Name: {} | Params: {}", controllerName, Arrays.toString(instantiationParams));
 
-        logger.trace("Retrieving controller. Name: {} | Singleton: {} | Params: {}", controllerName, singleton, Arrays.toString(instantiationParams));
-
-        //Singleton controllers can't be retrieved with parameters
-        if(singleton && instantiationParams.length > 0){
-            throw new LocusException(String.format("A singleton controller cannot be retrieved with instantiation parameters. " +
-                    "Name: %1$s, Params: %2$s", controllerName, Arrays.toString(instantiationParams)));
-        }
-
-        if(singleton){
-            controller = storage.getControllerSingletonInstance(controllerName);
-            if(controller == null){
-                controller = ObjectCreator.instantiateClass(controllerType);
-                storage.addControllerSingletonInstance(controllerName, controller);
-            }
-        }
-        else{
-            //If no params are provided, the no arg constructor will be used here
-            controller = ObjectCreator.instantiateClassWithParams(controllerType, instantiationParams);
-        }
+        //If no params are provided, the no arg constructor will be used here
+        controller = ObjectCreator.instantiateClassWithParams(controllerType, instantiationParams);
 
         if(controller == null){
             throw new LocusNoControllerException(String.format("Unable to get instance of controller named: %s", controllerName));

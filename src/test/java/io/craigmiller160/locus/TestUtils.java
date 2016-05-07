@@ -144,8 +144,8 @@ public class TestUtils {
     }
 
     public static void setupControllers(LocusStorage storage){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-        storage.addControllerType("ControllerTwo", ControllerTwo.class, true);
+        storage.addControllerType("ControllerOne", ControllerOne.class);
+        storage.addControllerType("ControllerTwo", ControllerTwo.class);
     }
 
 

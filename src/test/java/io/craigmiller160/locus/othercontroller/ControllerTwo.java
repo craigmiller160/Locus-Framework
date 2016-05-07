@@ -26,7 +26,7 @@ import io.craigmiller160.locus.annotations.LController;
  *
  * Created by craigmiller on 3/19/16.
  */
-@LController(name="ControllerOne", singleton = true)
+@LController(name="ControllerOne")
 public class ControllerTwo {
 
     private String id;
