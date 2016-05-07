@@ -27,6 +27,12 @@ import io.craigmiller160.locus.annotations.LController;
 @LController(name="ControllerOne")
 public class ControllerOne {
 
+    public ControllerOne(){}
+
+    public ControllerOne(String id){
+        this.id = id;
+    }
+
     private String id;
 
     public void setId(String id){

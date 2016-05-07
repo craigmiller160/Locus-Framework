@@ -67,8 +67,6 @@ public class LocusControllerTest {
      */
     @Test
     public void testGetControllerNonSingleton(){
-        storage.addControllerType("ControllerOne", ControllerOne.class, false);
-
         Object controller = locusController.getController(TestUtils.CONTROLLER_ONE_NAME);
         assertNotNull("Controller is null", controller);
         assertEquals("Controller wrong type", ControllerOne.class, controller.getClass());
@@ -151,7 +149,7 @@ public class LocusControllerTest {
         //Using BigDecimal for the callback because it has a specific value to be tested for
         BigDecimal callback = new BigDecimal(33.3);
 
-        Object cOne = locusController.getControllerWithCallback(TestUtils.CONTROLLER_ONE_NAME, callback);
+        Object cOne = locusController.getControllerWithCallback(callback, TestUtils.CONTROLLER_ONE_NAME);
 
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
@@ -169,7 +167,7 @@ public class LocusControllerTest {
     public void testUsingControllerCallback(){
         Object callback = new Object();
 
-        Object cOne = locusController.getControllerWithCallback(TestUtils.CONTROLLER_ONE_NAME, callback);
+        Object cOne = locusController.getControllerWithCallback(callback, TestUtils.CONTROLLER_ONE_NAME);
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
 
@@ -194,9 +192,61 @@ public class LocusControllerTest {
         Thread callback = new Thread();
         long value = callback.getId();
 
-        Object cOne = locusController.getControllerWithCallback(TestUtils.CONTROLLER_ONE_NAME, callback);
+        Object cOne = locusController.getControllerWithCallback(callback, TestUtils.CONTROLLER_ONE_NAME);
         assertNotNull("Controller instance is null", cOne);
         assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
+
+        LocusControllerCallback lcc = locusController.callback(cOne);
+        assertNotNull("ControllerCallback is null", lcc);
+        assertEquals("ControllerCallback is wrapping wrong object", callback, lcc.getCallback());
+
+        long result = lcc.getValue("Id", Long.class);
+        assertNotNull("Result retrieved from ControllerCallback is null", result);
+        assertEquals("Result retrieved from ControllerCallback is not correct", value, result);
+    }
+
+    /**
+     * Test retrieving a controller with instantiation
+     * arguments being provided.
+     */
+    @Test
+    public void testGetControllerWithArgs(){
+        Object controller = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, "ID");
+        assertNotNull("Controller is null", controller);
+        assertEquals("Controller wrong type", ControllerOne.class, controller.getClass());
+        ControllerOne c1 = (ControllerOne) controller;
+        assertEquals("Controller value wasn't set by constructor arg", "ID", c1.getId());
+    }
+
+    /**
+     * Test retrieving a controller with instantiation
+     * arguments being provided. This tests the generic
+     * return type version of this method.
+     */
+    @Test
+    public void testGetControllerWithArgsGeneric(){
+        ControllerOne cOne = locusController.getController(TestUtils.CONTROLLER_ONE_NAME, ControllerOne.class, "ID");
+
+        assertNotNull("Controller instance is null", cOne);
+        assertEquals("Controller instance is wrong type", ControllerOne.class, cOne.getClass());
+        assertEquals("Controller value wasn't set by constructor arg", "ID", cOne.getId());
+    }
+
+    /**
+     * Test getting a controller with a callback, with
+     * instantiation arguments.
+     */
+    @Test
+    public void testGetControllerWithArgsCallback(){
+        //I know, odd choice for a callback, first thing I could think of with a standard getter
+        Thread callback = new Thread();
+        long value = callback.getId();
+
+        Object cOne = locusController.getControllerWithCallback(callback, TestUtils.CONTROLLER_ONE_NAME, "ID");
+        assertNotNull("Controller instance is null", cOne);
+        assertEquals("Controller is wrong type", ControllerOne.class, cOne.getClass());
+        ControllerOne c1 = (ControllerOne) cOne;
+        assertEquals("Controller value wasn't set by constructor arg", "ID", c1.getId());
 
         LocusControllerCallback lcc = locusController.callback(cOne);
         assertNotNull("ControllerCallback is null", lcc);

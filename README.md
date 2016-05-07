@@ -10,6 +10,8 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 **Version 1.4**
 + Updated CM160Utils to Version 1.3, and updated project to adapt to API changes.
 + Changed LocusController.getController(...) with a callback object argument to LocusController.getControllerWithCallback(...).
++ Added ability to retrieve and instantiate controllers with constructor arguments to LocusController.
++ Removed unused controller singleton functionality, which caused conflicts and clashes with other features.
 
 **Version 1.3.3**
 + Reversed some of the overly-aggressive access level restrictions with the Locus component classes, because the restrictions caused them to not be accessible at all outside of the framework.

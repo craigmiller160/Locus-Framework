@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Arrays;
 
 /**
  * <p>One of the core components of the Locus Framework.
@@ -35,10 +36,12 @@ import javax.annotation.concurrent.ThreadSafe;
  * synchronized.</b></p>
  *
  * @author craigmiller
- * @version 1.2
+ * @version 1.3
  */
 @ThreadSafe
 public class LocusController {
+
+    //TODO consider dropping the controller singleton functionality in the future, as it clashes with the parameters in constructor thing
 
     /**
      * The logger for this class.
@@ -100,14 +103,17 @@ public class LocusController {
     }
 
     /**
-     * Get the controller matching the provided name. The controller will
-     * be instantiated if it needs to.
+     * Get the controller matching the provided name.
+     * Instantiation parameters can be provided to instantiate a controller
+     * that has a constructor requiring arguments.
+     *
      *
      * @param controllerName the name of the controller.
+     * @param instantiationParams the parameters to use to instantiate the controller.
      * @return the controller.
-     * @throws LocusException if there is no controller by that name, unable to instantiate the controller, or another error occurs.
+     * @throws LocusException if no controller exists with that name or type, unable to instantiate, or another error occurs.
      */
-    public Object getController(String controllerName) throws LocusException{
+    public Object getController(String controllerName, Object...instantiationParams) throws LocusException{
         Object controller = null;
 
         Class<?> controllerType = storage.getControllerType(controllerName);
@@ -117,7 +123,13 @@ public class LocusController {
 
         boolean singleton = storage.isControllerSingleton(controllerName);
 
-        logger.trace("Retrieving controller. Name: {} | Singleton: {}", controllerName, singleton);
+        logger.trace("Retrieving controller. Name: {} | Singleton: {} | Params: {}", controllerName, singleton, Arrays.toString(instantiationParams));
+
+        //Singleton controllers can't be retrieved with parameters
+        if(singleton && instantiationParams.length > 0){
+            throw new LocusException(String.format("A singleton controller cannot be retrieved with instantiation parameters. " +
+                    "Name: %1$s, Params: %2$s", controllerName, Arrays.toString(instantiationParams)));
+        }
 
         if(singleton){
             controller = storage.getControllerSingletonInstance(controllerName);
@@ -127,7 +139,8 @@ public class LocusController {
             }
         }
         else{
-            controller = ObjectCreator.instantiateClass(controllerType);
+            //If no params are provided, the no arg constructor will be used here
+            controller = ObjectCreator.instantiateClassWithParams(controllerType, instantiationParams);
         }
 
         if(controller == null){
@@ -137,29 +150,21 @@ public class LocusController {
         return controller;
     }
 
-    /*
-     * TODO how to add constructor args:
-     *
-     * 1) Varargs argument for the constructor args, provided in the order they exist in the constructor
-     * 2) ObjectCreator gets a new method for instantiating with args
-     * 3) Args get rejected if controller is a singleton, and has already been instantiated. Exception gets thrown in this case
-     * 4) If no args, nothing changes. If args, the arg-instantiation is used.
-     */
-
     /**
      * Get the controller matching the provided name, and ensure that the
      * return value is of the specified class type, so no casting is needed.
-     * If the controller needs to be, it will be instantiated. If it doesn't
-     * match the provided class type, an exception will be thrown.
+     * Instantiation parameters can be provided to instantiate a controller
+     * that has a constructor requiring arguments.
      *
      * @param controllerName the name of the controller.
-     * @param controllerType the class type it should be returned as.
+     * @param controllerType the class type the controller should be returned as.
+     * @param instantiationParams the parameters to use to instantiate the controller.
      * @param <T> the type of class of the controller.
      * @return the controller.
      * @throws LocusException if no controller exists with that name or type, unable to instantiate, or another error occurs.
      */
-    public <T> T getController(String controllerName, Class<T> controllerType) throws LocusException{
-        Object controller = getController(controllerName);
+    public <T> T getController(String controllerName, Class<T> controllerType, Object...instantiationParams) throws LocusException{
+        Object controller = getController(controllerName, instantiationParams);
 
         if(!controllerType.isAssignableFrom(controller.getClass())){
             throw new LocusInvalidTypeException(
@@ -170,40 +175,48 @@ public class LocusController {
     }
 
     /**
-     * Get the controller matching the provided name. A callback object
-     * is provided along with it, and that object will be linked
-     * to the controller object returned, so that it can access the
-     * callback if needed. The controller will be instantiated if it needs to.
+     * Get the controller matching the provided name.
+     * Instantiation parameters can be provided to instantiate a controller
+     * that has a constructor requiring arguments.
+     *
+     * A special callback object is included in this call. The callback
+     * will be stored for later access, and will be linked to the
+     * controller returned by this method.
+     *
      *
      * @param controllerName the name of the controller.
-     * @param callback the callback module to link it to.
-     * @return the controller matching the provided name.
-     * @throws LocusException if an error occurs.
+     * @param callback the callback object.
+     * @param instantiationParams the parameters to use to instantiate the controller.
+     * @return the controller.
+     * @throws LocusException if no controller exists with that name or type, unable to instantiate, or another error occurs.
      */
-    public Object getControllerWithCallback(String controllerName, Object callback) throws LocusException{
-        Object controller = getController(controllerName);
+    public Object getControllerWithCallback(Object callback, String controllerName, Object...instantiationParams) throws LocusException{
+        Object controller = getController(controllerName, instantiationParams);
         storage.addControllerCallback(controller, callback);
         return controller;
     }
 
     /**
      * Get the controller matching the provided name, and ensure that the
-     * return value is of the specified class type, so no casting is needed. A callback object
-     * is provided along with it, and that object will be linked
-     * to the controller object returned, so that it can access the
-     * callback if needed.
-     * If the controller needs to be, it will be instantiated. If it doesn't
-     * match the provided class type, an exception will be thrown.
+     * return value is of the specified class type, so no casting is needed.
+     * Instantiation parameters can be provided to instantiate a controller
+     * that has a constructor requiring arguments.
+     *
+     * A special callback object is included in this call. The callback
+     * will be stored for later access, and will be linked to the
+     * controller returned by this method.
+     *
      *
      * @param controllerName the name of the controller.
      * @param controllerType the class type the controller should be returned as.
      * @param callback the callback object.
+     * @param instantiationParams the parameters to use to instantiate the controller.
      * @param <T> the type of class of the controller.
      * @return the controller.
      * @throws LocusException if no controller exists with that name or type, unable to instantiate, or another error occurs.
      */
-    public <T> T getControllerWithCallback(String controllerName, Class<T> controllerType, Object callback) throws LocusException{
-        T controller = getController(controllerName, controllerType);
+    public <T> T getControllerWithCallback(Object callback, String controllerName, Class<T> controllerType, Object...instantiationParams) throws LocusException{
+        T controller = getController(controllerName, controllerType, instantiationParams);
         storage.addControllerCallback(controller, callback);
         return controller;
     }
