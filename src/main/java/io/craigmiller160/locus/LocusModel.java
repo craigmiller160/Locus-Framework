@@ -91,7 +91,7 @@ public class LocusModel {
      * @throws ReflectiveException if an error occurs.
      */
     public void setValue(String propName, Object... values) throws ReflectiveException{
-        FindAndInvoke.findOneAndInvoke(getMethods(propName, SETTER), values);
+        FindAndInvoke.findInvokeOneMethod(getMethods(propName, SETTER), values);
         locusView.setValue(propName, values);
     }
 
@@ -106,7 +106,7 @@ public class LocusModel {
      * @throws ReflectiveException if an error occurs.
      */
     public void addValue(String propName, Object...values) throws ReflectiveException{
-        FindAndInvoke.findOneAndInvoke(getMethods(propName, ADDER), values);
+        FindAndInvoke.findInvokeOneMethod(getMethods(propName, ADDER), values);
         locusView.addValue(propName, values);
     }
 
@@ -121,7 +121,7 @@ public class LocusModel {
      * @throws ReflectiveException if an error occurs.
      */
     public void removeValue(String propName, Object...values) throws ReflectiveException{
-        FindAndInvoke.findOneAndInvoke(getMethods(propName, REMOVER), values);
+        FindAndInvoke.findInvokeOneMethod(getMethods(propName, REMOVER), values);
         locusView.removeValue(propName, values);
     }
 
@@ -134,7 +134,7 @@ public class LocusModel {
      * @throws LocusException if an error occurs.
      */
     public Object getValue(String propName, Object... args) throws LocusException{
-        return FindAndInvoke.findOneAndInvoke(getMethods(propName, GETTER), args);
+        return FindAndInvoke.findInvokeOneMethod(getMethods(propName, GETTER), args);
     }
 
     /**

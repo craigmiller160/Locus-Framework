@@ -219,9 +219,9 @@ class ScanParser {
             return;
         }
 
-        Method m1 = rmh.getMethod();
+        Method m1 = rmh.getReflectiveComponent();
         for(ReflectiveMethodHolder<?> rmh2 : otherOams){
-            Method m2 = rmh2.getMethod();
+            Method m2 = rmh2.getReflectiveComponent();
             if(MethodUtils.isDuplicateMethod(m1, m2)){
                 throw new ReflectiveException(String.format(
                         "Identical %1$s methods for a single property not allowed, even if they are in different classes.%n" +

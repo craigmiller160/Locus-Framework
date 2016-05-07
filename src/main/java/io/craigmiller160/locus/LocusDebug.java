@@ -133,7 +133,7 @@ public class LocusDebug {
             if(setters != null && setters.size() > 0){
                 builder.append(String.format("   %-7s: ", SETTER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : setters){
-                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
+                    builder.append(String.format("     %s", oam.getReflectiveComponent().toString())).append(LS);
                 }
             }
 
@@ -141,7 +141,7 @@ public class LocusDebug {
             if(getters != null && getters.size() > 0){
                 builder.append(String.format("   %-7s: ", GETTER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : getters){
-                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
+                    builder.append(String.format("     %s", oam.getReflectiveComponent().toString())).append(LS);
                 }
             }
 
@@ -149,7 +149,7 @@ public class LocusDebug {
             if(adders != null && adders.size() > 0){
                 builder.append(String.format("   %-7s: ", ADDER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : adders){
-                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
+                    builder.append(String.format("     %s", oam.getReflectiveComponent().toString())).append(LS);
                 }
             }
 
@@ -157,7 +157,7 @@ public class LocusDebug {
             if(removers != null && removers.size() > 0){
                 builder.append(String.format("   %-7s: ", REMOVER_METHOD)).append(LS);
                 for(ObjectAndMethod oam : removers){
-                    builder.append(String.format("     %s", oam.getMethod().toString())).append(LS);
+                    builder.append(String.format("     %s", oam.getReflectiveComponent().toString())).append(LS);
                 }
             }
         }
@@ -188,7 +188,7 @@ public class LocusDebug {
             if(setters != null && setters.size() > 0){
                 builder.append(String.format("   %-7s: ", SETTER_METHOD)).append(LS);
                 for(ClassAndMethod cam : setters){
-                    builder.append(String.format("     %s", cam.getMethod().toString())).append(LS);
+                    builder.append(String.format("     %s", cam.getReflectiveComponent().toString())).append(LS);
                 }
             }
 
@@ -196,7 +196,7 @@ public class LocusDebug {
             if(adders != null && adders.size() > 0){
                 builder.append(String.format("   %-7s: ", ADDER_METHOD)).append(LS);
                 for(ClassAndMethod cam : adders){
-                    builder.append(String.format("     %s", cam.getMethod().toString())).append(LS);
+                    builder.append(String.format("     %s", cam.getReflectiveComponent().toString())).append(LS);
                 }
             }
 
@@ -204,7 +204,7 @@ public class LocusDebug {
             if(removers != null && removers.size() > 0){
                 builder.append(String.format("   %-7s: ", REMOVER_METHOD)).append(LS);
                 for(ClassAndMethod cam : removers){
-                    builder.append(String.format("     %s", cam.getMethod().toString())).append(LS);
+                    builder.append(String.format("     %s", cam.getReflectiveComponent().toString())).append(LS);
                 }
             }
         }

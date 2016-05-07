@@ -168,9 +168,9 @@ public class LocusScannerImpl implements LocusScanner {
             return;
         }
 
-        Method m1 = rmh.getMethod();
+        Method m1 = rmh.getReflectiveComponent();
         for(ReflectiveMethodHolder<?> rmh2 : otherOams){
-            Method m2= rmh2.getMethod();
+            Method m2= rmh2.getReflectiveComponent();
             if(m1.getName().equals(m2.getName())){
                 throw new ReflectiveException("Identical methods for single property in single category not allowed." + System.lineSeparator() +
                         "   Category: " + category + " | Property: " + propName + System.lineSeparator() +

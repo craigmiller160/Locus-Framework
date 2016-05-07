@@ -173,7 +173,7 @@ public class LocusView {
                 for (WeakReference<?> weakRef : viewInstances) {
                     Object ref = weakRef.get();
                     if (ref != null) {
-                        ObjectAndMethod oam = new ObjectAndMethod(ref, cam.getMethod());
+                        ObjectAndMethod oam = new ObjectAndMethod(ref, cam.getReflectiveComponent());
                         try {
                             RemoteInvoke.validateAndInvokeMethod(oam, values);
                             success = true;
@@ -183,7 +183,7 @@ public class LocusView {
                             throw ex;
                         } catch (ReflectiveException ex) {
                             logger.trace("Failed to invoke view method method. Note that certain invocations are expected to fail.\n" +
-                                    "   Method: {} | Param: {}", oam.getMethod(), Arrays.toString(values), ex);
+                                    "   Method: {} | Param: {}", oam.getReflectiveComponent(), Arrays.toString(values), ex);
                         }
                     }
                 }

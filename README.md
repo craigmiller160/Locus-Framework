@@ -1,5 +1,5 @@
 # **Locus Framework**
-## **Version 1.2**
+## **Version 1.4**
 
 ### MVC Abstraction Framework
 
@@ -8,6 +8,7 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 #### Changelog
 
 **Version 1.4**
++ Updated CM160Utils to Version 1.3, and updated project to adapt to API changes.
 + Changed LocusController.getController(...) with a callback object argument to LocusController.getControllerWithCallback(...).
 
 **Version 1.3.3**
