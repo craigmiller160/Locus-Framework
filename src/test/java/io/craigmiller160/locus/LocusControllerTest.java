@@ -17,7 +17,6 @@
 package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
-import io.craigmiller160.locus.othercontroller.ControllerTwo;
 import io.craigmiller160.locus.sample.ControllerOne;
 import io.craigmiller160.locus.util.LocusStorage;
 import org.junit.Before;

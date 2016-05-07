@@ -41,8 +41,6 @@ import java.util.Arrays;
 @ThreadSafe
 public class LocusController {
 
-    //TODO consider dropping the controller singleton functionality in the future, as it clashes with the parameters in constructor thing
-
     /**
      * The logger for this class.
      */
