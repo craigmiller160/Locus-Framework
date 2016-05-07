@@ -41,7 +41,7 @@ import static io.craigmiller160.locus.util.LocusConstants.SETTER;
  * environment.</p>
  *
  * @author craigmiller
- * @version 1.2
+ * @version 1.3
  */
 @ThreadSafe
 public class LocusModel {

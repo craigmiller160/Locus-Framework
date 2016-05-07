@@ -52,7 +52,7 @@ import java.util.Collection;
  * with the callback object cannot be guaranteed.</p>
  *
  * @author craigmiller
- * @version 1.2
+ * @version 1.3
  */
 @ThreadSafe
 public class LocusView {

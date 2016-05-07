@@ -41,7 +41,7 @@ import java.util.Set;
  * is properly synchronized and thread safe.</p>
  *
  * @author craigmiller
- * @version 1.2
+ * @version 1.3
  */
 @ThreadSafe
 public class LocusDebug {
