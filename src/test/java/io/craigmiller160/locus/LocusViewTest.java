@@ -117,46 +117,6 @@ public class LocusViewTest {
     }
 
     /**
-     * Test invoking a method with the wrong parameters, so that
-     * no invocation will be successful. An exception should be thrown.
-     */
-    @Test
-    public void testFailedInvocation(){
-        String value = "Value";
-
-        boolean exceptionWasThrown = false;
-        try{
-            locusView.setValue("TwoFields", value);
-        }
-        catch(ReflectiveException ex){
-            exceptionWasThrown = true;
-            logger.error("LocusViewTest testFailedInvocation() exception stack trace", ex);
-        }
-
-        assertTrue("No exception was thrown for an invocation attempt that should've found no valid matches", exceptionWasThrown);
-    }
-
-    /**
-     * Test invoking a method that doesn't exist, so that an
-     * exception will be thrown.
-     */
-    @Test
-    public void testNoMethod(){
-        String value = "Value";
-
-        boolean exceptionWasThrown = false;
-        try{
-            locusView.setValue("NoField", value);
-        }
-        catch(ReflectiveException ex){
-            exceptionWasThrown = true;
-            logger.error("LocusViewTest testNoMethod() exception stack trace", ex);
-        }
-
-        assertTrue("No exception was thrown for an attempt to invoke non-existent method", exceptionWasThrown);
-    }
-
-    /**
      * Test invoking a setter with multiple arguments.
      */
     @Test

@@ -213,14 +213,12 @@ public class LocusView {
         @Override
         public void run() {
             Collection<ClassAndMethod> setters = storage.getSettersForViewProp(propName);
-            if(setters == null || setters.size() <= 0){
-                throw new ReflectiveException("No setters available in registered views to invoke for property. Property Name: " + propName);
-            }
-
-            boolean success = executeMethods(storage, setters, values);
-
-            if(!success){
-                throw new ReflectiveException("Unable to successfully invoke any view setter for property. Check TRACE level logs for details");
+            if(setters != null){
+                boolean success = executeMethods(storage, setters, values);
+                if(!success){
+                    logger.trace(String.format("Unable to successfully invoke any setters for property %1$s with values %2$s. " +
+                            "This can be expected and may not be an issue", propName, Arrays.toString(values)));
+                }
             }
         }
     }
