@@ -41,7 +41,7 @@ import static io.craigmiller160.locus.util.LocusConstants.SETTER;
  * environment.</p>
  *
  * @author craigmiller
- * @version 1.3
+ * @version 1.4.2
  */
 @ThreadSafe
 public class LocusModel {
@@ -150,6 +150,10 @@ public class LocusModel {
      */
     public <T> T getValue(String propName, Class<T> valueType, Object...args) throws LocusException{
         Object result = getValue(propName, args);
+        if(result == null){
+            return null;
+        }
+
         if(!(valueType.isAssignableFrom(result.getClass()))){
             throw new LocusInvalidTypeException(
                     String.format("Return value for getting \"%1$s\" doesn't match expected type. Expected: %2$s | Actual: %3$s",

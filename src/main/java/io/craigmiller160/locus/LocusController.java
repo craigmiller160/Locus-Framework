@@ -36,7 +36,7 @@ import java.util.Arrays;
  * synchronized.</b></p>
  *
  * @author craigmiller
- * @version 1.3
+ * @version 1.4.2
  */
 @ThreadSafe
 public class LocusController {
@@ -146,6 +146,9 @@ public class LocusController {
      */
     public <T> T getController(String controllerName, Class<T> controllerType, Object...instantiationParams) throws LocusException{
         Object controller = getController(controllerName, instantiationParams);
+        if(controller == null){
+            return null;
+        }
 
         if(!controllerType.isAssignableFrom(controller.getClass())){
             throw new LocusInvalidTypeException(
@@ -173,7 +176,9 @@ public class LocusController {
      */
     public Object getControllerWithCallback(Object callback, String controllerName, Object...instantiationParams) throws LocusException{
         Object controller = getController(controllerName, instantiationParams);
-        storage.addControllerCallback(controller, callback);
+        if(controller != null){
+            storage.addControllerCallback(controller, callback);
+        }
         return controller;
     }
 
@@ -198,7 +203,9 @@ public class LocusController {
      */
     public <T> T getControllerWithCallback(Object callback, String controllerName, Class<T> controllerType, Object...instantiationParams) throws LocusException{
         T controller = getController(controllerName, controllerType, instantiationParams);
-        storage.addControllerCallback(controller, callback);
+        if(controller != null){
+            storage.addControllerCallback(controller, callback);
+        }
         return controller;
     }
 
