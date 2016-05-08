@@ -7,6 +7,15 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 
 #### Changelog
 
+**Version 1.4.3**
++ Minor logging improvements to LocusModel.
+
+**Version 1.4.2**
++ Fixed NPEs in code that converted the return types of values retrieved through reflection.
+
+**Version 1.4.1**
++ Removed the exception that was thrown if LocusView was automatically invoked for a property that doesn't currently exist in a view.
+
 **Version 1.4**
 + Updated CM160Utils to Version 1.3, and updated project to adapt to API changes.
 + Changed LocusController.getController(...) with a callback object argument to LocusController.getControllerWithCallback(...).

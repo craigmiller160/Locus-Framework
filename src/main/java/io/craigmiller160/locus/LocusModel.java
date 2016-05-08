@@ -20,6 +20,8 @@ import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.utils.reflect.FindAndInvoke;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
 import io.craigmiller160.utils.reflect.ReflectiveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
@@ -57,6 +59,11 @@ public class LocusModel {
      * after changes to the models.
      */
     private final LocusView locusView;
+
+    /**
+     * The logger for this class.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(LocusModel.class);
 
     /**
      * The default constructor for this class.
@@ -177,24 +184,32 @@ public class LocusModel {
      */
     private Collection<ObjectAndMethod> getMethods(String propName, int methodType) throws ReflectiveException{
         Collection<ObjectAndMethod> oams = null;
+        String methodName = "";
         switch(methodType){
             case GETTER:
                 oams = storage.getGettersForModelProp(propName);
+                methodName = "getter";
                 break;
             case SETTER:
                 oams = storage.getSettersForModelProp(propName);
+                methodName = "setter";
                 break;
             case ADDER:
                 oams = storage.getAddersForModelProp(propName);
+                methodName = "adder";
                 break;
             case REMOVER:
                 oams = storage.getRemoversForModelProp(propName);
+                methodName = "remover";
                 break;
         }
 
+        logger.trace(String.format("Found %1$d %2$s methods matching property name %3$s", oams != null ? oams.size() : 0, methodName, propName));
+
         if(oams == null || oams.size() == 0){
-            throw new ReflectiveException("No model " + methodType + " found matching the property name \"" + propName + "\"");
+            throw new ReflectiveException("No model " + methodName + " found matching the property name \"" + propName + "\"");
         }
+
         return oams;
     }
 }
