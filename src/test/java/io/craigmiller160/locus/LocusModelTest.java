@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -248,6 +249,17 @@ public class LocusModelTest {
 
         assertNotNull("StringField value is null", result);
         assertEquals("StringField has wrong value", expectedResult, result);
+    }
+
+    /**
+     * Test setting a null value.
+     */
+    @Test
+    public void testSettingNullValue(){
+        modelOne.setStringField("Value");
+        locusModel.setValue("StringField", null);
+
+        assertNull("StringField should be null", modelOne.getStringField());
     }
 
 }
