@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -255,11 +256,19 @@ public class LocusModelTest {
      * Test setting a null value.
      */
     @Test
-    public void testSettingNullValue(){
+    public void testSettingNullValue() throws Exception{
         modelOne.setStringField("Value");
         locusModel.setValue("StringField", null);
 
         assertNull("StringField should be null", modelOne.getStringField());
+    }
+
+    @Test
+    public void testGettingPrimitiveValue(){
+        modelOne.setIntField(22);
+        int result = locusModel.getValue("IntField", int.class);
+
+        assertEquals("IntField wrong value", 22, result);
     }
 
 }

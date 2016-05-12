@@ -18,6 +18,7 @@ package io.craigmiller160.locus;
 
 import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ParamUtils;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 import io.craigmiller160.utils.reflect.RemoteInvoke;
 
@@ -116,7 +117,7 @@ public class LocusControllerCallback {
             return null;
         }
 
-        if(!resultType.isAssignableFrom(result.getClass())){
+        if(!resultType.isAssignableFrom(result.getClass()) && !ParamUtils.isAcceptablePrimitive(resultType, result.getClass())){
             throw new LocusInvalidTypeException(
                     String.format("Return value for getting \"%1$s\" doesn't match expected type. Expected: %2$s | Actual: %3$s",
                             propName, resultType.getName(), result.getClass().getName()));

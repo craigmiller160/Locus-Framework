@@ -20,6 +20,7 @@ import io.craigmiller160.locus.concurrent.UIThreadExecutor;
 import io.craigmiller160.locus.concurrent.UIThreadExecutorFactory;
 import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.utils.reflect.ObjectCreator;
+import io.craigmiller160.utils.reflect.ParamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,7 +151,7 @@ public class LocusController {
             return null;
         }
 
-        if(!controllerType.isAssignableFrom(controller.getClass())){
+        if(!controllerType.isAssignableFrom(controller.getClass()) && !ParamUtils.isAcceptablePrimitive(controllerType, controller.getClass())){
             throw new LocusInvalidTypeException(
                     String.format("The type of the controller names\"%1$s\" doesn't match the expected type. Expected: %2$s | Actual: %3$s",
                             controllerName, controllerType.getName(), controller.getClass().getName()));

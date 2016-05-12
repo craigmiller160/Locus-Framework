@@ -19,6 +19,7 @@ package io.craigmiller160.locus;
 import io.craigmiller160.locus.util.LocusStorage;
 import io.craigmiller160.utils.reflect.FindAndInvoke;
 import io.craigmiller160.utils.reflect.ObjectAndMethod;
+import io.craigmiller160.utils.reflect.ParamUtils;
 import io.craigmiller160.utils.reflect.ReflectiveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +48,6 @@ import static io.craigmiller160.locus.util.LocusConstants.SETTER;
  */
 @ThreadSafe
 public class LocusModel {
-
-    //TODO all type conversion methods in all classes should include tests for primitives as well
 
     /**
      * The LocusStorage instance containing the classes managed
@@ -163,7 +162,7 @@ public class LocusModel {
             return null;
         }
 
-        if(!(valueType.isAssignableFrom(result.getClass()))){
+        if(!valueType.isAssignableFrom(result.getClass()) && !ParamUtils.isAcceptablePrimitive(valueType, result.getClass())){
             throw new LocusInvalidTypeException(
                     String.format("Return value for getting \"%1$s\" doesn't match expected type. Expected: %2$s | Actual: %3$s",
                             propName, valueType.getName(), result.getClass().getName()));
