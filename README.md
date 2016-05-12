@@ -7,6 +7,10 @@ Locus is an MVC abstraction framework, inspired by a wide range of innovative ab
 
 #### Changelog
 
+**Version 1.4.4**
++ Upgraded CM160Utils to version 1.3.2, to enable support for null arguments in the reflective invocations.
++ Improved methods that provided generic return types so that they could support the use of primitives types.
+
 **Version 1.4.3**
 + Minor logging improvements to LocusModel.
 

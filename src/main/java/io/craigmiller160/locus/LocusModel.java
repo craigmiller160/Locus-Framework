@@ -49,7 +49,6 @@ import static io.craigmiller160.locus.util.LocusConstants.SETTER;
 public class LocusModel {
 
     //TODO all type conversion methods in all classes should include tests for primitives as well
-    //TODO does passing a null type work???
 
     /**
      * The LocusStorage instance containing the classes managed
